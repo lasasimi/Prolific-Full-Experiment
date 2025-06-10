@@ -1,0 +1,69 @@
+{{ block title }}
+Information about yourself
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-mid m-0">
+    <div class="card-body">
+            <label for="age">How old are you?</label><p></p>
+            <p> <input type="number" name="age" required style ="width: 70px"> years </p>
+{{ formfield 'gender' }}
+{{ formfield 'education_lvl' }}
+{{ formfield 'neighborhood_type' }}
+</div>
+
+</div>
+<br>
+<button class="next-button" type="submit">Next</button>
+<style>
+    .card{
+        max-width: 1600px;
+        overflow-x:visible;
+    }
+    .next-button {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+    font-size: 16px;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 12px;
+}
+.next-button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+.next-button:active {
+    background-color: #005f8b; /* Darker blue for clicked state */
+    color: white;
+    border: 2px solid #005f8b;
+}
+
+table {
+      width: 100%;
+      padding: 20px;
+      table-layout: fixed; /* Key: enforces equal column width */
+
+    }
+    th {
+      font-size:normal;
+      text-align: center;
+      word-wrap:normal; /* Prevents overflow in fixed layout */
+      font-weight: normal; /* Ensures text is not bold */
+    }
+    td {
+      padding: 8px;
+      border:none;
+      text-align: center;
+      word-wrap: break-word; /* Prevents overflow in fixed layout */
+    }
+</style>
+
+
+{{ endblock }}
+
+

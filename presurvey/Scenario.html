@@ -1,0 +1,229 @@
+{{ block title }}
+
+{{ endblock }}
+
+{{ block content }}
+
+<div class="card bg-mid m-0">
+  <h4 class="card-header">{{ scenario_title }}</h4>
+
+  <div class="card-body">
+      <br>
+      {{ scenario_text }} 
+      <br><br>
+      <strong>What do you think the community should do?</strong>
+      
+      {{ formfield_errors 'response' }}
+        <input type="hidden" name="response" id="response">
+
+        <div class="button-container">
+          <button class="button button2 bg-sage" type="button" onclick="selectAnswer(this, '-1')">
+              {{ scenario_against }}
+          </button>
+          <button class="button button2 bg-lavender" type="button" onclick="selectAnswer(this, '1')">
+              {{ scenario_for }}
+          </button>
+        </div>
+      </div>
+
+  </div>
+</div>
+
+<br>
+
+
+Based on the your answer for the issue above, please indicate your opinion about the following statements:
+<br><br>
+
+<!-- Display the form fields in a table format -->
+
+<table class="table">
+  <thead>
+    <colgroup>
+      <col>
+    </colgroup>
+    <tr>
+        <th class="label-col"></th>
+        <th class="scale-label"><div>Strongly disagree</div></th>
+        <th class="scale-label"><div>Disagree</div></th>
+        <th class="scale-label"><div>Neutral</div></th>
+        <th class="scale-label"><div>Agree</div></th>
+        <th class="scale-label"><div>Strongly agree</div></th>
+    </tr>
+</thead>
+
+{{ formfield_errors 'attitude_certainty' }}
+{{ formfield_errors 'likelihood' }}
+{{ formfield_errors 'political_charge' }}
+{{ formfield_errors 'emotional_charge' }}
+{{ formfield_errors 'disagree_conform' }}
+
+<!-- Comment out for teting purpose
+<tbody>
+  <tr>
+      <th>{{ form.attitude_certainty.label }}</th>
+      {{ for choice in form.attitude_certainty }}
+          <td>{{ choice }}</td>
+      {{ endfor }}
+  </tr>
+  <tr>
+    <th>{{ form.likelihood.label }}</th>
+    {{ for choice in form.likelihood }}
+        <td>{{ choice }}</td>
+    {{ endfor }}
+  </tr>
+  <tr>
+    <th>{{ form.political_charge.label }}</th>
+    {{ for choice in form.political_charge }}
+        <td>{{ choice }}</td>
+    {{ endfor }}
+  </tr>
+  <tr>
+    <th>{{ form.emotional_charge.label }}</th>
+    {{ for choice in form.emotional_charge }}
+        <td>{{ choice }}</td>
+    {{ endfor }}
+  </tr>
+  <tr>
+    <th>{{ form.disagree_conform.label }}</th>
+    {{ for choice in form.disagree_conform }}
+        <td>{{ choice }}</td>
+    {{ endfor }}
+  </tr>
+
+</tbody>
+
+</table>
+-->
+<button class="next-button" type="submit">Next</button>
+
+<script>
+  function selectAnswer(button, value) {
+      // Update the hidden input field
+      document.getElementById('response').value = value;
+
+      // Remove the 'selected' class from all buttons
+      const buttons = document.querySelectorAll('.button-container .button2');
+      buttons.forEach(btn => btn.classList.remove('selected'));
+
+      // Add the 'selected' class to the clicked button
+      button.classList.add('selected');
+  }
+</script>
+
+<style>
+    .button {
+        background-color: #3182bd;
+        border: none;
+        color: white;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 18px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .button2 {
+      background-color: white;
+      color: black;
+      border: 2px solid #008CBA;
+      font-size: 16px;
+    }
+    .button2:hover {
+      background-color: #008CBA;
+      color: white;
+    }
+    .button2.selected {
+        background-color: #005f8b; /* Darker blue for selected state */
+        color: white;
+        border: 2px solid #005f8b;
+    }
+    
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* 3 equal-width columns, change 3 to 2 for 2 answer options */
+      gap: 10px; /* Spacing between buttons */
+      margin-top: 10px;
+    }
+    /* Media query for narrow devices */
+    @media (max-width: 600px) {
+        .button-container {
+            grid-template-columns: 1fr; /* Switch to a single column layout */
+            gap: 5px; /* Reduce spacing between buttons */
+        }
+    }    
+    .button-container.button {
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    .next-button {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        font-size: 16px;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .next-button:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+    .next-button:active {
+        background-color: #005f8b; /* Darker blue for clicked state */
+        color: white;
+        border: 2px solid #005f8b;
+    }
+    .matrix-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    table {
+      width: 75%;
+      padding: 10px;
+      table-layout: fixed; /* Key: enforces equal column width */
+      
+    }
+    th {
+      padding: 10px;
+      font-size: normal;
+      text-align: left;
+      word-wrap:normal; /* Prevents overflow in fixed layout */
+      font-weight: normal; /* Ensures text is not bold */
+    }
+    th.scale-label { /* style for the likert label */
+      width: 15%; /* Adjust this value as needed */
+      text-align: center;
+    }
+    td {
+      padding: 8px;
+      text-align: center;
+      word-wrap: break-word; /* Prevents overflow in fixed layout */
+    }
+    colgroup col:first-child {
+      width: 60%; /* First column (question label) */
+    }
+    colgroup col:not(:first-child) {
+      width: 10%; /* Evenly divide the rest (5 columns = 60% total) */
+    }
+
+    /* Speech bubble background classes */
+.bg-sage {
+    background-color: #c7dbb2;
+}
+.bg-gray {
+    background-color: #e4e9eb;
+}
+.bg-lavender {
+    background-color: #c8b6e3;
+}
+    </style>
+{{ endblock }}
