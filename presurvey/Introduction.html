@@ -60,10 +60,13 @@
 </div>
 </div>
 <br>
-    {{ formfields }}
-    <button class="next-button" type="submit">Next</button>
+    <h4>Do you confirm that you have read and understood the information presented above and that you wish
+    to participate in this study?</h4>  
+    <button class="consent-button" name="gives_consent" value="True">Yes</button>
+    <button class="consent-button" name="gives_consent" value="False">No</button>
+
 <style>
-        .next-button {
+    .consent-button {
         background-color: white;
         color: black;
         border: 2px solid #008CBA;
@@ -75,11 +78,11 @@
         cursor: pointer;
         border-radius: 12px;
     }
-    .next-button:hover {
+    .consent-button:hover {
         background-color: #008CBA;
         color: white;
     }
-    .next-button:active {
+    .consent-button:active {
         background-color: #005f8b; /* Darker blue for clicked state */
         color: white;
         border: 2px solid #005f8b;

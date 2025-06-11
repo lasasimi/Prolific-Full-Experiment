@@ -49,7 +49,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     gives_consent = models.BooleanField(
         label="I acknowledge that I have read and understood the information above and confirm that I wish to participate in this study.")
-
+    scenario_code = models.StringField()
     back_consent = models.BooleanField()
 
     # Demographics
@@ -178,9 +178,10 @@ class Scenario(Page):
         )
     def before_next_page(player: Player, timeout_happened):
         # Get the current scenario code
-        scenario_code = player.participant.vars['scenario_order'][player.round_number - 1]['code']
+        player.scenario_code = player.participant.vars['scenario_order'][player.round_number - 1]['code']
+        print(f"Scenario code for round {player.round_number}: {player.scenario_code}")
         # Store the scenario code in the player's order
-        player.participant.vars['all_responses'][scenario_code] = player.response
+        player.participant.vars['all_responses'][player.scenario_code] = player.response
         
     @staticmethod
     def is_displayed(player:Player):
@@ -203,7 +204,7 @@ class FinalRound(Page):
             player.session.vars['combined_responses'] = {}
             # Add the current player's all_responses dictionary to the combined dictionary
         
-        player.session.vars['combined_responses'][player.id_in_group] = player.participant.vars['all_responses']
+        player.session.vars['combined_responses'][player.participant.code] = player.participant.vars['all_responses']
 
 class ExitPage_TWO(Page):
     form_model = 'player'
