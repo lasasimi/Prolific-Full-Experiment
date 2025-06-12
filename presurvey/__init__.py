@@ -52,6 +52,16 @@ class Player(BasePlayer):
     scenario_code = models.StringField()
     back_consent = models.BooleanField()
 
+    attention_check = models.IntegerField(
+    label="Which of the following is a vegetable?",
+    choices=[
+        [1, 'Salmon'],
+        [2, 'Broccoli'],
+        [3, 'Cheeseburger'],
+        [4, 'Pizza'],
+        [5, 'Milk'],
+    ])
+    failed_attention_check = models.BooleanField(initial=False) 
     # Demographics
     age = models.IntegerField(label='How old are you?', min=18, max=100)
     gender = models.StringField(choices=[['Man', 'Man'], 
@@ -102,11 +112,11 @@ class Player(BasePlayer):
     disagree_conform = make_field("I will change my mind if most people in my neighborhood disagreed with my position.")
     
 
-    # Other feedback
-    feedback = models.LongStringField(label=
-                                      "Do you have any comments on this dilemma or the solutions offered? If no, click next",
-                                      blank=True)
-    feedback_final = models.LongStringField(label="Please provide your feedback here:")
+    # # Other feedback
+    # feedback = models.LongStringField(label=
+    #                                   "Do you have any comments on this dilemma or the solutions offered? If no, click next",
+    #                                   blank=True)
+    # feedback_final = models.LongStringField(label="Please provide your feedback here:")
 
 
 # PAGES
@@ -160,14 +170,12 @@ class Neighborhood(Page):
 class Scenario(Page):
     form_model = 'player'
     form_fields = ['attitude_certainty', 'likelihood', 'political_charge', 'emotional_charge', 
-                   'disagree_conform', 
-                   'response'] 
+                   'disagree_conform', 'response'] 
 
     @staticmethod
     def vars_for_template(player: Player):
         # Access the scenario based on the randomized order
         scenario = player.participant.vars['scenario_order'][player.round_number - 1]
-        print(scenario['code'])
         
         return dict(
             scenario_text = scenario['Text'],
@@ -179,17 +187,19 @@ class Scenario(Page):
     def before_next_page(player: Player, timeout_happened):
         # Get the current scenario code
         player.scenario_code = player.participant.vars['scenario_order'][player.round_number - 1]['code']
-        print(f"Scenario code for round {player.round_number}: {player.scenario_code}")
-        # Store the scenario code in the player's order
+        # Debug check:
+        # print(f"Scenario code for round {player.round_number}: {player.scenario_code}")
+
+        # Store the response in the participant's vars and record the time of waiting
         player.participant.vars['all_responses'][player.scenario_code] = player.response
-        
+    
     @staticmethod
     def is_displayed(player:Player):
             return player.round_number <= C.NUM_ROUNDS and player.participant.gives_consent
 
 class FinalRound(Page):
     form_model = 'player'
-    form_fields = ['feedback']
+    form_fields = ['attention_check']
     
     @staticmethod
     def is_displayed(player:Player):
@@ -206,6 +216,27 @@ class FinalRound(Page):
         
         player.session.vars['combined_responses'][player.participant.code] = player.participant.vars['all_responses']
 
+        if timeout_happened:
+            player.failed_attention_check = True
+        else:
+            if player.attention_check != 2: # wrong answer
+                player.failed_attention_check = True
+            else:
+                player.failed_attention_check = False
+        print(player.failed_attention_check)
+
+class FailedAttentionCheck(Page):
+    form_model = 'player'
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.failed_attention_check and player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
+
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            failedattentionlink=player.subsession.session.config['failedattentionlink']
+        )
 class ExitPage_TWO(Page):
     form_model = 'player'
 
@@ -219,5 +250,5 @@ class ExitPage_TWO(Page):
     def is_displayed(player: Player):
         return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
-page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Scenario, FinalRound]
+page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Scenario, FinalRound, FailedAttentionCheck]
 # Don't forget to add ExitPage_TWO at the end if you want to redirect participants after the final round.

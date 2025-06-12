@@ -32,9 +32,6 @@
 <br>
 
 
-Based on the your answer for the issue above, please indicate your opinion about the following statements:
-<br><br>
-
 <!-- Display the form fields in a table format -->
 
 <table class="table">
@@ -95,7 +92,6 @@ Based on the your answer for the issue above, please indicate your opinion about
 
 </table>
 -->
-<button class="next-button" type="submit">Next</button>
 
 <script>
   function selectAnswer(button, value) {
@@ -108,6 +104,9 @@ Based on the your answer for the issue above, please indicate your opinion about
 
       // Add the 'selected' class to the clicked button
       button.classList.add('selected');
+
+      // Submit the form
+      button.closest('form').submit();
   }
 </script>
 

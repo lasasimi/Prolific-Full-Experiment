@@ -8,6 +8,7 @@ SESSION_CONFIGS = [
         display_name="Combined app",
         completionlink=' https://app.prolific.com/submissions/complete?cc=CA6AFDZ5',
         didnotconsent='https://app.prolific.com/submissions/complete?cc=C1KPU2A9',
+        failedattentionlink='https://app.prolific.com/submissions/complete?cc=C1KPU2A9',
     ),
 
 ]
