@@ -1,5 +1,6 @@
 from otree.api import *
 import pandas as pd
+import numpy as np
 import random 
 import time
 
@@ -40,6 +41,7 @@ def creating_session(subsession):
         # Shuffle the scenario order for each player
         shuffled_scenarios = random.sample(C.SCENARIOS, len(C.SCENARIOS))
         player.participant.vars['scenario_order'] = shuffled_scenarios  # Store the shuffled order as a participant variable
+        player.participant.vars['training_correct'] = False # Initialize training correctness
         player.participant.vars['all_responses'] = {} # Initialize empty dictionary for all responses, will be appended on each round
 
 class Group(BaseGroup):
@@ -47,11 +49,42 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    # Consent variables
     gives_consent = models.BooleanField(
         label="I acknowledge that I have read and understood the information above and confirm that I wish to participate in this study.")
     scenario_code = models.StringField()
     back_consent = models.BooleanField()
 
+    # Training variables
+    test_scenario = models.StringField(
+    label="What do you think the community should do?",
+    choices=[['Do not help with the search', 'Do not help with the search'],
+            ['Verify the cat in the garden', 'Verify the cat in the garden'],
+            ['Help search near the sewage', 'Help search near the sewage']],
+    widget=widgets.RadioSelectHorizontal())
+ 
+    dilemmatopic = models.BooleanField(
+        label="The dilemma is about what the community should do with the lost cat.",
+        choices=[
+            [True, 'True'],
+            [False, 'False'],
+        ])
+    majority = models.BooleanField(
+        label="The majority of your neighbors are in favor of helping to search for the cat in the sewage.",
+        choices=[
+            [True, 'True'], 
+            [False, 'False'],
+        ])
+    howmanyneighbors = models.BooleanField(
+        label="You have 2 neighbors in your group.",
+        choices=[
+            [False, 'True'],# inverse the values since the correct answer is False
+            [True, 'False'],
+        ])
+
+    total_correct = models.IntegerField()
+
+    # Attention check
     attention_check = models.IntegerField(
     label="Which of the following is a vegetable?",
     choices=[
@@ -62,6 +95,7 @@ class Player(BasePlayer):
         [5, 'Milk'],
     ])
     failed_attention_check = models.BooleanField(initial=False) 
+    
     # Demographics
     age = models.IntegerField(label='How old are you?', min=18, max=100)
     gender = models.StringField(choices=[['Man', 'Man'], 
@@ -166,7 +200,50 @@ class Neighborhood(Page):
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.gives_consent 
 
-    
+
+class Training(Page):
+    form_model='player'
+    form_fields = ['test_scenario']
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.gives_consent 
+
+class TrainingNeighbor(Page):
+    form_model='player'
+    form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.gives_consent and not player.participant.vars['training_correct']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        # Some made up responses of other players' to be displayed
+        return dict(
+            others_responses = [-1,1,1,1],
+            scenario_title = "The Lost Cat",
+            scenario_against = "Do not help with the search",
+            scenario_neutral = "Verify the cat in the garden",
+            scenario_for = "Help search near the sewage",
+        )
+     
+    @staticmethod
+    def error_message(player, values):
+        dilemmatopic = values.get('dilemmatopic')
+        majority = values.get('majority')
+        howmanyneighbors = values.get('howmanyneighbors')
+
+        total_correct = np.sum([dilemmatopic, 
+                                       majority, 
+                                       howmanyneighbors])
+        # Check if the answers are correct
+        if total_correct != 3:
+            player.participant.vars['training_correct'] = False
+            return "You have incorrect answer(s). Please read carefully and try again."
+        else:
+            player.participant.vars['training_correct'] = True
+
+
 class Scenario(Page):
     form_model = 'player'
     form_fields = ['attitude_certainty', 'likelihood', 'political_charge', 'emotional_charge', 
@@ -195,7 +272,7 @@ class Scenario(Page):
     
     @staticmethod
     def is_displayed(player:Player):
-            return player.round_number <= C.NUM_ROUNDS and player.participant.gives_consent
+            return player.round_number <= C.NUM_ROUNDS and player.participant.gives_consent and player.participant.training_correct
 
 class FinalRound(Page):
     form_model = 'player'
@@ -203,7 +280,7 @@ class FinalRound(Page):
     
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
+        return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS and player.participant.training_correct
     
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -223,14 +300,13 @@ class FinalRound(Page):
                 player.failed_attention_check = True
             else:
                 player.failed_attention_check = False
-        print(player.failed_attention_check)
 
 class FailedAttentionCheck(Page):
     form_model = 'player'
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.failed_attention_check and player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
+        return player.failed_attention_check or not player.participant.vars['training_correct'] and player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
     @staticmethod
     def js_vars(player):
@@ -250,5 +326,5 @@ class ExitPage_TWO(Page):
     def is_displayed(player: Player):
         return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
-page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Scenario, FinalRound, FailedAttentionCheck]
+page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Training, TrainingNeighbor, Scenario, FinalRound, FailedAttentionCheck]
 # Don't forget to add ExitPage_TWO at the end if you want to redirect participants after the final round.

@@ -24,7 +24,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
 
-PARTICIPANT_FIELDS = ['gives_consent', 'no_consent', 'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival']
+PARTICIPANT_FIELDS = ['gives_consent', 'no_consent', 'training_correct', 'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival']
 SESSION_FIELDS = ['combined_responses']
 
 # ISO-639 code
