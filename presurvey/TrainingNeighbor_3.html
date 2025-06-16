@@ -2,6 +2,9 @@
 
 {{ endblock }}
 {{ block content }}
+<div class="alert">
+        You have incorrect answer(s). Please re-check your answer and select the correct one(s). This is your last attempt.
+</div>
 
 <br>
 <div class="card bg-mid m-0">
@@ -64,7 +67,7 @@
     <h4 class="card-header">Questions</h4>
     <div class="card-body">
             <p> Please answer the following questions about the dilemma you just read. 
-            You can only proceed to the next steps after <b>answering all questions correctly</b>.</p>
+            You can only proceed to the next steps after <b>answering all questions correctly</b> within 2 attempts. </p>
             {{ formfield 'majority' }}
             {{ formfield 'dilemmatopic' }}
             {{ formfield 'howmanyneighbors' }}
@@ -172,6 +175,20 @@
     font-weight: bold;
     font-size: 0.9rem;
 }
+.alert {
+    background-color: #fdecea;
+    color: #d32f2f;
+    border-left: 5px solid #d32f2f;
+    padding: 12px 16px;
+    margin-top: 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
 /* Speech bubble background classes */
 .bg-sage {
     background-color: #c7dbb2;
