@@ -11,7 +11,7 @@
 
       One of the neighbors recently lost their cat. The cat is old and is usually staying inside the house. One neighbor mentions that the cat was roaming around the neighborhood two days ago. Some neighbors propose to help search for the cat near the sewage in case it was trapped. However, some are against helping the search because they saw the cat was alright, it was just roaming around the garden with other strays. Other neighbors want to first verify if the cat in the garden is indeed the lost cat.
       <br><br>
-    <h5 class=card-header">Your group's answers</h5>
+    <h5>Your group's answers</h5>
       You have been placed in a small discussion group with several of your neighbors to share ideas about what the community should do. Each neighbor in your group has shared their own opinion. Here’s what they said (including yours):
       
 
@@ -40,20 +40,6 @@
                 </div>
             {{ endfor }}
             
-
-        <!-- You (center) -->
-        <div class="player-row you-player">
-            <div class="player">
-                <div class="you speech-bubble
-                    {% if player.test_scenario == 'Do not help with the search' %} bg-sage 
-                    {% elif player.test_scenario == 'Verify the cat in the garden' %} bg-gray
-                    {% else %} bg-lavender
-                    {% endif %}" id="your-answer">{{ player.test_scenario }}</div>
-                <img src="{{ static 'person-shape.png' }}" class="avatar">
-                <div class="you-label">You</div>
-            </div>
-        
-    </div>
 </div>
 </div>
 </div>
@@ -125,10 +111,7 @@
 .neighbors {
     padding: 0.2rem;
 }
-.you-player{
-    border: dashed 2px #aaa; /* adding a border to the player */
-    padding: 0.2rem;
-}
+
 .avatar {
     width: 50px;
     height: 50px;
@@ -156,22 +139,6 @@
     border-style: solid;
 }
 
-
-.you.speech-bubble:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 10px 10px 0 10px;
-
-}
-
-.you-label {
-    margin-top: 5px;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
 /* Speech bubble background classes */
 .bg-sage {
     background-color: #c7dbb2;

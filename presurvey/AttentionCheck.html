@@ -1,10 +1,13 @@
 
 
 {{ block content }}
+<div class="alert">
+    You answered the question(s) on the previous page incorrectly.
+</div>
 <div class="card bg-mid m-0">
     <h4 class="card-header">Provide your answer</h4>
     <div class="card-body">
-    You answered the questions on the previous page incorrectly, which indicates that you may not have been paying attention to the questions.
+    Answering incorrectly indicates that you may not have been paying attention to the questions.
     You must confirm that you are active by answering a question. Please answer this following question correctly:
     <br>
     <strong>{{ formfields }}</strong>
@@ -35,7 +38,19 @@
         color: white;
         border: 2px solid #005f8b;
     }
-    
+    .alert {
+    background-color: #fdecea;
+    color: #d32f2f;
+    border-left: 5px solid #d32f2f;
+    padding: 12px 16px;
+    margin-top: 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    }   
     </style>
 </style>
 {{ endblock }}
