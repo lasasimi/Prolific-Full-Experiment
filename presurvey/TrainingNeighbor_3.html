@@ -43,20 +43,6 @@
                 </div>
             {{ endfor }}
             
-
-        <!-- You (center) -->
-        <div class="player-row you-player">
-            <div class="player">
-                <div class="you speech-bubble
-                    {% if player.test_scenario == 'Do not help with the search' %} bg-sage 
-                    {% elif player.test_scenario == 'Verify the cat in the garden' %} bg-gray
-                    {% else %} bg-lavender
-                    {% endif %}" id="your-answer">{{ player.test_scenario }}</div>
-                <img src="{{ static 'person-shape.png' }}" class="avatar">
-                <div class="you-label">You</div>
-            </div>
-        
-    </div>
 </div>
 </div>
 </div>
@@ -128,10 +114,7 @@
 .neighbors {
     padding: 0.2rem;
 }
-.you-player{
-    border: dashed 2px #aaa; /* adding a border to the player */
-    padding: 0.2rem;
-}
+
 .avatar {
     width: 50px;
     height: 50px;
@@ -159,22 +142,6 @@
     border-style: solid;
 }
 
-
-.you.speech-bubble:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 10px 10px 0 10px;
-
-}
-
-.you-label {
-    margin-top: 5px;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
 .alert {
     background-color: #fdecea;
     color: #d32f2f;

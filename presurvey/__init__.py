@@ -309,11 +309,11 @@ class AttentionCheck(Page):
     def before_next_page(player, timeout_happened):
         if timeout_happened:
             player.participant.vars['failed_attention_check'] = True 
-            player.participant.label = "inactive"
+            player.participant.active = "inactive"
         else:
             if player.attention_check != 2: # wrong answer
                player.participant.vars['failed_attention_check'] = True 
-               player.participant.label = "inactive"
+               player.participant.active = "inactive"
                print("Attention check not passed")
             else:
                 player.participant.vars['failed_attention_check'] = False 
