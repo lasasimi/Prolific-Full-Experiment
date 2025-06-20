@@ -306,6 +306,8 @@ class FailedAttentionCheck(Page):
 
     @staticmethod
     def is_displayed(player: Player):
+        # if player.participant.gives_consent and player.round_number == C.NUM_ROUNDS:
+        #    return player.failed_attention_check or not player.participant.vars['training_correct']
         return player.failed_attention_check or not player.participant.vars['training_correct'] and player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
     @staticmethod
@@ -313,6 +315,8 @@ class FailedAttentionCheck(Page):
         return dict(
             failedattentionlink=player.subsession.session.config['failedattentionlink']
         )
+    
+
 class ExitPage_TWO(Page):
     form_model = 'player'
 
