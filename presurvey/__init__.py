@@ -29,7 +29,7 @@ class C(BaseConstants):
     SCENARIOS = CSV.to_dict(orient='records')
     #NUM_ROUNDS = len(CSV['code']) # number of scenarios
     # for testing: 
-    NUM_ROUNDS = 3
+    NUM_ROUNDS = 4
 
 
 
