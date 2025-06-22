@@ -28,6 +28,8 @@ class Player(BasePlayer):
 
 
 class MyPage(Page):
+    pass
+""" 
     @staticmethod
     def vars_for_template(player: Player):
         # Access the variables from the previous app
@@ -36,7 +38,7 @@ class MyPage(Page):
         return dict(
             combined_responses=combined_responses
         )
-       
+ """       
     
     
         

@@ -3,7 +3,8 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        app_sequence=['presurvey', 'mock'],
+        # app_sequence=['presurvey'],
+        app_sequence=['consent','presurvey', 'mock', 'noPay', 'Pay'],
         num_demo_participants=3,
         display_name="Combined app",
         completionlink=' https://app.prolific.com/submissions/complete?cc=CA6AFDZ5',
