@@ -70,7 +70,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 break
     
     ##### BLOCK 0 #####
-    if len(waiting_players) > 3: ##### TEST ONLY!! CHANGE LATER #####
+    if len(waiting_players) > 5: ##### TEST ONLY!! CHANGE LATER to 20/6 #####
         print('Ready to check discussion group')
         temp_scenarios = scenarios.copy()
         temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
@@ -79,18 +79,17 @@ def group_by_arrival_time_method(subsession, waiting_players):
         
         ##### BLOCK 1 #####
         for i_sce, sce in enumerate(temp_scenarios):
-            if len(scenario_counts[sce]['A']) == 2 and len(scenario_counts[sce]['F']) == 2: ##### TEST ONLY!! CHANGE LATER #####
-                print('Ready to create a 50/50 group')
+            if len(scenario_counts[sce]['A']) == 3 and len(scenario_counts[sce]['F']) == 3: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
+                print('Ready to create a 50/50 group N=6')
                 print(sce,scenario_counts[sce]['A']+scenario_counts[sce]['F'])
                 return(scenario_counts[sce]['A']+scenario_counts[sce]['F'])
                 break
 
             ##### BLOCK 2 #####
             elif len(medium_waiting) > 3:
-                ##### TEST ONLY!! 80/20 OPTION #####
-                if np.logical_or(len(scenario_counts[sce]['A']) == 3 and len(scenario_counts[sce]['F']) == 1,
-                                 len(scenario_counts[sce]['F']) == 3 and len(scenario_counts[sce]['A']) == 1):
-                    print('Ready to create a group')
+                ##### TEST ONLY!! 80/20 OPTION CHANGE TO N = 10/4 ##### 
+                if len(scenario_counts[sce]['A']) == 2 and len(scenario_counts[sce]['F']) == 2:
+                    print('Ready to create a 50/50 group N=4')
                     print(sce,scenario_counts[sce]['A']+scenario_counts[sce]['F'])
                     return(scenario_counts[sce]['A']+scenario_counts[sce]['F'])
                     break
