@@ -14,7 +14,6 @@ class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = 3
     NUM_ROUNDS = 1
-    SCENARIOS = ['s13_p','s3_n','s11_p']
 
 
 class Subsession(BaseSubsession):
@@ -109,8 +108,6 @@ class Player(BasePlayer):
 
 # PAGES
 class GroupingWaitPage(WaitPage):
-    #print(C.RESPONSES)
-    print(C.SCENARIOS)
     group_by_arrival_time = True
 
 
