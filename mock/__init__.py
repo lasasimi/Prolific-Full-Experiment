@@ -41,7 +41,6 @@ def group_by_arrival_time_method(subsession, waiting_players):
     for p in waiting_players:
         if p.id_in_group == 1:
             scenarios = [key for key in p.participant.all_responses]
-        
         response[p.participant.code] = p.participant.all_responses
 
     scenario_counts = {}
