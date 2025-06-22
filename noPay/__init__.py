@@ -25,8 +25,19 @@ class Player(BasePlayer):
 
 
 # PAGES
-class MyPage(Page):
-    pass
+class ExitPage(Page):
+    # For not consenting participants
+    form_model = 'player'
+
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            didnotconsent = player.subsession.session.config['returnlink']
+        )
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return not player.participant.gives_consent or player.participant.active == "inactive"
 
 
-page_sequence = [MyPage]
+page_sequence = [ExitPage]

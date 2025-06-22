@@ -61,32 +61,39 @@
 </div>
 </div>
 
- {{ next_button }}
+<div>
+    <h4> Do you confirm that you have read and understood the information presented above and that you wish to
+                    participate in this study?</h4>
+    <button class="button button2" name="gives_consent" value="True">Yes</button>
+    <button class="button button2" name="gives_consent" value="False">No</button>
+</div>
 
 
 <style>
-    .consent-button {
-        background-color: white;
-        color: black;
-        border: 2px solid #008CBA;
-        font-size: 16px;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .consent-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .consent-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    
-    </style>
+.button {
+    background-color: #3182bd;
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.button2 {
+  background-color: white;
+  color: black;
+  border: 2px solid #008CBA;
+}
+
+.button2:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
 </style>
 {{ endblock }}

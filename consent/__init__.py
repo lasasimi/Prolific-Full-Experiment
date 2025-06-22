@@ -16,6 +16,12 @@ class Subsession(BaseSubsession):
     pass
 
 
+def creating_session(subsession):
+    for player in subsession.get_players():
+        # Shuffle the scenario order for each player
+        player.participant.vars['no_consent'] = False # Initialize no consent variable
+
+
 class Group(BaseGroup):
     pass
 
@@ -36,18 +42,12 @@ class Introduction(Page):
     def before_next_page(player, timeout_happened):
         
         player.participant.gives_consent = player.gives_consent
-        if not player.gives_consent:
-            player.participant.vars['no_consent'] = True
-        else:
+        if player.gives_consent:
             player.participant.vars['no_consent'] = False
-
-
-class ResultsWaitPage(WaitPage):
-    pass
-
-
-class Results(Page):
-    pass
+        else:
+            player.participant.vars['no_consent'] = True
+        
+        print("CONSENT:", player.gives_consent,player.participant.vars['no_consent'])
 
 
 page_sequence = [Introduction]

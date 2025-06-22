@@ -4,12 +4,13 @@ SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
         # app_sequence=['presurvey'],
-        app_sequence=['consent','presurvey', 'mock', 'noPay', 'Pay'],
+        app_sequence=['presurvey', 'mock', 'noPay'],
+        #app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         num_demo_participants=3,
         display_name="Combined app",
-        completionlink=' https://app.prolific.com/submissions/complete?cc=CA6AFDZ5',
-        didnotconsent='https://app.prolific.com/submissions/complete?cc=C1KPU2A9',
-        failedattentionlink='https://app.prolific.com/submissions/complete?cc=C1KPU2A9',
+        completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T',
+        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750',
+        failedattentionlink='https://app.prolific.com/submissions/complete?cc=C1KPU2A9', # DELETE
     ),
 
 ]

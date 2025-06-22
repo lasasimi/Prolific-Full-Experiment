@@ -42,26 +42,20 @@ def creating_session(subsession):
         # Shuffle the scenario order for each player
         shuffled_scenarios = random.sample(C.SCENARIOS, len(C.SCENARIOS))
         player.participant.vars['scenario_order'] = shuffled_scenarios  # Store the shuffled order as a participant variable
-        player.participant.vars['no_consent'] = None # Initialize no consent variable
         player.participant.vars['training_attempt'] = 3 # Initialize training attempt
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
         player.participant.vars['training_success'] = False # Initialize training success
         player.participant.vars['all_responses'] = {} # Initialize empty dictionary for all responses, will be appended on each round
         
-        # Skip 'mock' if participant no_consent is True
-        if not player.participant.vars['no_consent']:
-            player.participant.app_sequence = ['presurvey', 'mock','Pay']
-        else:
-            player.participant.app_sequence = ['noPay']
-        print(player.participant.app_sequence)
-
-
-
+        
 class Group(BaseGroup):
     pass
 
 
 class Player(BasePlayer):
+    gives_consent = models.BooleanField(
+        label="I acknowledge that I have read and understood the information above "
+        "and confirm that I wish to participate in this study.")
     scenario_code = models.StringField()
     dropout = models.BooleanField(initial=False)
 
@@ -123,8 +117,8 @@ class Player(BasePlayer):
 
     neighborhood_type = models.StringField(
         choices=[['Urban', 'Urban'],
-                ['Suburban', 'Suburban'],
-                ['Countryside', 'Countryside']],
+                ['Suburban', 'Suburban (residential neighbourhood on the outskirts of a city or town)'],
+                ['Countryside', 'Countryside (rural areas)']],
         label='What type of neighborhood do you live in?',
         widget=widgets.RadioSelect,)
 
@@ -164,50 +158,18 @@ class Player(BasePlayer):
 
 # PAGES
 class Introduction(Page):
+    form_model = 'player'
+    form_fields = ['gives_consent']
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 and not player.participant.no_consent 
-    
-    #@staticmethod
-    #def before_next_page(player, timeout_happened):
-        #return super().before_next_page(player, timeout_happened)
-        
-
-class NoConsent(Page):
-    form_model = 'player'
-    form_fields = []
-    timeout_seconds = 30
-    @staticmethod
-    def is_displayed(player: Player):
-        return not player.participant.gives_consent 
+        return player.round_number == 1 
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        player.participant.gives_consent = True
-        if timeout_happened:
-            player.dropout = True
-            print(player.dropout)
-        else:
-            player.dropout = False
-            print(player.dropout)
-        
-
-class ExitPage(Page):
-    # For not consenting participants
-    form_model = 'player'
-
-    @staticmethod
-    def js_vars(player):
-        return dict(
-            didnotconsent=player.subsession.session.config['didnotconsent']
-        )
-
-    @staticmethod
-    def is_displayed(player: Player):
-        return not player.participant.gives_consent and player.dropout
-
-    
+        player.participant.gives_consent = player.gives_consent
+ 
+   
 class Demographics(Page):
     form_model = 'player'
     form_fields = ['age', 'gender','education_lvl', 'neighborhood_type'] 
@@ -245,10 +207,6 @@ class Training(Page):
 class TrainingNeighbor_1(Page):
     form_model='player'
     form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
-    @staticmethod
-    def is_displayed(player):
-        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
-        return player.participant.training_attempt == 3 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -270,7 +228,12 @@ class TrainingNeighbor_1(Page):
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
-        print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
+        print(f"Before next Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
+    
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.gives_consent 
+        # return player.participant.training_attempt == 3 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
 
 
 class TrainingNeighbor_2(Page):
@@ -287,11 +250,7 @@ class TrainingNeighbor_2(Page):
             scenario_neutral = "Verify the cat in the garden",
             scenario_for = "Help search near the sewage",
         )
-    @staticmethod
-    def is_displayed(player):
-        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
-        return player.participant.training_attempt == 2 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
-
+    
     @staticmethod
     def before_next_page(player, timeout_happened):
         total_correct = np.sum([player.dilemmatopic, 
@@ -303,15 +262,16 @@ class TrainingNeighbor_2(Page):
             player.participant.vars['training_success'] = True
         print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
+    @staticmethod
+    def is_displayed(player):
+        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
+        if player.round_number == 1 and player.participant.gives_consent:
+            return player.participant.training_attempt == 2 and not player.participant.training_success
+
 
 class AttentionCheck(Page):
     form_model = 'player'
     form_fields = ['attention_check']
-    
-    @staticmethod
-    def is_displayed(player:Player):
-        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
-        return player.participant.training_attempt == 1 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
     
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -326,16 +286,20 @@ class AttentionCheck(Page):
             else:
                 player.participant.vars['failed_attention_check'] = False 
                 print("Attention check passed")
+                player.participant.active = "active"
 
+    @staticmethod
+    def is_displayed(player:Player):
+        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
+        if player.round_number == 1 and player.participant.gives_consent:
+            return player.participant.training_attempt == 1 and not player.participant.training_success
+        #player.participant.training_attempt == 1 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
+    
 
 class TrainingNeighbor_3(Page):
     form_model='player'
     form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
-    @staticmethod
-    def is_displayed(player):
-        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']} and Training Success: {player.participant.training_success} and Failed Attention Check: {player.participant.failed_attention_check}")
-        return player.participant.training_attempt == 1 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
-
+    
     @staticmethod
     def vars_for_template(player: Player):
         # Some made up responses of other players' to be displayed
@@ -354,9 +318,16 @@ class TrainingNeighbor_3(Page):
                                 player.howmanyneighbors])
         if total_correct != 3:
             player.participant.vars['training_attempt'] -= 1
+            player.participant.active = "inactive"
         else:
             player.participant.vars['training_success'] = True
         print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
+
+    @staticmethod
+    def is_displayed(player):
+        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']} and Training Success: {player.participant.training_success} and Failed Attention Check: {player.participant.failed_attention_check}")
+        if player.round_number == 1 and player.participant.gives_consent and player.participant.active == "active":
+            return player.participant.training_attempt == 1 
 
 
 class Scenario(Page):
@@ -424,6 +395,24 @@ class FailedAttentionCheck(Page):
             failedattentionlink=player.subsession.session.config['failedattentionlink']
         )
     
+class NoConsent(Page):
+    form_model = 'player'
+    form_fields = []
+    timeout_seconds = 30
+    @staticmethod
+    def is_displayed(player: Player):
+        return not player.participant.gives_consent 
+    
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.participant.gives_consent = True
+        if timeout_happened:
+            player.dropout = True
+            print(player.dropout)
+        else:
+            player.dropout = False
+            print(player.dropout)
+
 
 class ExitPage_TWO(Page):
     form_model = 'player'
@@ -438,7 +427,8 @@ class ExitPage_TWO(Page):
     def is_displayed(player: Player):
         return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
-page_sequence = [Introduction]
+page_sequence = [Introduction, Demographics, Neighborhood, NeighborhoodInstruction, TrainingNeighbor_1, TrainingNeighbor_2,
+                 AttentionCheck, TrainingNeighbor_3, Scenario, FinalPage]
 
 # page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Training, Scenario, FailedAttentionCheck]
 # page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Training, TrainingNeighbor, Scenario, FinalRound, FailedAttentionCheck]
