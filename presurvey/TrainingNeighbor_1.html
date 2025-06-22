@@ -1,0 +1,164 @@
+{{ block title }}
+
+{{ endblock }}
+{{ block content }}
+
+<br>
+<div class="card bg-mid m-0">
+  <h4 class="card-header">{{ scenario_title }}</h4>
+
+  <div class="card-body">
+
+      One of the neighbors recently lost their cat. The cat is old and is usually staying inside the house. One neighbor mentions that the cat was roaming around the neighborhood two days ago. Some neighbors propose to help search for the cat near the sewage in case it was trapped. However, some are against helping the search because they saw the cat was alright, it was just roaming around the garden with other strays. Other neighbors want to first verify if the cat in the garden is indeed the lost cat.
+      <br><br>
+    <h5>Your group's answers</h5>
+      You have been placed in a small discussion group with several of your neighbors to share ideas about what the community should do. Each neighbor in your group has shared their own opinion. Here’s what they said (including yours):
+      
+
+  </div>
+
+
+    <div class="players-wrapper">
+    <!-- Neighbors --> 
+        <div class="players-row neighbors">
+            {{ for r in others_responses }}
+                <div class="player">
+                    <div class="speech-bubble
+                    {% if r == -1 %} bg-sage 
+                    {% elif r == 0 %} bg-gray
+                    {% else %} bg-lavender
+                    {% endif %}">
+                        {{ if r == -1 }}
+                            {{ scenario_against }}
+                        {{ elif r == 0 }}
+                            {{ scenario_neutral }}
+                        {{ else }}
+                            {{ scenario_for }}
+                        {{ endif }}
+                    </div>
+                    <img src="{{ static 'person-shape.png' }}" class="avatar">
+                </div>
+            {{ endfor }}
+            
+</div>
+</div>
+</div>
+
+<br><br>
+            
+<div class="card bg-white mb-1">
+    <h4 class="card-header">Questions</h4>
+    <div class="card-body">
+            <p> Please answer the following questions about the dilemma you just read. 
+            You can only proceed to the next steps after <b>answering all questions correctly</b> within 2 attempts. </p>
+            {{ formfield 'majority' }}
+            {{ formfield 'dilemmatopic' }}
+            {{ formfield 'howmanyneighbors' }}
+    </div>
+</div>
+
+
+<br>
+    <button class="next-button" type="submit">Next</button>
+
+
+<style>
+        .next-button {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        font-size: 16px;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .next-button:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+    .next-button:active {
+        background-color: #005f8b; /* Darker blue for clicked state */
+        color: white;
+        border: 2px solid #005f8b;
+    }
+
+/* To display the player avatars and speech bubbles */
+.players-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.players-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 0.4rem 0.4rem;
+}
+.neighbors {
+    padding: 0.2rem;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #ccc;
+    border-radius: 50%;
+}
+
+.speech-bubble {
+    position: relative;
+    background: #f0f0f0;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    margin-bottom: 10px;
+    text-align: center;
+    min-width: 120px;
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0 10px;
+    border-style: solid;
+}
+
+/* Speech bubble background classes */
+.bg-sage {
+    background-color: #c7dbb2;
+}
+.bg-gray {
+    background-color: #e4e9eb;
+}
+.bg-lavender {
+    background-color: #c8b6e3;
+}
+
+/* Matching triangle tips */
+.bg-sage::after {
+    border-color: #c7dbb2 transparent transparent transparent;
+}
+.bg-gray::after {
+    border-color: #e4e9eb transparent transparent transparent;
+}
+.bg-lavender::after {
+    border-color: #c8b6e3 transparent transparent transparent;
+}
+</style>
+{{ endblock }}
