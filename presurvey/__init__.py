@@ -228,6 +228,7 @@ class TrainingNeighbor_1(Page):
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
+            player.participant.active = "active"
         print(f"Before next Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
     
     @staticmethod
@@ -260,6 +261,7 @@ class TrainingNeighbor_2(Page):
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
+            player.participant.active = "active"
         print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
     @staticmethod
@@ -321,6 +323,7 @@ class TrainingNeighbor_3(Page):
             player.participant.active = "inactive"
         else:
             player.participant.vars['training_success'] = True
+            player.participant.active = "active"
         print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
     @staticmethod

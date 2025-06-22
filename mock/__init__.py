@@ -26,6 +26,8 @@ class Player(BasePlayer):
 
 # PAGES
 class MyPage(Page):
+    
+
     @staticmethod
     def vars_for_template(player: Player):
         # Access the variables from the previous app
