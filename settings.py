@@ -10,7 +10,6 @@ SESSION_CONFIGS = [
         display_name="Combined app",
         completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T',
         returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750',
-        failedattentionlink='https://app.prolific.com/submissions/complete?cc=C1KPU2A9', # DELETE
     ),
 
 ]

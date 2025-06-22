@@ -27,10 +27,6 @@ class Player(BasePlayer):
 # PAGES
 class MyPage(Page):
     @staticmethod
-    def is_displayed(player: Player):
-        return player.participant.gives_consent and player.participant.active == "active"
-
-    @staticmethod
     def vars_for_template(player: Player):
         # Access the variables from the previous app
         combined_responses = player.session.vars['combined_responses']
@@ -38,6 +34,10 @@ class MyPage(Page):
         return dict(
             combined_responses=combined_responses
         )
+    
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.participant.gives_consent and player.participant.active == "active"
           
 
 class ResultsWaitPage(WaitPage):

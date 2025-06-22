@@ -378,22 +378,6 @@ class FinalPage(Page):
     def before_next_page(player: Player, timeout_happened):
         player.participant.wait_page_arrival = time.time()
 
-
-class FailedAttentionCheck(Page):
-    form_model = 'player'
-
-    @staticmethod
-    def is_displayed(player: Player):
-        # if player.participant.gives_consent and player.round_number == C.NUM_ROUNDS:
-        #    return player.failed_attention_check or not player.participant.vars['training_correct']
-        # return player.failed_attention_check or not player.participant.vars['training_correct'] and player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
-        return player.participant.failed_attention_check or not player.participant.vars['training_correct'] and player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
-
-    @staticmethod
-    def js_vars(player):
-        return dict(
-            failedattentionlink=player.subsession.session.config['failedattentionlink']
-        )
     
 class NoConsent(Page):
     form_model = 'player'
