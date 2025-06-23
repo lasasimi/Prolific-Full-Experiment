@@ -5,7 +5,7 @@ SESSION_CONFIGS = [
         name='pilotsurveyALL',
         # app_sequence=['presurvey', 'mock', 'noPay', 'Pay']
         # app_sequence=['presurvey'],  ### --- TESTS FOR LASMI --- ###
-        app_sequence=['presurvey', 'mock'],
+        app_sequence=['presurvey'],
         num_demo_participants=7,
         display_name="Combined app",
         completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T',
@@ -23,7 +23,8 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
 
-PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
+PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'treatment', 
+                      'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active']
 SESSION_FIELDS = ['combined_responses']
 
