@@ -10,9 +10,8 @@ SESSION_CONFIGS = [
         display_name="Combined app",
         completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # pay with bonus
         returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
-        nobonuslink='https://app.prolific.com/submissions/complete?cc=C15KPYKO' # pay but no bonus
+        nobonuslink='https://app.prolific.com/submissions/complete?cc=CSUMQ59A' # pay but no bonus/INCORRECT BONUS PAYMENT LINK
     ),
-
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs

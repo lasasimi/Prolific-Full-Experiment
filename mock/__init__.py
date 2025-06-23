@@ -43,9 +43,12 @@ def group_by_arrival_time_method(subsession, waiting_players):
         response[p.participant.code] = p.participant.all_responses
     
     # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
-    first_key = list(response.keys())[0] # fails if room is empty 
-    scenarios = [key for key in response[first_key]]
-        
+    try:
+        first_key = list(response.keys())[0] # fails if room is empty 
+        scenarios = [key for key in response[first_key]]
+    except:
+        scenarios = []
+
     scenario_counts = {}
     for i_sce, sce in enumerate(scenarios):
         scenario_counts[sce] = {}
