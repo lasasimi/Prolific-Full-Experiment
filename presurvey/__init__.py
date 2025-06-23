@@ -49,7 +49,7 @@ def creating_session(subsession):
         
         
 class Group(BaseGroup):
-    pass
+    print("Creating group")
 
 
 class Player(BasePlayer):
