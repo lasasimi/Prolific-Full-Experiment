@@ -12,8 +12,10 @@ Your app description
 
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
-    PLAYERS_PER_GROUP = 3
+    PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
+    MEDIUM_WAIT = 20  # 5 mins 
+    LONG_WAIT = 15  # 10 mins 
 
 
 class Subsession(BaseSubsession):
@@ -38,10 +40,13 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
     response = {}
     for p in waiting_players:
-        if p.id_in_group == 1:
-            scenarios = [key for key in p.participant.all_responses]
         response[p.participant.code] = p.participant.all_responses
-
+    
+    # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
+    first_key = list(response.keys())[0] # fails if room is empty 
+    scenarios = [key for key in response[first_key]]
+    
+        
     scenario_counts = {}
     for i_sce, sce in enumerate(scenarios):
         scenario_counts[sce] = {}
@@ -51,14 +56,22 @@ def group_by_arrival_time_method(subsession, waiting_players):
     for p in waiting_players:
         # print(p.id_in_group)
         for i_sce, sce in enumerate(scenarios):
+            if response[p.participant.code][sce] == -1:
+                scenario_counts[sce]['A'].append(p)
+            else:
+                scenario_counts[sce]['F'].append(p)
+            """ 
             try:
                 if response[p.participant.code][sce] == -1:
                     scenario_counts[sce]['A'].append(p)
                 else:
                     scenario_counts[sce]['F'].append(p)
             except:
+                print("Entering exception")
                 pass
-    
+            """
+            print(sce,"Faction A:", len(scenario_counts[sce]['A']), "Faction F:", len(scenario_counts[sce]['F']))
+
     # players waiting for more than 10 mins 
     long_waiting = [p for p in waiting_players if long_wait(p)]
     if len(long_waiting) > 1:
@@ -99,7 +112,8 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
 
 class Group(BaseGroup):
-    pass
+    group_size = models.StringField()
+    is_group_single = models.BooleanField()
 
 
 class Player(BasePlayer):
@@ -109,6 +123,21 @@ class Player(BasePlayer):
 # PAGES
 class GroupingWaitPage(WaitPage):
     group_by_arrival_time = True
+
+
+class GroupSizeWaitPage(WaitPage):
+    @staticmethod
+    def after_all_players_arrive(group: Group):
+        session = group.subsession.session
+        group_players = group.get_players()
+
+        if len(group_players) == 1: 
+            group.is_group_single = True
+        else:
+            group.is_group_single = False
+        
+        print(group.id_in_subsession, group.is_group_single)
+
 
 
 class MyPage(Page):
@@ -135,4 +164,4 @@ class Results(Page):
     pass
 
 
-page_sequence = [GroupingWaitPage]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage]

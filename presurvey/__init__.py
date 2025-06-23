@@ -229,7 +229,7 @@ class TrainingNeighbor_1(Page):
         else:
             player.participant.vars['training_success'] = True
             player.participant.active = "active"
-        print(f"Before next Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
+        #print(f"Before next Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
     
     @staticmethod
     def is_displayed(player):
@@ -262,11 +262,11 @@ class TrainingNeighbor_2(Page):
         else:
             player.participant.vars['training_success'] = True
             player.participant.active = "active"
-        print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
+        #print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
     @staticmethod
     def is_displayed(player):
-        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
+        #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
         if player.round_number == 1 and player.participant.gives_consent:
             return player.participant.training_attempt == 2 and not player.participant.training_success
 
@@ -284,15 +284,15 @@ class AttentionCheck(Page):
             if player.attention_check != 2: # wrong answer
                player.participant.vars['failed_attention_check'] = True 
                player.participant.active = "inactive"
-               print("Attention check not passed")
+               #print("Attention check not passed")
             else:
                 player.participant.vars['failed_attention_check'] = False 
-                print("Attention check passed")
+                #print("Attention check passed")
                 player.participant.active = "active"
 
     @staticmethod
     def is_displayed(player:Player):
-        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
+        #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
         if player.round_number == 1 and player.participant.gives_consent:
             return player.participant.training_attempt == 1 and not player.participant.training_success
         #player.participant.training_attempt == 1 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
@@ -324,11 +324,11 @@ class TrainingNeighbor_3(Page):
         else:
             player.participant.vars['training_success'] = True
             player.participant.active = "active"
-        print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
+        #print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
     @staticmethod
     def is_displayed(player):
-        print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']} and Training Success: {player.participant.training_success} and Failed Attention Check: {player.participant.failed_attention_check}")
+        #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']} and Training Success: {player.participant.training_success} and Failed Attention Check: {player.participant.failed_attention_check}")
         if player.round_number == 1 and player.participant.gives_consent and player.participant.active == "active":
             return player.participant.training_attempt == 1 
 
@@ -416,7 +416,3 @@ class ExitPage_TWO(Page):
 
 page_sequence = [Introduction, Demographics, Neighborhood, NeighborhoodInstruction, TrainingNeighbor_1, TrainingNeighbor_2,
                  AttentionCheck, TrainingNeighbor_3, Scenario, FinalPage]
-
-# page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Training, Scenario, FailedAttentionCheck]
-# page_sequence = [Introduction, ExitPage, Demographics, Neighborhood, Training, TrainingNeighbor, Scenario, FinalRound, FailedAttentionCheck]
-# Don't forget to add ExitPage_TWO at the end if you want to redirect participants after the final round.
