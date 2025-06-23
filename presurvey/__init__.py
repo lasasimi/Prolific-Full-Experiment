@@ -46,6 +46,7 @@ def creating_session(subsession):
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
         player.participant.vars['training_success'] = False # Initialize training success
         player.participant.vars['all_responses'] = {} # Initialize empty dictionary for all responses, will be appended on each round
+        # player.participant.vars['active'] = True 
         
         
 class Group(BaseGroup):
@@ -414,5 +415,10 @@ class ExitPage_TWO(Page):
     def is_displayed(player: Player):
         return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
-page_sequence = [Introduction, Demographics, Neighborhood, NeighborhoodInstruction, TrainingNeighbor_1, TrainingNeighbor_2,
-                 AttentionCheck, TrainingNeighbor_3, Scenario, FinalPage]
+page_sequence = [Introduction, Demographics, Neighborhood, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, Scenario, FinalPage]
+# add the Training 
+# combine NeighborhoodInstruction + Training and add another instruction before Scenario 
+# TrainingNeighbor_1 doens't change active var 
+# TrainingNeighbor_2
+# TrainingNeighbor_1, TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3: 
