@@ -41,7 +41,7 @@ def creating_session(subsession):
     for player in subsession.get_players():
         # Shuffle the scenario order for each player
         chosen_scenarios = C.SCENARIOS[:4]  # Select the first 4 scenarios for testing
-        player.participant.vars['scenario_order'] = chosen_scenarios  # Store the shuffled order as a participant variable
+        player.participant.vars['scenario_order'] = chosen_scenarios  # Store the chosen scenarios
         player.participant.vars['training_attempt'] = 3 # Initialize training attempt
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
         player.participant.vars['training_success'] = False # Initialize training success

@@ -8,9 +8,9 @@ SESSION_CONFIGS = [
         # app_sequence=['presurvey'],
         num_demo_participants=20,
         display_name="Combined app",
-        completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T',
-        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750',
-        # bonuspayment='https://app.prolific.com/submissions/complete?cc=C1M5K3TH'
+        completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # pay with bonus
+        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
+        nobonuslink='https://app.prolific.com/submissions/complete?cc=C15KPYKO' # pay but no bonus
     ),
 
 ]
@@ -26,7 +26,7 @@ SESSION_CONFIG_DEFAULTS = dict(
 
 PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'treatment', 
                       'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
-                      'active', 'single_group']
+                      'active', 'single_group', 'reason']
 SESSION_FIELDS = ['combined_responses']
 
 # ISO-639 code

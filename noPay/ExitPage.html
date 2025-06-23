@@ -4,16 +4,20 @@
     <div class="card bg-mid m-0">
     <h4 class="card-header">Exit page</h4>
     <div class="card-body">
-    You did not consent to participate in the study. Thank you for your time.
+        {{ player.participant.reason }}
+    
 
     </div>
 </div>
-
+<!--- JS script to show the reason for 5 seconds and then redirecting to the corresponding Prolific link-->
     <script>
-        let didnotconsent = js_vars.didnotconsent;
+        let nopay = js_vars.nopay;
 
         window.onload = function(){
-            window.location.href=didnotconsent;
+            // Wait for 5 seconds (5000 ms) before redirecting
+            setTimeout(function() {
+                window.location.href = nopay;
+            }, 5000);
         }
     </script>
 
