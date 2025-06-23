@@ -45,7 +45,6 @@ def group_by_arrival_time_method(subsession, waiting_players):
     # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
     first_key = list(response.keys())[0] # fails if room is empty 
     scenarios = [key for key in response[first_key]]
-    
         
     scenario_counts = {}
     for i_sce, sce in enumerate(scenarios):
@@ -56,7 +55,6 @@ def group_by_arrival_time_method(subsession, waiting_players):
     for p in waiting_players:
         # print(p.id_in_group)
         for i_sce, sce in enumerate(scenarios):
-            """ 
             if response[p.participant.code][sce] == -1:
                 scenario_counts[sce]['A'].append(p)
             else:
@@ -68,8 +66,8 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 else:
                     scenario_counts[sce]['F'].append(p)
             except:
-                print("Entering exception")
                 pass
+            """ 
             
             print(sce,"Faction A:", len(scenario_counts[sce]['A']), "Faction F:", len(scenario_counts[sce]['F']))
 
@@ -82,7 +80,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 break
     
     ##### BLOCK 0 #####
-    if len(waiting_players) > 5: ##### TEST ONLY!! CHANGE LATER to 20/6 #####
+    if len(waiting_players) > 3: ##### TEST ONLY!! CHANGE LATER to 20/6 #####
         print('Ready to check discussion group')
         temp_scenarios = scenarios.copy()
         temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
@@ -91,12 +89,13 @@ def group_by_arrival_time_method(subsession, waiting_players):
         
         ##### BLOCK 1 #####
         for i_sce, sce in enumerate(temp_scenarios):
-            if len(scenario_counts[sce]['A']) == 3 and len(scenario_counts[sce]['F']) == 3: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
+            if len(scenario_counts[sce]['A']) == 2 and len(scenario_counts[sce]['F']) == 2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
                 print('Ready to create a 50/50 group N=6')
                 print(sce,scenario_counts[sce]['A']+scenario_counts[sce]['F'])
                 return(scenario_counts[sce]['A']+scenario_counts[sce]['F'])
                 break
 
+            """ 
             ##### BLOCK 2 #####
             elif len(medium_waiting) > 3:
                 ##### TEST ONLY!! 80/20 OPTION CHANGE TO N = 10/4 ##### 
@@ -107,6 +106,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
                     break
             else: # essentially does nothing — it just complete the if-elif-else structure, could ignore 
                 pass
+            """ 
 
     else: 
         print('not enough players yet to create a group')
@@ -135,17 +135,28 @@ class GroupSizeWaitPage(WaitPage):
     def after_all_players_arrive(group: Group):
         session = group.subsession.session
         group_players = group.get_players()
-
-        if len(group_players) == 1: 
-            group.is_group_single = True
-        else:
+        
+        if len(group_players) == 6: #### 20
+            group.group_size='N20'
             group.is_group_single = False
+        elif len(group_players) == 4: #### 10
+            group.group_size='N10'
+            group.is_group_single = False
+        else:
+            group.group_size='single'
+            group.is_group_single = True
+
+        if group.group_size == 'single':
+            for p in group_players:
+                p.participant.single_group = True
+                # they go to the pay up, but no bonus payment 
         
         print(group.id_in_subsession, group.is_group_single)
 
     @staticmethod
     def is_displayed(player):
         return player.participant.active
+
 
 class MyPage(Page):
 
@@ -160,7 +171,7 @@ class MyPage(Page):
     
     @staticmethod
     def is_displayed(player: Player):
-        return player.participant.gives_consent and player.participant.active == True
+        return player.participant.gives_consent and player.participant.active 
           
 
 class ResultsWaitPage(WaitPage):
