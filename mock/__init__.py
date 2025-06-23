@@ -56,11 +56,12 @@ def group_by_arrival_time_method(subsession, waiting_players):
     for p in waiting_players:
         # print(p.id_in_group)
         for i_sce, sce in enumerate(scenarios):
+            """ 
             if response[p.participant.code][sce] == -1:
                 scenario_counts[sce]['A'].append(p)
             else:
                 scenario_counts[sce]['F'].append(p)
-            """ 
+            """
             try:
                 if response[p.participant.code][sce] == -1:
                     scenario_counts[sce]['A'].append(p)
@@ -69,7 +70,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
             except:
                 print("Entering exception")
                 pass
-            """
+            
             print(sce,"Faction A:", len(scenario_counts[sce]['A']), "Faction F:", len(scenario_counts[sce]['F']))
 
     # players waiting for more than 10 mins 
