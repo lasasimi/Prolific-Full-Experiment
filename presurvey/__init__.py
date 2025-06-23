@@ -25,7 +25,7 @@ class C(BaseConstants):
     NAME_IN_URL = 'presurvey'
     PLAYERS_PER_GROUP = None
     # all scenarios: not used for the Prolific, but only used for the Collective Minds' app
-    CSV = open_CSV('presurvey/20250512_scenarios-new.csv')
+    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
     SCENARIOS = CSV.to_dict(orient='records')
     #NUM_ROUNDS = len(CSV['code']) # number of scenarios
     # for testing: 
@@ -40,13 +40,13 @@ class Subsession(BaseSubsession):
 def creating_session(subsession):
     for player in subsession.get_players():
         # Shuffle the scenario order for each player
-        shuffled_scenarios = random.sample(C.SCENARIOS, len(C.SCENARIOS))
-        player.participant.vars['scenario_order'] = shuffled_scenarios  # Store the shuffled order as a participant variable
+        chosen_scenarios = C.SCENARIOS[:4]  # Select the first 4 scenarios for testing
+        player.participant.vars['scenario_order'] = chosen_scenarios  # Store the shuffled order as a participant variable
         player.participant.vars['training_attempt'] = 3 # Initialize training attempt
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
         player.participant.vars['training_success'] = False # Initialize training success
         player.participant.vars['all_responses'] = {} # Initialize empty dictionary for all responses, will be appended on each round
-        # player.participant.vars['active'] = True 
+        player.participant.vars['active'] = True # Initialize active status, will be set to False if Training_3 fails or timeout_happened
         
         
 class Group(BaseGroup):
@@ -169,6 +169,7 @@ class Introduction(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         player.participant.gives_consent = player.gives_consent
+        player.participant.active = player.participant.gives_consent # Assigning active status based on consent
  
    
 class Demographics(Page):
@@ -177,7 +178,7 @@ class Demographics(Page):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.gives_consent
+        return player.round_number == 1 and player.participant.active
     
 
 class Neighborhood(Page):
@@ -185,7 +186,7 @@ class Neighborhood(Page):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.gives_consent 
+        return player.round_number == 1 and player.participant.active
 
 
 class NeighborhoodInstruction(Page):
@@ -193,7 +194,7 @@ class NeighborhoodInstruction(Page):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.gives_consent 
+        return player.round_number == 1 and player.participant.active 
     
 
 class Training(Page):
@@ -202,7 +203,7 @@ class Training(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.gives_consent 
+        return player.round_number == 1 and player.participant.active 
 
 
 class TrainingNeighbor_1(Page):
@@ -229,12 +230,11 @@ class TrainingNeighbor_1(Page):
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
-            player.participant.active = "active"
         #print(f"Before next Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.gives_consent 
+        return player.round_number == 1 and player.participant.active 
         # return player.participant.training_attempt == 3 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
 
 
@@ -262,39 +262,38 @@ class TrainingNeighbor_2(Page):
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
-            player.participant.active = "active"
         #print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
     @staticmethod
     def is_displayed(player):
         #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
-        if player.round_number == 1 and player.participant.gives_consent:
+        if player.round_number == 1 and player.participant.active:
             return player.participant.training_attempt == 2 and not player.participant.training_success
 
 
 class AttentionCheck(Page):
     form_model = 'player'
     form_fields = ['attention_check']
-    
+    timeout_seconds = 60 # Set a timeout for the attention check
     @staticmethod
     def before_next_page(player, timeout_happened):
         if timeout_happened:
             player.participant.vars['failed_attention_check'] = True 
-            player.participant.active = "inactive"
+            player.participant.active = False
         else:
             if player.attention_check != 2: # wrong answer
                player.participant.vars['failed_attention_check'] = True 
-               player.participant.active = "inactive"
+               player.participant.active = False
                #print("Attention check not passed")
             else:
                 player.participant.vars['failed_attention_check'] = False 
                 #print("Attention check passed")
-                player.participant.active = "active"
+                player.participant.active = True
 
     @staticmethod
     def is_displayed(player:Player):
         #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
-        if player.round_number == 1 and player.participant.gives_consent:
+        if player.round_number == 1 and player.participant.active:
             return player.participant.training_attempt == 1 and not player.participant.training_success
         #player.participant.training_attempt == 1 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
     
@@ -321,19 +320,32 @@ class TrainingNeighbor_3(Page):
                                 player.howmanyneighbors])
         if total_correct != 3:
             player.participant.vars['training_attempt'] -= 1
-            player.participant.active = "inactive"
+            player.participant.active = False
         else:
             player.participant.vars['training_success'] = True
-            player.participant.active = "active"
+            player.participant.active = True
         #print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
     @staticmethod
     def is_displayed(player):
         #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']} and Training Success: {player.participant.training_success} and Failed Attention Check: {player.participant.failed_attention_check}")
-        if player.round_number == 1 and player.participant.gives_consent and player.participant.active == "active":
+        if player.round_number == 1 and player.participant.active:
             return player.participant.training_attempt == 1 
 
+class ExperimentInstruction(Page):
+    form_model = 'player'
 
+    @staticmethod
+    def is_displayed(player:Player):
+        return player.participant.active and player.round_number == 1
+
+class Neighborhood_1(Page):
+    form_model = 'player'
+
+    @staticmethod
+    def is_displayed(player:Player):
+        return player.participant.active and player.round_number == 1
+    
 class Scenario(Page):
     form_model = 'player'
     form_fields = ['attitude_certainty', 'likelihood', 'political_charge', 'emotional_charge', 
@@ -368,7 +380,7 @@ class Scenario(Page):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.gives_consent and player.participant.training_success and not player.participant.failed_attention_check and player.round_number <= C.NUM_ROUNDS 
+        return player.participant.gives_consent and player.participant.active and player.round_number <= C.NUM_ROUNDS 
 
 
 class FinalPage(Page):
@@ -376,7 +388,7 @@ class FinalPage(Page):
     timeout_seconds = 5
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS and player.participant.gives_consent and player.participant.training_success and not player.participant.failed_attention_check
+        return player.round_number == C.NUM_ROUNDS and player.participant.active
     
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -415,8 +427,9 @@ class ExitPage_TWO(Page):
     def is_displayed(player: Player):
         return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
-page_sequence = [Introduction, Demographics, Neighborhood, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, Scenario, FinalPage]
+page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
+                 Scenario, FinalPage]
 # add the Training 
 # combine NeighborhoodInstruction + Training and add another instruction before Scenario 
 # TrainingNeighbor_1 doens't change active var 

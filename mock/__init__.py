@@ -124,6 +124,10 @@ class Player(BasePlayer):
 # PAGES
 class GroupingWaitPage(WaitPage):
     group_by_arrival_time = True
+    
+    @staticmethod
+    def is_displayed(player):
+        return player.participant.active
 
 
 class GroupSizeWaitPage(WaitPage):
@@ -139,7 +143,9 @@ class GroupSizeWaitPage(WaitPage):
         
         print(group.id_in_subsession, group.is_group_single)
 
-
+    @staticmethod
+    def is_displayed(player):
+        return player.participant.active
 
 class MyPage(Page):
 
@@ -154,7 +160,7 @@ class MyPage(Page):
     
     @staticmethod
     def is_displayed(player: Player):
-        return player.participant.gives_consent and player.participant.active == "active"
+        return player.participant.gives_consent and player.participant.active == True
           
 
 class ResultsWaitPage(WaitPage):

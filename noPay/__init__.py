@@ -37,7 +37,7 @@ class ExitPage(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return not player.participant.gives_consent or player.participant.active == "inactive"
+        return not player.participant.gives_consent or player.participant.active == False
 
 
 page_sequence = [ExitPage]

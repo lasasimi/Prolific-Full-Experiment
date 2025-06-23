@@ -1,13 +1,20 @@
-
+{{ block title }}
+    Introduction
+{{ endblock }}
 {{ block content }}
 
 <div class="card bg-mid m-0">
-    <h4 class="card-header">Instruction</h4>
-    <div class="card-body"> 
-    <p>Before we begin, we will give you a short training session to familiarize you with the task. </p>
-    The next screen will show you an example of a dilemma and you 
-    can see how your neighbors responded to it. You will be given a chance to respond to the dilemma and then answer some questions about it to test 
-    your comprehension. <strong>You have two attempts to answer the questions correctly before proceeding to the main task.</strong> 
+    <h4 class="card-header">Neighborhood dilemma</h4>
+    <div class="card-body">
+        <img src="/static/village-image.jpg" class="img-fluid" alt="Neighborhood Image" style="float:left; margin-right: 20px; max-width: 100%; height: 320px; display: block;"> 
+        Imagine that you live in a village of around 50 houses owned by neighbors of different ages, occupations, and incomes. 
+        The village has many shared facilities, such as the children's playground, the community garden, garbage collection area, community halls, and so on. 
+        All neighbors meet as a community once every six months to discuss issues regarding maintenance and neighborhood problems.
+    <br>
+    <br>
+    We will now show you a series of dilemmas experienced by your village. After each dilemma, we will ask you a few questions about each of them. 
+    First, as you are a part of the village, we will ask what you think the community should do. You will be given several options to choose from. 
+    Then, we will ask you other questions about some further aspects of the dilemmas.  
     </div>
 </div>
 
@@ -24,9 +31,9 @@
     }
 
     /* Media query for narrow devices */
-    @media (max-width: 600px) {
+    @media (max-width: 400px) {
         .responsive-image {
-            max-width: 90%; /* Slightly smaller width for narrow screens */
+            max-width: 80%; /* Slightly smaller width for narrow screens */
             height: auto; /* Maintain aspect ratio */
         }
     }
