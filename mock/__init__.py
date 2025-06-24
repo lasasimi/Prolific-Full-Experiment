@@ -47,6 +47,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
     """
     REMEMBER TO INCLUDE A SELF LOAD EVERY 30 SECS OR SO, IF NO MORE PARTICIPANTS ENTER, CODE WONT EXECUTE 
     """
+    N = 10
     session = subsession.session
     response = {}
     for p in waiting_players:
@@ -83,7 +84,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
             break
     
     ##### BLOCK 0 #####
-    if len(waiting_players) > 3: ##### TEST ONLY!! CHANGE LATER to 20/6 #####
+    if len(waiting_players) >= N: ##### TEST ONLY!! CHANGE LATER to 10/4 #####
         print('Ready to check discussion group')
         temp_scenarios = scenarios.copy()
         temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
@@ -93,7 +94,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
         ##### BLOCK 1 #####
         for i_sce, sce in enumerate(temp_scenarios):
             print(len(scenario_counts[sce]['A']),len(scenario_counts[sce]['F']))
-            if len(scenario_counts[sce]['A']) == 2 and len(scenario_counts[sce]['F']) == 2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
+            if len(scenario_counts[sce]['A']) == N/2 and len(scenario_counts[sce]['F']) == N/2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
                 group = scenario_counts[sce]['A']+scenario_counts[sce]['F']
                 for p in group:
                     p.participant.scenario = sce  # setting a scenarioi group-level variable
@@ -184,10 +185,8 @@ class DiscussionGRPWaitPage(WaitPage):
             faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
             faction_F = random.sample(faction_F,len(faction_F))
 
-            player_ids = {code: i + 1 for i, code in enumerate(faction_A + faction_F)}
-
             player_ids = {code: i + 1 for i, code in enumerate(faction_A)}
-            player_ids = {code: i + 6 for i, code in enumerate(faction_F)}
+            player_ids.update({code: i + 6 for i, code in enumerate(faction_F)})  # Add F starting at 6
 
             for p in group.get_players():
                 p.participant.player_ids = player_ids
