@@ -184,7 +184,7 @@ class DiscussionGRPWaitPage(WaitPage):
             faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
             faction_F = random.sample(faction_F,len(faction_F))
 
-            #player_ids = {code: i + 1 for i, code in enumerate(faction_A + faction_F)}
+            player_ids = {code: i + 1 for i, code in enumerate(faction_A + faction_F)}
 
             player_ids = {code: i + 1 for i, code in enumerate(faction_A)}
             player_ids = {code: i + 6 for i, code in enumerate(faction_F)}
