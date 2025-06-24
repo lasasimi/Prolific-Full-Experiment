@@ -23,15 +23,15 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 5
     MEDIUM_WAIT = 20  # 5 mins 
-    LONG_WAIT = 5  # 10 mins 
+    LONG_WAIT = 20  # 10 mins 
     CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
     SCENARIOS = CSV.to_dict(orient='records')
-    GROUPS = open_CSV('mock/beta_02_p_00_N_10.csv')
+    GROUPS = open_CSV('mock/beta_02_p_02_N_10.csv')
+    N_TEST = 4
 
 
 class Subsession(BaseSubsession):
     pass
-
 
 def medium_wait(player):
     participant = player.participant
@@ -47,7 +47,6 @@ def group_by_arrival_time_method(subsession, waiting_players):
     """
     REMEMBER TO INCLUDE A SELF LOAD EVERY 30 SECS OR SO, IF NO MORE PARTICIPANTS ENTER, CODE WONT EXECUTE 
     """
-    N = 10
     session = subsession.session
     response = {}
     for p in waiting_players:
@@ -84,7 +83,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
             break
     
     ##### BLOCK 0 #####
-    if len(waiting_players) >= N: ##### TEST ONLY!! CHANGE LATER to 10/4 #####
+    if len(waiting_players) >= C.N_TEST: ##### TEST ONLY!! CHANGE LATER to 10/4 #####
         print('Ready to check discussion group')
         temp_scenarios = scenarios.copy()
         temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
@@ -94,7 +93,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
         ##### BLOCK 1 #####
         for i_sce, sce in enumerate(temp_scenarios):
             print(len(scenario_counts[sce]['A']),len(scenario_counts[sce]['F']))
-            if len(scenario_counts[sce]['A']) == N/2 and len(scenario_counts[sce]['F']) == N/2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
+            if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
                 group = scenario_counts[sce]['A']+scenario_counts[sce]['F']
                 for p in group:
                     p.participant.scenario = sce  # setting a scenarioi group-level variable
@@ -145,10 +144,10 @@ class GroupSizeWaitPage(WaitPage):
         session = group.subsession.session
         group_players = group.get_players()
         
-        if len(group_players) == 6:
+        if len(group_players) == 20:
             group_size = 'N20'
             is_group_single = False
-        elif len(group_players) == 4:
+        elif len(group_players) == C.N_TEST:
             group_size = 'N10'
             is_group_single = False
         else:
@@ -196,6 +195,9 @@ class DiscussionGRPWaitPage(WaitPage):
                 row = C.GROUPS[C.GROUPS['Player_IDs'] == player_id]
                 group_name = f'group_{p.round_number}'
                 p.discussion_grp = int(row.iloc[0][group_name])  
+                if p.round_number == 1:
+                    if int(row.iloc[0]['Anticonformists']) == 1:
+                        p.participant.anticonformist = True
     
     @staticmethod
     def is_displayed(player):

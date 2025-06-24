@@ -48,6 +48,7 @@ def creating_session(subsession):
         player.participant.vars['all_responses'] = {} # Initialize empty dictionary for all responses, will be appended on each round
         player.participant.vars['active'] = True # Initialize active status, will be set to False if Training_3 fails or timeout_happened
         player.participant.vars['single_group'] = False
+        player.participant.vars['anticonformist'] = False
         
 class Group(BaseGroup):
     pass
