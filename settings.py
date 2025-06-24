@@ -26,7 +26,7 @@ SESSION_CONFIG_DEFAULTS = dict(
 PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'treatment', 
                       'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
-                      'scenario','anticonformist']
+                      'scenario','anticonformist','position']
 SESSION_FIELDS = ['combined_responses']
 
 # ISO-639 code

@@ -32,7 +32,6 @@ class C(BaseConstants):
     NUM_ROUNDS = 4
 
 
-
 class Subsession(BaseSubsession):
     pass
 
