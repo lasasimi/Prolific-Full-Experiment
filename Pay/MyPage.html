@@ -3,12 +3,16 @@
            
 {{ endblock }}
 {{ block content }}
-    {{ player.participant.reason }}
 
-{{ endblock }}
+    <div class="card bg-mid m-0">
+    <h4 class="card-header">Exit page</h4>
+    <div class="card-body">
+        {{ player.participant.reason }}
 
-<!--- JS script to show the reason for 5 seconds and then redirecting to the corresponding Prolific link-->
-<script>
+    </div>
+    </div>
+    <!--- JS script to show the reason for 5 seconds and then redirecting to the corresponding Prolific link-->
+    <script>
     let completionlink = js_vars.completionlink;
 
     window.onload = function(){
@@ -18,4 +22,6 @@
         }, 5000);
     }
 </script>
+
+{{ endblock }}
 

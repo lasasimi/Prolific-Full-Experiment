@@ -3,11 +3,19 @@ import numpy as np # type: ignore
 import json
 import time
 import random
+import pandas as pd
 
 
 doc = """
 Your app description
 """
+def open_CSV(filename):
+    """
+    :param filename: opinions.csv
+    :return: a list of statements for the session
+    """
+    temp = pd.read_csv(filename, sep=',')
+    return temp
 
 
 class C(BaseConstants):
@@ -15,7 +23,10 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
     MEDIUM_WAIT = 20  # 5 mins 
-    LONG_WAIT = 15  # 10 mins 
+    LONG_WAIT = 5  # 10 mins 
+    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
+    SCENARIOS = CSV.to_dict(orient='records')
+    GROUPS = open_CSV('mock/beta_02_p_00_N_10.csv')
 
 
 class Subsession(BaseSubsession):
@@ -37,7 +48,6 @@ def group_by_arrival_time_method(subsession, waiting_players):
     REMEMBER TO INCLUDE A SELF LOAD EVERY 30 SECS OR SO, IF NO MORE PARTICIPANTS ENTER, CODE WONT EXECUTE 
     """
     session = subsession.session
-
     response = {}
     for p in waiting_players:
         response[p.participant.code] = p.participant.all_responses
@@ -62,25 +72,15 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 scenario_counts[sce]['A'].append(p)
             else:
                 scenario_counts[sce]['F'].append(p)
-            """
-            try:
-                if response[p.participant.code][sce] == -1:
-                    scenario_counts[sce]['A'].append(p)
-                else:
-                    scenario_counts[sce]['F'].append(p)
-            except:
-                pass
-            """ 
-            
-            print(sce,"Faction A:", len(scenario_counts[sce]['A']), "Faction F:", len(scenario_counts[sce]['F']))
+            # print(sce,"Faction A:", len(scenario_counts[sce]['A']), "Faction F:", len(scenario_counts[sce]['F']))
 
     # players waiting for more than 10 mins 
     long_waiting = [p for p in waiting_players if long_wait(p)]
-    if len(long_waiting) > 1:
-            for player in long_waiting:
-                print('Ready to let participant go, waiting for too long')
-                return [player]
-                break
+    if len(long_waiting) >= 1:
+        for player in long_waiting:
+            print('Ready to let participant go, waiting for too long')
+            return [player]
+            break
     
     ##### BLOCK 0 #####
     if len(waiting_players) > 3: ##### TEST ONLY!! CHANGE LATER to 20/6 #####
@@ -88,14 +88,18 @@ def group_by_arrival_time_method(subsession, waiting_players):
         temp_scenarios = scenarios.copy()
         temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
         # players waiting for more than 5 mins are considered of medium wait
-        medium_waiting = [p for p in waiting_players if medium_wait(p)]
+        # medium_waiting = [p for p in waiting_players if medium_wait(p)]
         
         ##### BLOCK 1 #####
         for i_sce, sce in enumerate(temp_scenarios):
+            print(len(scenario_counts[sce]['A']),len(scenario_counts[sce]['F']))
             if len(scenario_counts[sce]['A']) == 2 and len(scenario_counts[sce]['F']) == 2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
-                print('Ready to create a 50/50 group N=6')
-                print(sce,scenario_counts[sce]['A']+scenario_counts[sce]['F'])
-                return(scenario_counts[sce]['A']+scenario_counts[sce]['F'])
+                group = scenario_counts[sce]['A']+scenario_counts[sce]['F']
+                for p in group:
+                    p.scenario = sce  # setting a scenarioi group-level variable
+                print('Ready to create a 50/50 group N=4')
+                # print(sce,scenario_counts[sce]['A']+scenario_counts[sce]['F'])
+                return group
                 break
 
             """ 
@@ -116,12 +120,12 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
 
 class Group(BaseGroup):
-    group_size = models.StringField()
+    group_size = models.StringField(initial='single')
     is_group_single = models.BooleanField()
-
+    
 
 class Player(BasePlayer):
-    pass
+    scenario = models.StringField()
 
 
 # PAGES
@@ -155,26 +159,41 @@ class GroupSizeWaitPage(WaitPage):
                 # they go to the pay up, but no bonus payment 
         
         print(group.id_in_subsession, group.is_group_single)
+        print('Player_IDs',C.GROUPS['Player_IDs'])
+        print('Faction_A',C.GROUPS['Faction_A'])
+        print('Anticonformists',C.GROUPS['Anticonformists'])
 
     @staticmethod
     def is_displayed(player):
         return player.participant.active
 
 
-class MyPage(Page):
-
+class Discussion(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        # Access the variables from the previous app
-        combined_responses = player.session.vars['combined_responses']
-        print(player.participant.wait_page_arrival)
-        return dict(
-            combined_responses=combined_responses
-        )
-    
+        group = player.group
+        subsession = group.subsession
+        if group.group_size == 'N10':
+            faction_A = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.scenario]==-1]
+            faction_A = random.sample(faction_A,len(faction_A))
+            faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.scenario]==1]
+            faction_F = random.sample(faction_F,len(faction_F))
+            
+            player_ids = {}
+            for i_f, f in enumerate(faction_A+faction_F):
+                player_ids[f] = i_f+1
+            
+            for p in group.get_players():
+                p.participant.player_ids = player_ids
+                if p.id_in_group==1:
+                    print(p.participant.player_ids)
+                    print('GROUP:',group.id_in_subsession,len(faction_A),len(faction_F))
+        return {}
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.participant.gives_consent and player.participant.active 
+        return player.participant.gives_consent and player.participant.active
+
           
 
 class ResultsWaitPage(WaitPage):
@@ -185,4 +204,4 @@ class Results(Page):
     pass
 
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, Discussion]

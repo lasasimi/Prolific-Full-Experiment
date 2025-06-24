@@ -3,8 +3,8 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
-        # app_sequence=['presurvey'],  ### --- TESTS FOR LASMI --- ###
+        #app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
+        app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         # app_sequence=['presurvey'],
         num_demo_participants=20,
         display_name="Combined app",
@@ -25,7 +25,7 @@ SESSION_CONFIG_DEFAULTS = dict(
 
 PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'treatment', 
                       'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
-                      'active', 'single_group', 'reason']
+                      'active', 'single_group', 'reason','player_ids']
 SESSION_FIELDS = ['combined_responses']
 
 # ISO-639 code
