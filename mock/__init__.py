@@ -21,7 +21,7 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 5
     MEDIUM_WAIT = 20  # 5 mins 
     LONG_WAIT = 5  # 10 mins 
     CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
@@ -96,7 +96,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
             if len(scenario_counts[sce]['A']) == 2 and len(scenario_counts[sce]['F']) == 2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
                 group = scenario_counts[sce]['A']+scenario_counts[sce]['F']
                 for p in group:
-                    p.scenario = sce  # setting a scenarioi group-level variable
+                    p.participant.scenario = sce  # setting a scenarioi group-level variable
                 print('Ready to create a 50/50 group N=4')
                 # print(sce,scenario_counts[sce]['A']+scenario_counts[sce]['F'])
                 return group
@@ -126,6 +126,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     scenario = models.StringField()
+    discussion_grp = models.IntegerField()
 
 
 # PAGES
@@ -134,7 +135,7 @@ class GroupingWaitPage(WaitPage):
     
     @staticmethod
     def is_displayed(player):
-        return player.participant.active
+        return player.round_number == 1 and player.participant.active 
 
 
 class GroupSizeWaitPage(WaitPage):
@@ -143,58 +144,80 @@ class GroupSizeWaitPage(WaitPage):
         session = group.subsession.session
         group_players = group.get_players()
         
-        if len(group_players) == 6: #### 20
-            group.group_size='N20'
-            group.is_group_single = False
-        elif len(group_players) == 4: #### 10
-            group.group_size='N10'
-            group.is_group_single = False
+        if len(group_players) == 6:
+            group_size = 'N20'
+            is_group_single = False
+        elif len(group_players) == 4:
+            group_size = 'N10'
+            is_group_single = False
         else:
-            group.group_size='single'
-            group.is_group_single = True
+            group_size = 'single'
+            is_group_single = True     
 
-        if group.group_size == 'single':
-            for p in group_players:
-                p.participant.single_group = True
-                # they go to the pay up, but no bonus payment 
-        
-        print(group.id_in_subsession, group.is_group_single)
-        print('Player_IDs',C.GROUPS['Player_IDs'])
-        print('Faction_A',C.GROUPS['Faction_A'])
-        print('Anticonformists',C.GROUPS['Anticonformists'])
+        # Save to the group model (for round 1 only)
+        group.group_size = group_size
+        group.is_group_single = is_group_single 
+
+        # Save persistently to participant
+        for p in group_players:
+            p.participant.group_size = group_size
+            p.participant.is_group_single = is_group_single
+            if group_size == 'single':
+                p.participant.single_group = True  # they go to the pay up, but no bonus payment 
 
     @staticmethod
     def is_displayed(player):
-        return player.participant.active
+        return player.round_number == 1 and player.participant.active 
 
+
+class DiscussionGRPWaitPage(WaitPage):
+    @staticmethod
+    def after_all_players_arrive(group: Group):
+        # Copy group_size from participant (set in round 1)
+        example_player = group.get_players()[0]
+        group.group_size = example_player.participant.group_size
+        group.is_group_single = example_player.participant.is_group_single
+
+        if group.group_size == 'N10':
+            faction_A = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==-1]
+            faction_A = random.sample(faction_A,len(faction_A))
+            faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
+            faction_F = random.sample(faction_F,len(faction_F))
+
+            #player_ids = {code: i + 1 for i, code in enumerate(faction_A + faction_F)}
+
+            player_ids = {code: i + 1 for i, code in enumerate(faction_A)}
+            player_ids = {code: i + 6 for i, code in enumerate(faction_F)}
+
+            for p in group.get_players():
+                p.participant.player_ids = player_ids
+            
+            for p in group.get_players():
+                player_id = p.participant.player_ids[p.participant.code]
+                row = C.GROUPS[C.GROUPS['Player_IDs'] == player_id]
+                group_name = f'group_{p.round_number}'
+                p.discussion_grp = int(row.iloc[0][group_name])  
+    
+    @staticmethod
+    def is_displayed(player):
+        return player.participant.active and not player.participant.single_group
+            
 
 class Discussion(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        group = player.group
-        subsession = group.subsession
-        if group.group_size == 'N10':
-            faction_A = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.scenario]==-1]
-            faction_A = random.sample(faction_A,len(faction_A))
-            faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.scenario]==1]
-            faction_F = random.sample(faction_F,len(faction_F))
-            
-            player_ids = {}
-            for i_f, f in enumerate(faction_A+faction_F):
-                player_ids[f] = i_f+1
-            
-            for p in group.get_players():
-                p.participant.player_ids = player_ids
-                if p.id_in_group==1:
-                    print(p.participant.player_ids)
-                    print('GROUP:',group.id_in_subsession,len(faction_A),len(faction_F))
-        return {}
+        # Get discussion partners for THIS player
+        discussion_partners = [
+            o for o in player.get_others_in_group() if o.discussion_grp == player.discussion_grp
+        ]
+        print("Player:",player.id_in_group, discussion_partners)
+
+        return {'discussion_partners' : discussion_partners}
 
     @staticmethod
-    def is_displayed(player: Player):
-        return player.participant.gives_consent and player.participant.active
+    def is_displayed(player):
+        return player.participant.active and not player.participant.single_group
 
-          
 
 class ResultsWaitPage(WaitPage):
     pass
@@ -204,4 +227,4 @@ class Results(Page):
     pass
 
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, Discussion]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Discussion]
