@@ -1,0 +1,74 @@
+{{ block title }}
+Before seeing other neighbors' answers 
+{{ endblock }}
+
+{{ block content }}
+
+<p id="wait">We give you some time to read this tip while we load your neighbors' answers...</p>  
+{{ if anticonformist }}
+<div id="info-banner" style="background-color: #D9DDDC; color: black;" class="fixed bottom-0 left-0 right-0 p-4 flex justify-center items-center z-50">
+    <h5>Tip: A Call for Independent Thinking</h5>
+    <p class="text-lg font-semibold">
+        Some people might not be comfortable speaking about their true opinion. 
+        In order to arrive at the best decision possible, it's necessary for someone 
+        to choose an opinion that is different from others to empower the minority 
+        opinion to speak up. We have chosen you to do this task. Try not to conform and choose something that is different from the others. </p>
+
+    <ul>
+        <li>Sometimes the majority gets it wrong — trust your judgment.</li>
+        <li>You don’t have to agree just because others do. Think for yourself.</li>
+        <li>Being in the minority doesn’t mean you're wrong — it often means you're ahead.</li> 
+    </ul>
+
+</div>
+    
+
+{{  else }}
+<div id="info-banner" style="background-color: #D9DDDC; color: black;" class="fixed bottom-0 left-0 right-0 p-4 flex justify-center items-center z-50">
+    <h5>Tip: Reflections from Your Peers</h5>
+    <p class="text-lg font-semibold">
+        In a situation where it's not obvious which solution is the best, people often 
+        look at others to help decide. Therefore, we will show you what others have chosen 
+        in this scenario. You can look at their answers and see which one is the majority 
+        to help guide your decision. </p>
+    <ul>
+        <li>Many others have already considered this carefully — you might find their reasoning helpful.</li>
+        <li>This perspective has resonated with a lot of people in similar situations.</li>
+        <li>Others have found this option to reflect shared values and priorities.</li> 
+    </ul>
+</div>
+{{ endif }}
+
+<br>
+<p id="done" style="display: none">Press Next to continue. You will be seeing your neighbors' answers on the next page</p>
+
+<button id="next-button"
+        class="otree-btn-next btn btn-primary"
+        style="display: none;">
+Next
+</button>
+
+
+<script>
+    setTimeout(function() {
+        document.getElementById("done").style.display = "block"; // Show next text
+        // document.getElementById("wait").style.visibility = "hidden"; // Hide waiting text
+        document.getElementById("next-button").style.display = "block";  // Show Next button
+    }, 7000); // in miliseconds (7s)
+</script>
+
+{{ endblock }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
