@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
         #app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
-        app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
+        #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         # app_sequence=['presurvey'],
         num_demo_participants=20,
         display_name="Combined app",
