@@ -148,13 +148,6 @@ class Player(BasePlayer):
     political_charge = make_field("The situation described in the dilemma is politically controversial.")
     emotional_charge = make_field("The situation described in the dilemma is emotionally charged.")
     disagree_conform = make_field("I will change my mind if most people in my neighborhood disagreed with my position.")
-    
-
-    # # Other feedback
-    # feedback = models.LongStringField(label=
-    #                                   "Do you have any comments on this dilemma or the solutions offered? If no, click next",
-    #                                   blank=True)
-    # feedback_final = models.LongStringField(label="Please provide your feedback here:")
 
 
 # PAGES
@@ -394,44 +387,7 @@ class FinalPage(Page):
     def before_next_page(player: Player, timeout_happened):
         player.participant.wait_page_arrival = time.time()
 
-    
-class NoConsent(Page):
-    form_model = 'player'
-    form_fields = []
-    timeout_seconds = 30
-    @staticmethod
-    def is_displayed(player: Player):
-        return not player.participant.gives_consent 
-    
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        player.participant.gives_consent = True
-        if timeout_happened:
-            player.dropout = True
-            print(player.dropout)
-        else:
-            player.dropout = False
-            print(player.dropout)
-
-
-class ExitPage_TWO(Page):
-    form_model = 'player'
-
-    @staticmethod
-    def js_vars(player):
-        return dict(
-            completionlink=player.subsession.session.config['completionlink']
-        )
-
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.participant.gives_consent and player.round_number == C.NUM_ROUNDS
 
 page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
                  Scenario, FinalPage]
-# add the Training 
-# combine NeighborhoodInstruction + Training and add another instruction before Scenario 
-# TrainingNeighbor_1 doens't change active var 
-# TrainingNeighbor_2
-# TrainingNeighbor_1, TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3: 
