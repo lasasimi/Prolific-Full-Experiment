@@ -29,7 +29,6 @@ class C(BaseConstants):
     SCENARIOS = open_CSV('presurvey/dummy_4scenarios_n.csv')
     GROUPS = open_CSV('mock/beta_02_p_02_N_10.csv')
 
-
 class Subsession(BaseSubsession):
     pass
 
