@@ -230,7 +230,7 @@ class DiscussionGRPWaitPage(WaitPage):
 
 
 class Phase3(Page):
-    #timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
+    timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
     
     @staticmethod
     def is_displayed(player):
@@ -238,7 +238,7 @@ class Phase3(Page):
 
 
 class Nudge(Page):
-    #timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
+    timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
     @staticmethod
     def vars_for_template(player):        
         return dict(
