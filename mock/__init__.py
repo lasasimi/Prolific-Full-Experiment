@@ -133,6 +133,7 @@ class Player(BasePlayer):
                                             [0, 'Neutral'],
                                             [1, 'For']],
                                             widget=widgets.RadioSelectHorizontal())
+    forced_response = models.BooleanField(initial=False)
 
 
 # PAGES
@@ -276,6 +277,7 @@ class Discussion(Page):
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
             ### REVIEW THE RULE #### 
+            player.forced_response = True
             player.new_response = random.choice([-1, 0, 1])
 
     @staticmethod
