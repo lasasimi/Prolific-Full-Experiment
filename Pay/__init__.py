@@ -21,8 +21,16 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+    feedback_final = models.LongStringField(label="Please provide your feedback here:")
 
+
+class Feedback(Page):
+    form_model = 'player'
+    form_fields = ['feedback_final']
+    
+    @staticmethod
+    def is_displayed(player:Player):
+        return player.participant.active and not player.participant.single_group
 
 # PAGES
 class MyPage(Page):
@@ -33,18 +41,18 @@ class MyPage(Page):
         if player.participant.single_group == False:
             player.participant.reason="Thanks for participating! Since you completed the entire study, you will receive the bonus payment."
             return dict(
-                completionlink=player.subsession.session.config['completionlink']
+                pay=player.subsession.session.config['completionlink']
             )
         elif player.participant.single_group == True:  
             player.participant.reason="You were the only participant in your group and we could not find you other participants to join your group. Thanks for your time!"
             return dict(
-                completionlink= player.subsession.session.config['nobonuslink']
+                pay= player.subsession.session.config['waitingbonuslink']
             )
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.participant.active or not player.participant.single_group
+        return player.participant.active
 
 
 
-page_sequence = [MyPage]
+page_sequence = [Feedback, MyPage]

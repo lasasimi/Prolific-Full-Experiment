@@ -1,13 +1,20 @@
-
+{{ block title }}{{ endblock }}
 {{ block content }}
 
 <div class="card bg-mid m-0">
-    <h4 class="card-header">Instruction</h4>
-    <div class="card-body"> 
-    <p>Before we begin, we will give you a short training session to familiarize you with the task. </p>
-    The next screen will show you an example of a dilemma and you 
-    can see how your neighbors responded to it. You will be given a chance to respond to the dilemma and then answer some questions about it to test 
-    your comprehension. <strong>You have two attempts to answer the questions correctly before proceeding to the main task.</strong> 
+    <h2 class="card-header">🟦 Phase 1: Training & Comprehension</h2>
+    <div class="card-body">
+    <h5><strong>Welcome to Phase 1: Learning the Task</h5></strong>
+
+    <p>Before we begin, we will give you a short training session to familiarize you with the task.
+    The next screen will show you an example of a dilemma and you can see how your neighbors responded to it. You will be given a chance to respond to the dilemma and then answer some questions about it to test 
+    your comprehension.
+  </p>
+
+  <p class="green-box">
+    ✅ You must complete this phase to be eligible for payment and to continue in the study.
+  </p>
+
     </div>
 </div>
 
@@ -15,6 +22,13 @@
     {{ formfields }}
     <button class="next-button" type="submit">Next</button>
 <style>
+    .green-box{
+        margin-top: 20px; 
+        background-color: #d4edda; 
+        padding: 12px; 
+        border-left: 5px solid #28a745; 
+        border-radius: 4px;
+    }
     .responsive-image {
         max-width: 100%; /* Ensures the image does not exceed the container width */
         height: auto; /* Maintains the aspect ratio */

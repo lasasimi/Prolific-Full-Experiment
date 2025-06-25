@@ -1,19 +1,14 @@
-
+{{ block title }}
+{{ endblock }}
 {{ block content }}
 
 <div class="card bg-mid m-0">
-    <h4 class="card-header">Instruction</h4>
+    <h2 class="card-header">🟨 Phase 2: Survey</h2>
     <div class="card-body"> 
     <p> Congratulations, you have successfully completed the Training phase.</p> 
-    
-    We will now show you a series of dilemmas experienced by your village. After each dilemma, we will ask you a few questions about each of them. In detail, you will do the following:
-    <ol type="1">
-        <li>You will read a dilemma and choose one of the options on what the community should do. You will be given several options to choose from.</li>
-        <li>You will see the responses of your neighbors to the same dilemma.</li>
-        <li>You will have the option to choose again what you think the community should do on the same dilemma.</li>
-        <li>Finally, you will answer other questions about some further aspects of the dilemmas. </li>
-    </ol>
-    Click the "Next" button below to start the task. If you proceed to finish the task until the end, we will give you a bonus payment of $2. 
+    <h5><strong>Welcome to Phase 2: Survey </strong></h5>
+   In the next phase, you will read a series of neighborhood dilemmas encountered by your village. After each dilemma, you will be asked a set of questions. Before we begin, we will show you the neighborhood situation again to help you recall the context
+    <p class="green-box">✅ You must complete this phase, along with Phase 1, to receive the base payment.</p>
     </div>
 </div>
 
@@ -21,7 +16,13 @@
     {{ formfields }}
     <button class="next-button" type="submit">Next</button>
 <style>
-    .responsive-image {
+    .green-box{
+        margin-top: 20px; 
+        background-color: #d4edda; 
+        padding: 12px; 
+        border-left: 5px solid #28a745; 
+        border-radius: 4px;
+    }.responsive-image {
         max-width: 100%; /* Ensures the image does not exceed the container width */
         height: auto; /* Maintains the aspect ratio */
         display: block; /* Centers the image when combined with margin auto */

@@ -48,6 +48,7 @@ def creating_session(subsession):
         player.participant.vars['active'] = True # Initialize active status, will be set to False if Training_3 fails or timeout_happened
         player.participant.vars['single_group'] = False
         player.participant.vars['anticonformist'] = False
+        player.participant.vars['failed_commitment'] = False
         
 class Group(BaseGroup):
     pass
@@ -140,7 +141,7 @@ class Player(BasePlayer):
             [5, 'Strongly Agree']],
             label=label,
             widget=widgets.RadioSelect,
-            blank=True, # Remove this to make it mandatory, this is done for testing purposes
+            #blank=True, # Remove this to make it mandatory, this is done for testing purposes
         )
     
     attitude_certainty = make_field("I am certain about my position on this issue.")   
@@ -148,6 +149,23 @@ class Player(BasePlayer):
     political_charge = make_field("The situation described in the dilemma is politically controversial.")
     emotional_charge = make_field("The situation described in the dilemma is emotionally charged.")
     disagree_conform = make_field("I will change my mind if most people in my neighborhood disagreed with my position.")
+
+    # Commitment questions
+    commit_attention_Q1 = models.BooleanField(
+        label="I commit to giving this study my full and undivided attention.",
+        choices=[[True, 'Agree'], 
+                 [False, 'Disagree']],
+        )
+    commit_attention_Q2 = models.BooleanField(
+        label="I will remain at my computer station and refrain from opening other tabs or browsers during the experiment.",
+        choices=[[True, 'Agree'], 
+             [False, 'Disagree']],
+    )
+    commit_attention_Q3 = models.BooleanField(
+        label="I am aware that abandoning the study prematurely could impede the other participants' ability to successfully complete it.",
+        choices=[[True, 'Agree'], 
+             [False, 'Disagree']],
+    )
 
 
 # PAGES
@@ -277,18 +295,14 @@ class AttentionCheck(Page):
             if player.attention_check != 2: # wrong answer
                player.participant.vars['failed_attention_check'] = True 
                player.participant.active = False
-               #print("Attention check not passed")
             else:
                 player.participant.vars['failed_attention_check'] = False 
-                #print("Attention check passed")
                 player.participant.active = True
 
     @staticmethod
     def is_displayed(player:Player):
-        #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
         if player.round_number == 1 and player.participant.active:
             return player.participant.training_attempt == 1 and not player.participant.training_success
-        #player.participant.training_attempt == 1 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
     
 
 class TrainingNeighbor_3(Page):
@@ -317,11 +331,9 @@ class TrainingNeighbor_3(Page):
         else:
             player.participant.vars['training_success'] = True
             player.participant.active = True
-        #print(f"Training attempt: {player.participant.vars['training_attempt']}, {player.participant.vars['training_success']}")
 
     @staticmethod
     def is_displayed(player):
-        #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']} and Training Success: {player.participant.training_success} and Failed Attention Check: {player.participant.failed_attention_check}")
         if player.round_number == 1 and player.participant.active:
             return player.participant.training_attempt == 1 
 
@@ -341,8 +353,7 @@ class Neighborhood_1(Page):
     
 class Scenario(Page):
     form_model = 'player'
-    form_fields = ['attitude_certainty', 'likelihood', 'political_charge', 'emotional_charge', 
-                   'disagree_conform', 'response'] 
+    form_fields = ['political_charge', 'emotional_charge', 'response']
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -359,9 +370,7 @@ class Scenario(Page):
     def before_next_page(player: Player, timeout_happened):
         # Get the current scenario code
         player.scenario_code = player.participant.vars['scenario_order'][player.round_number - 1]['code']
-        # Debug check:
-        # print(f"Scenario code for round {player.round_number}: {player.scenario_code}")
-
+        
         # Store the response in the participant's vars and record the time of waiting
         player.participant.vars['all_responses'][player.scenario_code] = player.response
         # Combine all participants' all_responses dictionaries into a session-level variable
@@ -376,6 +385,23 @@ class Scenario(Page):
         return player.participant.gives_consent and player.participant.active and player.round_number <= C.NUM_ROUNDS 
 
 
+class Commitment(Page):
+    form_model = 'player'
+    form_fields = ['commit_attention_Q1','commit_attention_Q2', 'commit_attention_Q3']
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        total_commitment = np.sum([player.commit_attention_Q1, player.commit_attention_Q2,
+                                   player.commit_attention_Q3])
+        
+        if total_commitment < 3:
+            player.participant.failed_commitment = True # initially false
+            player.participant.active = False
+
+    @staticmethod
+    def is_displayed(player:Player):
+        return player.participant.active and player.round_number == C.NUM_ROUNDS
+    
 class FinalPage(Page):
     form_model = 'player'
     timeout_seconds = 5
@@ -390,4 +416,4 @@ class FinalPage(Page):
 
 page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
-                 Scenario, FinalPage]
+                 Scenario, Commitment, FinalPage]

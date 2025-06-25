@@ -1,14 +1,12 @@
 {{ block title }}
-
 {{ endblock }}
 
 {{ block content }}
-
+<h2>🟨 Phase 2: Survey</h2>
 <div class="card bg-mid m-0">
   <h4 class="card-header">{{ scenario_title }}</h4>
 
   <div class="card-body">
-      <br>
       {{ scenario_text }} 
       <br><br>
       <strong>What do you think the community should do?</strong>
@@ -49,26 +47,7 @@
     </tr>
 </thead>
 
-{{ formfield_errors 'attitude_certainty' }}
-{{ formfield_errors 'likelihood' }}
-{{ formfield_errors 'political_charge' }}
-{{ formfield_errors 'emotional_charge' }}
-{{ formfield_errors 'disagree_conform' }}
-
-<!-- Comment out for teting purpose
 <tbody>
-  <tr>
-      <th>{{ form.attitude_certainty.label }}</th>
-      {{ for choice in form.attitude_certainty }}
-          <td>{{ choice }}</td>
-      {{ endfor }}
-  </tr>
-  <tr>
-    <th>{{ form.likelihood.label }}</th>
-    {{ for choice in form.likelihood }}
-        <td>{{ choice }}</td>
-    {{ endfor }}
-  </tr>
   <tr>
     <th>{{ form.political_charge.label }}</th>
     {{ for choice in form.political_charge }}
@@ -81,17 +60,12 @@
         <td>{{ choice }}</td>
     {{ endfor }}
   </tr>
-  <tr>
-    <th>{{ form.disagree_conform.label }}</th>
-    {{ for choice in form.disagree_conform }}
-        <td>{{ choice }}</td>
-    {{ endfor }}
-  </tr>
 
 </tbody>
-
 </table>
--->
+
+<br>
+<button class="next-button" type="submit">Next</button>
 
 <script>
   function selectAnswer(button, value) {
@@ -104,9 +78,6 @@
 
       // Add the 'selected' class to the clicked button
       button.classList.add('selected');
-
-      // Submit the form
-      button.closest('form').submit();
   }
 </script>
 
