@@ -21,7 +21,8 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    feedback_final = models.LongStringField(label="Please provide your feedback here:")
+    feedback_final = models.LongStringField(label="Please provide your feedback here:",
+                                            blank=True)
 
 
 class Feedback(Page):
