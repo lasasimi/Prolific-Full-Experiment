@@ -1,12 +1,91 @@
+{{ extends 'otree/WaitPage.html' }}
+
 {{ block title }}
-    This is the mock page
+<!-- We leave this blank so the title can be fully handled inside content -->
 {{ endblock }}
+
 {{ block content }}
 
-{{ endblock }}
 
-<script>
-    setInterval(function() {
-        window.location.reload();
-    }, 10000); // Refresh every 10 seconds
-</script>
+<style>
+    .progress {
+        width: 80%;
+        height: 20px;
+        margin: 0 auto;
+    }
+    body {
+        background-color: #d3d3d3; /* Light gray background */
+    }
+    .wait-container {
+        max-width: 700px;
+        margin: auto;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .progress-wrapper {
+        width: 100%;
+        margin: 20px 0;
+    }
+    .custom-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="wait-container">
+
+    <!-- Centered Title -->
+    <div class="custom-title">🕒 Waiting for a Group to Form</div>
+
+    <p>Thank you for completing Phases 1 and 2!</p>
+
+    <p>You are now waiting to be placed into a group of 10 participants for the group discussion round (Phase 3).</p>
+
+    <hr>
+
+    <h3>🔔 Important Information</h3>
+    <ul>
+        <li>This part of the study involves <strong>real-time interaction</strong> with others.</li>
+        <li>Once you join the group discussion, you must:
+            <ul>
+                <li>Stay at your <strong>computer station</strong> at all times.</li>
+                <li>Be <strong>actively attentive</strong> and ready to respond.</li>
+                <li>Remain connected until the discussion ends.</li>
+            </ul>
+        </li>
+        <li>You may need to <strong>wait up to <span style="color: red;">10 minutes</span></strong> while we form your group.</li>
+        <li><strong>Please do not leave your screen</strong> during this time.</li>
+    </ul>
+
+    <hr>
+
+    <h3>💰 Compensation</h3>
+    <ul>
+        <li>If you are successfully placed in a group and <strong>complete the discussion rounds</strong>, you will receive a <strong>bonus payment</strong> on top of your base payment.</li>
+        <li>If a group <strong>cannot be formed</strong> within the allowed time, you will still receive <strong>compensation</strong> for your time and effort.</li>
+    </ul>
+
+    <p>We appreciate your patience and your commitment to participating fully. This phase is essential to the study, and your involvement makes it possible.</p>
+
+    <p style="text-align: center;"><strong>Thank you for staying with us!</strong></p>
+</div>
+
+{% if view.group_by_arrival_time %}
+    <script>
+        if (!window.reloadScheduled) {
+            window.reloadScheduled = true;
+            var SECOND = 1000;
+            setInterval(function () {
+                window.location.reload();
+            }, 30 * SECOND);
+        }
+    </script>
+{% endif %}
+
+{{ endblock }}

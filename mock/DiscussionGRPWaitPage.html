@@ -1,0 +1,70 @@
+{{ extends 'otree/WaitPage.html' }}
+
+{{ block title }}
+<!-- Custom title handled inside content -->
+{{ endblock }}
+
+{{ block content }}
+
+<style>
+    .progress {
+        width: 80%;
+        height: 20px;
+        margin: 0 auto;
+    }
+    body {
+        background-color: #d3d3d3;
+    }
+    .wait-container {
+        max-width: 700px;
+        margin: auto;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .progress-wrapper {
+        width: 100%;
+        margin: 20px 0;
+    }
+    .custom-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="wait-container">
+
+    <!-- Centered Title -->
+    <div class="custom-title">🕒 Preparing Your Next Discussion Group</div>
+    
+    <p>
+        Other participants are selecting their positions. Once ready, you’ll join a new group of 5 neighbors for the next discussion.
+    </p>
+
+    <hr>
+
+    <h3>🔔 Stay Ready</h3>
+    <p style="margin-top: 20px; background-color: #d4edda; padding: 12px; border-left: 5px solid #28a745; border-radius: 4px;">
+        ✅ This phase requires real-time coordination. Please stay at your computer and remain attentive. We’ll begin as soon as everyone is ready.
+        </p>
+    <p style="text-align: center;"><strong>Thank you for your patience!</strong></p>
+</div>
+
+{% if view.group_by_arrival_time %}
+<script>
+    if (!window.reloadScheduled) {
+        window.reloadScheduled = true;
+        var SECOND = 1000;
+        setInterval(function () {
+            window.location.reload();
+        }, 30 * SECOND);
+    }
+</script>
+{% endif %}
+
+{{ endblock }}

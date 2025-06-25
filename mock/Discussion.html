@@ -6,14 +6,32 @@ What others are thinking
 {{ endblock }}
 {{ block content }}
 
+{% if anticonformist %}
+    <div class="nudge-anti-card">
+        <h2>💡 Tip: Be the Agent of Change</h2>
+            Some people might feel hesitant to express unpopular opinions. 
+            To help reach the best decision, someone needs to voice a different 
+            view to empower others to speak up.
+            <br>
+                👉 <strong>That someone is you.</strong> Try not to conform—challenge the norm and make space for overlooked ideas.
+    </div>       
+{% else %}
+    <div class="nudge-confo-card">
+        <h2>💡 Tip: Wisdom of Crowds</h2>
+            Not sure what to choose? When the answer isn’t obvious, it’s helpful to see what others are doing.
+            <br>
+            👀 We'll soon show you your neighbors' choices—see if the majority points you in a clearer direction.
+    </div>     
+
+{% endif %}
+<br>
 <div class="card bg-mid m-0">
   <h4 class="card-header">{{ scenario_title }}</h4>
 
     <div class="card-body">
       {{ scenario_text }} 
       <br><br>
-      <h5>Your group's answers</h5>
-      You have been placed in a small discussion group with several of your neighbors to share ideas about what the community should do. Each neighbor in your group has shared their own opinion. Here’s what they said (including yours):
+      <h5>Here’s what your small group of neighbors had to say:</h5>
       <br><br>
       <!-- Neighbors -->
       <div class="players-row neighbors">
@@ -40,8 +58,8 @@ What others are thinking
 
 </div>
 <br>
-      <strong>What do you think the community should do?</strong> 
-      <br>
+    <h5> <strong>What do you think the community should do?</strong></h5>
+     
       <form method="post">
       {{ formfield_errors 'new_response' }}
         <input type="hidden" name="new_response" id="new_response">
@@ -62,40 +80,8 @@ What others are thinking
 </div>
 
 <br>
-   
-{{ if anticonformist }}
-<div id="info-banner" style="background-color: #D9DDDC; color: black;" class="fixed bottom-0 left-0 right-0 p-4 flex justify-center items-center z-50">
-    <h5>Tip: A Call for Independent Thinking</h5>
-    <p class="text-lg font-semibold">
-        Some people might not be comfortable speaking about their true opinion. 
-        In order to arrive at the best decision possible, it's necessary for someone 
-        to choose an opinion that is different from others to empower the minority 
-        opinion to speak up. We have chosen you to do this task. Try not to conform and choose something that is different from the others. </p>
 
-    <ul>
-        <li>Sometimes the majority gets it wrong — trust your judgment.</li>
-        <li>You don’t have to agree just because others do. Think for yourself.</li>
-        <li>Being in the minority doesn’t mean you're wrong — it often means you're ahead.</li> 
-    </ul>
 
-</div>
-    
-
-{{  else }}
-<div id="info-banner" style="background-color: #D9DDDC; color: black;" class="fixed bottom-0 left-0 right-0 p-4 flex justify-center items-center z-50">
-    <h5>Tip: Reflections from Your Peers</h5>
-    <p class="text-lg font-semibold">
-        In a situation where it's not obvious which solution is the best, people often 
-        look at others to help decide. Therefore, we will show you what others have chosen 
-        in this scenario. You can look at their answers and see which one is the majority 
-        to help guide your decision. </p>
-    <ul>
-        <li>Many others have already considered this carefully — you might find their reasoning helpful.</li>
-        <li>This perspective has resonated with a lot of people in similar situations.</li>
-        <li>Others have found this option to reflect shared values and priorities.</li> 
-    </ul>
-</div>
-{{ endif }}
 
 <br>
 
@@ -116,6 +102,21 @@ What others are thinking
 </script>
 
 <style>
+    .nudge-anti-card{
+        margin-top: 20px;
+        background-color: #e9caca; 
+        padding: 12px; 
+        border-left: 5px solid #d43d3b; 
+        border-radius: 4px;
+
+    }
+    .nudge-confo-card{
+        margin-top: 20px;
+        background-color: #b6c6e7; 
+        padding: 12px; 
+        border-left: 5px solid #1b54d0; 
+        border-radius: 4px;
+    }
     .button {
         background-color: #3182bd;
         border: none;

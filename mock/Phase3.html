@@ -1,53 +1,47 @@
+
 {{ block title }}
-⏳ Please take a moment to read this tip while we prepare your neighbors' answers…
+<!-- We leave this blank so the title can be fully handled inside content -->
 {{ endblock }}
+
+
 
 {{ block content }}
 
+<div class="card bg-mid m-0">
+    <h2 class="card-header">🟥 Phase 3 Introduction – Group Discussions</h2>
+    <div class="card-body"> 
+        <h5><strong>Welcome to Phase 3: Group Discussions</strong></p></h5><p>
 
+        <p>
+            This phase involves <strong>live interaction with 9 other participants</strong> from your session. 
+            You’ll discuss one of the earlier topics across <strong>short several rounds</strong>, each time 
+            with a new group of 5 participants (including you). 
+            Each round gives you a chance to see your neighbors' answers.
+        </p>
 
-    {% if anticonformist %}
-    <div class="nudge-anti-card">
-        <h2>💡 Tip: Be the Agent of Change</h2>
-            Some people might feel hesitant to express unpopular opinions. 
-            To help reach the best decision, someone needs to voice a different 
-            view to empower others to speak up.
-            <br>
-                👉 <strong>That someone is you.</strong> Try not to conform—challenge the norm and make space for overlooked ideas.
-    </div>       
-    {% else %}
-    <div class="nudge-confo-card">
-        <h2>💡 Tip: Wisdom of Crowds</h2>
-            Not sure what to choose? When the answer isn’t obvious, it’s helpful to see what others are doing.
-            <br>
-            👀 We'll soon show you your neighbors' choices—see if the majority points you in a clearer direction.
-    </div>     
+        <h5>⚠️ Important Participation Requirements</h5>
+        <ul>
+            <li>Stay at your <strong>computer station</strong>, fully attentive, for the entire session.</li>
+            <li><strong>Do not leave</strong> your station or let your attention wander at any time.</li>
+        </ul>
 
-    {% endif %}
- 
+        <h5>💰 Compensation</h5>
+          <p style="margin-top: 20px; background-color: #d4edda; padding: 12px; border-left: 5px solid #28a745; border-radius: 4px;">
+    ✅ By participating and remaining throughout the entire discussion phase, you will receive 
+            a <strong>bonus payment</strong> in addition to your base payment.
+        </p>
+
+    </div>
+</div>
 <br>
 <p id="done" style="display: none;">
    Press Next to begin your discussion.
 </p>
-{{ formfields }}
-<button id="next-button" class="next-button" type="submit" style="display: none;">Next</button>
+
+    {{ formfields }}
+    <button id="next-button" class="next-button" type="submit" style="display: none;">Next</button>
 
 <style>
-    .nudge-anti-card{
-        margin-top: 20px;
-        background-color: #e9caca; 
-        padding: 12px; 
-        border-left: 5px solid #d43d3b; 
-        border-radius: 4px;
-
-    }
-    .nudge-confo-card{
-        margin-top: 20px;
-        background-color: #b6c6e7; 
-        padding: 12px; 
-        border-left: 5px solid #1b54d0; 
-        border-radius: 4px;
-    }
     .responsive-image {
         max-width: 100%; /* Ensures the image does not exceed the container width */
         height: auto; /* Maintains the aspect ratio */
@@ -95,6 +89,7 @@
         document.getElementById("next-button").style.display = "inline-block";
     }, 7000); // 7 seconds delay
 </script>
+
 
 
 {{ endblock }}

@@ -23,7 +23,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 5 #### TEST!!!!! 
     MEDIUM_WAIT = 20  # 5 mins  #### TEST!!!!! 
-    LONG_WAIT = 20  # 10 mins #### TEST!!!!! 
+    LONG_WAIT = 10  # 10 mins #### TEST!!!!! 
     N_TEST = 10 #### TEST!!!!!
     CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
     SCENARIOS = open_CSV('presurvey/dummy_4scenarios_n.csv')
@@ -137,6 +137,7 @@ class Player(BasePlayer):
 
 # PAGES
 class GroupingWaitPage(WaitPage):
+    template_name = 'mock/GroupingWaitPage.html'
     group_by_arrival_time = True
     
     @staticmethod
@@ -177,6 +178,7 @@ class GroupSizeWaitPage(WaitPage):
 
 
 class DiscussionGRPWaitPage(WaitPage):
+    template_name = 'mock/DiscussionGRPWaitPage.html'
     @staticmethod
     def after_all_players_arrive(group: Group):
         # Copy group_size from participant (set in round 1)
@@ -225,10 +227,18 @@ class DiscussionGRPWaitPage(WaitPage):
     @staticmethod
     def is_displayed(player):
         return player.participant.active and not player.participant.single_group
-            
+
+
+class Phase3(Page):
+    #timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
+    
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.active and not player.participant.single_group    
+
 
 class Nudge(Page):
-    timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
+    #timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
     @staticmethod
     def vars_for_template(player):        
         return dict(
@@ -273,4 +283,4 @@ class Discussion(Page):
         return player.participant.active and not player.participant.single_group
 
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Nudge, Discussion]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
