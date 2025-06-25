@@ -39,21 +39,29 @@ class MyPage(Page):
     # JS vars to determine which link and reason to display based on if they finished the entire app (participant.single_group == False) or waited too long
     @staticmethod
     def js_vars(player: Player):
-        if player.participant.single_group == False:
-            player.participant.reason="Thanks for participating! Since you completed the entire study, you will receive the bonus payment."
+        if player.participant.single_group == False and player.participant.failed_commitment == True:
+            player.participant.reason="You did not commit to entering the next phase of the study."
             return dict(
-                pay=player.subsession.session.config['completionlink']
+                pay= player.subsession.session.config['completionlink']
             )
-        elif player.participant.single_group == True:  
+
+        elif player.participant.single_group == True:
             player.participant.reason="You were the only participant in your group and we could not find you other participants to join your group. Thanks for your time!"
             return dict(
                 pay= player.subsession.session.config['waitingbonuslink']
             )
-
+        
+        elif player.participant.single_group == False and player.participant.failed_commitment == False:
+            player.participant.reason="Thanks for participating! Since you completed the entire study, you will receive the bonus payment."
+            return dict(
+                pay=player.subsession.session.config['bonuslink']
+            )
+        
     @staticmethod
     def is_displayed(player: Player):
-        return player.participant.active
-
-
+        if player.participant.failed_commitment:
+            return player.participant.gives_consent 
+        else:
+            return player.participant.active
 
 page_sequence = [Feedback, MyPage]
