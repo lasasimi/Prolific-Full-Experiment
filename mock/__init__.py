@@ -277,7 +277,7 @@ class Discussion(Page):
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
             ### REVIEW THE RULE #### 
-            player.forced_response = True
+            player.forced_response = True # only in the last round, make them inactive
             player.new_response = random.choice([-1, 0, 1])
 
     @staticmethod
