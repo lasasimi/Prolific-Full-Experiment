@@ -3,14 +3,13 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        #app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
-        app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
+        app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
+        #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=20,
         display_name="Combined app",
         completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # pay with bonus
-        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
-        nobonuslink='https://app.prolific.com/submissions/complete?cc=CSUMQ59A', # pay but no bonus/INCORRECT BONUS PAYMENT LINK
-        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=COQQW3A7'
+        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus (no consent, fail attention check, fail training, fail commitment)
+        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=COQQW3A7' # pay for bonus of waiting time (no discussion partner)
     ),
 ]
 
@@ -23,8 +22,8 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
 
-PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'treatment', 
-                      'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
+PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
+                      'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position']
 SESSION_FIELDS = ['combined_responses']

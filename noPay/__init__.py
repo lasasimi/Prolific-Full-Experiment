@@ -34,12 +34,14 @@ class ExitPage(Page):
     def js_vars(player: Player):
         if player.participant.failed_attention_check:
             player.participant.reason="You did not pass the attention check."
-            return dict(
-                nopay=player.subsession.session.config['returnlink'],
-            )
+        elif player.participant.failed_commitment:
+            player.participant.reason="You did not commit to entering the next phase of the study."
+        elif player.participant.training_attempt == 0:
+            player.participant.reason="You did not pass the Training phase by answering incorrectly for too many times."
         elif player.participant.active == False:
             player.participant.reason="You did not consent to participate in the study or or timed out for inactivity."
-            return dict(
+        
+        return dict(
                 nopay=player.subsession.session.config['returnlink'],
             )
 

@@ -1,0 +1,62 @@
+{{ block title }}
+
+{{ endblock }}
+{{ block content }}
+
+<div class="card bg-mid m-0">
+    <h2 class="card-header">Commitment Check</h2>
+    <div class="card-body">
+        <p>You have successfully completed the Survey phase.</p>
+
+        <h5><strong>Next phase: 🟥 Phase 3 Introduction – Group Discussions </strong></h5>
+        In the upcoming phase, you will be placed in a small discussion group with other participants from your neighborhood. Together, you will engage in a conversation about the same dilemma and view each other’s perspectives. Please note that this matching process may involve a short waiting period between pages. Because of this, we ask for your full commitment before proceeding. If you do not wish to continue, you may select “Disagree” to the statements below. You will still receive compensation for your participation in the earlier phases. If you choose to proceed, please indicate your commitment by selecting “Agree” to the statements.
+        Please confirm that you wish to participate in this study only if:
+        <ul>
+        <li>you commit to giving this study yout full and undivided attention</li>
+        <li>you will remain at your computer station and refrain from opening other tabs or browsers during the experiment</li>
+        <li>you are aware that abandoning the study prematurely could impede the other participants' ability to successfully complete it</li>
+        </ul> 
+        <p class="green-box">✅ You will receive $0.60 for the waiting time and an additional $2.00 upon completion of the study on top of your base payment.</p> 
+        {{ formfield 'commit_attention_Q1' }}
+        {{ formfield 'commit_attention_Q2' }}
+        {{ formfield 'commit_attention_Q3' }}
+    </div>
+
+</div>
+<br>
+<button class="next-button" type="submit">Next</button>
+<style>
+    .green-box{
+    margin-top: 20px; 
+    background-color: #d4edda; 
+    padding: 12px; 
+    border-left: 5px solid #28a745; 
+    border-radius: 4px;
+}
+    .card{
+        max-width: 1600px;
+        overflow-x:visible;
+    }
+    .next-button {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+    font-size: 16px;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 12px;
+}
+.next-button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+.next-button:active {
+    background-color: #005f8b; /* Darker blue for clicked state */
+    color: white;
+    border: 2px solid #005f8b;
+}
+</style>
+{{ endblock }}
