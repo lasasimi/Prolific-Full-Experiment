@@ -28,6 +28,14 @@ PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', '
                       'scenario','anticonformist','position']
 SESSION_FIELDS = ['combined_responses']
 
+ROOMS = [
+    dict(
+        name='pilotsession1_20250625',
+        display_name='pilotsession1_20250625',
+    ),
+]
+
+
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
 LANGUAGE_CODE = 'en'
