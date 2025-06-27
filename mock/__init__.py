@@ -21,16 +21,19 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 5 #### TEST!!!!! 
-    MEDIUM_WAIT = 20  # 5 mins  #### TEST!!!!! 
-    LONG_WAIT = 10  # 10 mins #### TEST!!!!! 
-    N_TEST = 10 #### TEST!!!!!
-    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
+    NUM_ROUNDS = 5 
+    MEDIUM_WAIT = 20  ##### CONSIDER REMOVING !!!!! 
+    LONG_WAIT = 10  # SHORTEN? 10 mins !!!!! 
+    N_TEST = 10 #### N=10
+    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### REVIEW TO DELETE IF POSSIBLE
     SCENARIOS = open_CSV('presurvey/dummy_4scenarios_n.csv')
     GROUPS = open_CSV('mock/beta_02_p_02_N_10.csv')
+    # player.subsession.session.config['beta']
+    # player.subsession.session.config['p']
 
 class Subsession(BaseSubsession):
     pass
+
 
 def medium_wait(player):
     participant = player.participant
@@ -43,9 +46,6 @@ def long_wait(player):
 
 
 def group_by_arrival_time_method(subsession, waiting_players):
-    """
-    REMEMBER TO INCLUDE A SELF LOAD EVERY 30 SECS OR SO, IF NO MORE PARTICIPANTS ENTER, CODE WONT EXECUTE 
-    """
     session = subsession.session
     response = {}
     for p in waiting_players:
