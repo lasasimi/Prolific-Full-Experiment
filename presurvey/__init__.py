@@ -193,16 +193,12 @@ class Demographics(Page):
     
 
 class Neighborhood(Page):
-    form_model = 'player'
-
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.active
 
 
 class NeighborhoodInstruction(Page):
-    form_model = 'player'
-
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.active 
@@ -337,20 +333,19 @@ class TrainingNeighbor_3(Page):
         if player.round_number == 1 and player.participant.active:
             return player.participant.training_attempt == 1 
 
-class ExperimentInstruction(Page):
-    form_model = 'player'
 
+class ExperimentInstruction(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.active and player.round_number == 1
 
-class Neighborhood_1(Page):
-    form_model = 'player'
 
+class Neighborhood_1(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.active and player.round_number == 1
     
+
 class Scenario(Page):
     form_model = 'player'
     form_fields = ['political_charge', 'emotional_charge', 'response']
@@ -401,6 +396,7 @@ class Commitment(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.active and player.round_number == C.NUM_ROUNDS
+  
     
 class FinalPage(Page):
     form_model = 'player'
