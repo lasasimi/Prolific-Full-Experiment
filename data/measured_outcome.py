@@ -94,3 +94,40 @@ plt.ylabel('Proportion')
 plt.title('Proportion of Responses (Round 5)')
 plt.ylim(0, 1)
 plt.show()
+
+
+# Calculate the majority opinion for each round and discussion group
+majority_opinion = (
+    df_with_round0
+    .groupby(['discussion_grp', 'round_no'])['response']
+    .agg(lambda x: x.mode().iloc[0] if not x.mode().empty else None)
+    .reset_index()
+)
+
+# Pivot for plotting: rows=round_no, columns=discussion_grp, values=majority opinion
+majority_pivot = majority_opinion.pivot(index='round_no', columns='discussion_grp', values='response')
+
+## Check if the nudge worked
+# See changes of opinion round by round for nudge == 1 and nudge == 0
+anticonformist_df = df_with_round0.loc[df_with_round0['participant.anticonformist'] == 1, ['participant.code', 'round_no', 'response', 'discussion_grp', 'forced_response']]
+
+round_numbers = sorted(df_with_round0['round_no'].unique().tolist())
+plt.figure(figsize=(12, 3.5))
+for (pid, grp), group in anticonformist_df.groupby(['participant.code', 'discussion_grp']):
+    color = 'mediumpurple' if grp == 1 else 'mediumseagreen'
+    plt.plot(group['round_no'], group['response'], marker='x', linestyle=':', color=color, label=f'Anticonformist from group {grp}')
+
+# Plot majority opinion for each discussion group
+for grp in majority_pivot.columns:
+    color = 'purple' if grp == 1 else 'green'
+    plt.plot(majority_pivot.index, majority_pivot[grp], marker='D', linestyle='--',  color=color, label=f'Majority opinion of group {grp}')
+
+plt.xlabel('Round Number')
+plt.ylabel('Opinion')
+plt.ylim(-1.1, 1.1)
+plt.yticks([-1, 0, 1])  # Show only -1, 0, 1 on y-axis
+plt.xticks(sorted(anticonformist_df['round_no'].unique()))
+plt.legend(bbox_to_anchor=(1,1), loc='upper left')
+plt.tight_layout()
+plt.show()
+
