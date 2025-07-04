@@ -360,6 +360,7 @@ class Scenario(Page):
             scenario_title = scenario['Title'],
             scenario_code = scenario['code'],
             scenario_against = scenario['Against'],
+            scenario_neutral = scenario['Neutral'],
             scenario_for = scenario['For'],
         )
     def before_next_page(player: Player, timeout_happened):
@@ -374,6 +375,16 @@ class Scenario(Page):
             # Add the current player's all_responses dictionary to the combined dictionary
         
         player.session.vars['combined_responses'][player.participant.code] = player.participant.vars['all_responses']
+
+        if player.round_number == C.NUM_ROUNDS:
+            pass
+            """
+            in the last round, check whether the player is eligible for the discussion
+            if neutral in all options:
+                ELIGIBLE = FALSE
+            else: 
+                ELIGIBLE = TRUE
+            """
 
     @staticmethod
     def is_displayed(player:Player):
@@ -396,6 +407,10 @@ class Commitment(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.active and player.round_number == C.NUM_ROUNDS
+        """
+        only displayed if participant eligible
+        if not eligible, plan accordingly. 
+        """
   
     
 class FinalPage(Page):
