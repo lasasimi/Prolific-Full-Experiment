@@ -78,7 +78,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
         for player in long_waiting:
             print('Ready to let participant go, waiting for too long')
             return [player]
-            break
+            #break
     
     ##### BLOCK 0 #####
     if len(waiting_players) >= C.N_TEST: ##### TEST ONLY!! CHANGE LATER to 10/4 #####
