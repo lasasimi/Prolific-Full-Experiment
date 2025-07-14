@@ -255,8 +255,10 @@ class Discussion(Page):
     def get_timeout_seconds(player):
         if player.round_number == 1:
             return 90  # longer seconds for the first round
+        elif 2<= player.round_number <= 4:
+            return 45
         else:
-            return 60  
+            return 30
         
     form_model = 'player'
     form_fields = ['new_response']
