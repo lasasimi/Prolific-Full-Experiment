@@ -21,7 +21,7 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 5 
+    NUM_ROUNDS = 20 
     MEDIUM_WAIT = 20  ##### CONSIDER REMOVING !!!!! 
     LONG_WAIT = 10  # SHORTEN? 10 mins !!!!! 
     N_TEST = 10 #### N=10
