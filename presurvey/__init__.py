@@ -193,16 +193,12 @@ class Demographics(Page):
     
 
 class Neighborhood(Page):
-    form_model = 'player'
-
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.active
 
 
 class NeighborhoodInstruction(Page):
-    form_model = 'player'
-
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.active 
@@ -337,20 +333,19 @@ class TrainingNeighbor_3(Page):
         if player.round_number == 1 and player.participant.active:
             return player.participant.training_attempt == 1 
 
-class ExperimentInstruction(Page):
-    form_model = 'player'
 
+class ExperimentInstruction(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.active and player.round_number == 1
 
-class Neighborhood_1(Page):
-    form_model = 'player'
 
+class Neighborhood_1(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.active and player.round_number == 1
     
+
 class Scenario(Page):
     form_model = 'player'
     form_fields = ['political_charge', 'emotional_charge', 'response']
@@ -365,6 +360,7 @@ class Scenario(Page):
             scenario_title = scenario['Title'],
             scenario_code = scenario['code'],
             scenario_against = scenario['Against'],
+            scenario_neutral = scenario['Neutral'],
             scenario_for = scenario['For'],
         )
     def before_next_page(player: Player, timeout_happened):
@@ -379,6 +375,16 @@ class Scenario(Page):
             # Add the current player's all_responses dictionary to the combined dictionary
         
         player.session.vars['combined_responses'][player.participant.code] = player.participant.vars['all_responses']
+
+        if player.round_number == C.NUM_ROUNDS:
+            pass
+            """
+            in the last round, check whether the player is eligible for the discussion
+            if neutral in all options:
+                ELIGIBLE = FALSE
+            else: 
+                ELIGIBLE = TRUE
+            """
 
     @staticmethod
     def is_displayed(player:Player):
@@ -401,6 +407,11 @@ class Commitment(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.active and player.round_number == C.NUM_ROUNDS
+        """
+        only displayed if participant eligible
+        if not eligible, plan accordingly. 
+        """
+  
     
 class FinalPage(Page):
     form_model = 'player'

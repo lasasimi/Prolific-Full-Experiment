@@ -6,6 +6,7 @@
 <div class="card bg-mid m-0">
   <h4 class="card-header">{{ scenario_title }}</h4>
 
+
   <div class="card-body">
       {{ scenario_text }} 
       <br><br>
@@ -17,6 +18,9 @@
         <div class="button-container">
           <button class="button button2 bg-sage" type="button" onclick="selectAnswer(this, '-1')">
               {{ scenario_against }}
+          </button>
+          <button class="button button2 bg-gray" type="button" onclick="selectAnswer(this, '0')">
+              {{ scenario_neutral }}
           </button>
           <button class="button button2 bg-lavender" type="button" onclick="selectAnswer(this, '1')">
               {{ scenario_for }}
@@ -113,10 +117,11 @@
     
     .button-container {
       display: grid;
-      grid-template-columns: repeat(2, 1fr); /* 3 equal-width columns, change 3 to 2 for 2 answer options */
+      grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns, change 3 to 2 for 2 answer options */
       gap: 10px; /* Spacing between buttons */
       margin-top: 10px;
     }
+    
     /* Media query for narrow devices */
     @media (max-width: 600px) {
         .button-container {
