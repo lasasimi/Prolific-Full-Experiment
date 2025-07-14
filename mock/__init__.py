@@ -25,9 +25,9 @@ class C(BaseConstants):
     MEDIUM_WAIT = 6  # IF A DISCUSSION GROUP HASN'T BEEN FORMED BY THEN, CHECK FOR OTHER GROUP SIZES 
     LONG_WAIT = 10  # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS 
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
-    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### TK (GJ): REVIEW TO DELETE IF POSSIBLE
-    SCENARIOS = open_CSV('presurvey/dummy_4scenarios_n.csv')
-    GROUPS = open_CSV('mock/beta_02_p_02_N_10.csv')
+    # CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### TK (GJ): REVIEW TO DELETE IF POSSIBLE
+    SCENARIOS = open_CSV('presurvey/4scenarios_np.csv')
+    # GROUPS = open_CSV('mock/beta_02_p_02_N_10.csv')
 
 
 class Subsession(BaseSubsession):
@@ -51,12 +51,14 @@ def group_by_arrival_time_method(subsession, waiting_players):
         response[p.participant.code] = p.participant.all_responses
     
     # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
+    scenarios = C.SCENARIOS['code']
+    """ 
     try:
         first_key = list(response.keys())[0] # fails if room is empty 
         scenarios = [key for key in response[first_key]]
     except:
         scenarios = []
-
+    """
     scenario_counts = {}
     for i_sce, sce in enumerate(scenarios):
         scenario_counts[sce] = {}
@@ -64,51 +66,58 @@ def group_by_arrival_time_method(subsession, waiting_players):
         scenario_counts[sce]['F'] = []
 
     for p in waiting_players:
-        # print(p.id_in_group)
         for i_sce, sce in enumerate(scenarios):
-            if response[p.participant.code][sce] == -1:
-                scenario_counts[sce]['A'].append(p)
-            else:
-                scenario_counts[sce]['F'].append(p)
+            if sce in response[p.participant.code].keys():
+                if response[p.participant.code][sce] == -1:
+                    scenario_counts[sce]['A'].append(p)
+                else:
+                    scenario_counts[sce]['F'].append(p)
+    print(scenario_counts)
 
-    # players waiting for more than 10 mins 
+    # players waiting for more than threshold need to be let go  
     long_waiting = [p for p in waiting_players if long_wait(p)]
     if len(long_waiting) >= 1:
         for player in long_waiting:
             print('Ready to let participant go, waiting for too long')
             return [player]
-            #break
-    
-    ##### BLOCK 0 #####
-    if len(waiting_players) >= C.N_TEST: ##### TEST ONLY!! CHANGE LATER to 10/4 #####
-        print('Ready to check discussion group')
+            
+    # players waiting for medium time, check if smaller group possible 
+    medium_waiting = [p for p in waiting_players if medium_wait(p)]
+    if len(medium_waiting) >= C.N_TEST/2:
+        print('Ready to check SMALL discussion group')
         temp_scenarios = scenarios.copy()
         temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
-        # players waiting for more than 5 mins are considered of medium wait
-        # medium_waiting = [p for p in waiting_players if medium_wait(p)]
-        
-        ##### BLOCK 1 #####
+
         for i_sce, sce in enumerate(temp_scenarios):
-            if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: ##### TEST ONLY!! CHANGE LATER to CORRECT 50/50#####
-                print('Ready to create a 50/50 group N=4')
+            if len(scenario_counts[sce]['A']) == C.N_TEST/2:
+                group = scenario_counts[sce]['A']
+                for p in group:
+                    p.participant.scenario = sce  # setting a scenario group-level variable
+            elif len(scenario_counts[sce]['F']) == C.N_TEST/2:
+                group = scenario_counts[sce]['B']
+                for p in group:
+                    p.participant.scenario = sce  # setting a scenario group-level variable
+            else:
+                continue  # if neither condition is met, skip to the next 'sce'
+
+            for p in group:
+                p.participant.scenario = sce
+                return group  # only runs if 'group' was set
+    
+    # check if creating 1 group of 8 is possible 
+    if len(waiting_players) >= C.N_TEST: 
+        print('Ready to check LARGE discussion group')
+        temp_scenarios = scenarios.copy()
+        temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
+        
+        for i_sce, sce in enumerate(temp_scenarios):
+            if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: 
+                print('Ready to create a LARGE discussion group')
                 group = scenario_counts[sce]['A']+scenario_counts[sce]['F']
                 for p in group:
                     p.participant.scenario = sce  # setting a scenarioi group-level variable
                 return group
                 break
-
-            """ 
-            ##### BLOCK 2 #####
-            elif len(medium_waiting) > 3:
-                ##### TEST ONLY!! 80/20 OPTION CHANGE TO N = 10/4 ##### 
-                if len(scenario_counts[sce]['A']) == 2 and len(scenario_counts[sce]['F']) == 2:
-                    print('Ready to create a 50/50 group N=4')
-                    print(sce,scenario_counts[sce]['A']+scenario_counts[sce]['F'])
-                    return(scenario_counts[sce]['A']+scenario_counts[sce]['F'])
-                    break
-            else: # essentially does nothing — it just complete the if-elif-else structure, could ignore 
-                pass
-            """ 
 
     else: 
         print('not enough players yet to create a group')
@@ -151,11 +160,11 @@ class GroupSizeWaitPage(WaitPage):
         session = group.subsession.session
         group_players = group.get_players()
         
-        if len(group_players) == 20:
-            group_size = 'N20'
+        if len(group_players) == C.N_TEST:
+            group_size = 'N08'
             is_group_single = False
-        elif len(group_players) == C.N_TEST:
-            group_size = 'N10'
+        elif len(group_players) == C.N_TEST/2:
+            group_size = 'N04'
             is_group_single = False
         else:
             group_size = 'single'
@@ -291,4 +300,5 @@ class Discussion(Page):
         return player.participant.active and not player.participant.single_group
 
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
+page_sequence = [GroupingWaitPage]
+# page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
