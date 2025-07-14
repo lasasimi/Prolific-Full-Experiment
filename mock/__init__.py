@@ -21,15 +21,14 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 20 
-    MEDIUM_WAIT = 20  ##### CONSIDER REMOVING !!!!! 
-    LONG_WAIT = 10  # SHORTEN? 10 mins !!!!! 
-    N_TEST = 10 #### N=10
-    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### REVIEW TO DELETE IF POSSIBLE
+    NUM_ROUNDS = 20 # FOR PRETEST TWO, PREVIOUSLY 5 
+    MEDIUM_WAIT = 6  # IF A DISCUSSION GROUP HASN'T BEEN FORMED BY THEN, CHECK FOR OTHER GROUP SIZES 
+    LONG_WAIT = 10  # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS 
+    N_TEST = 8 # SIZE OF DISCUSSION GROUP 
+    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### TK (GJ): REVIEW TO DELETE IF POSSIBLE
     SCENARIOS = open_CSV('presurvey/dummy_4scenarios_n.csv')
     GROUPS = open_CSV('mock/beta_02_p_02_N_10.csv')
-    # player.subsession.session.config['beta']
-    # player.subsession.session.config['p']
+
 
 class Subsession(BaseSubsession):
     pass
