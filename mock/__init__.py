@@ -21,8 +21,8 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 20 # FOR PRETEST TWO, PREVIOUSLY 5 
-    MEDIUM_WAIT = 6  # IF A DISCUSSION GROUP HASN'T BEEN FORMED BY THEN, CHECK FOR OTHER GROUP SIZES 
+    NUM_ROUNDS = 6 # FOR PRETEST TWO, PREVIOUSLY 5 
+    MEDIUM_WAIT = 1  # IF A DISCUSSION GROUP HASN'T BEEN FORMED BY THEN, CHECK FOR OTHER GROUP SIZES 
     LONG_WAIT = 10  # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS 
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     # CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### TK (GJ): REVIEW TO DELETE IF POSSIBLE
@@ -288,20 +288,19 @@ class DiscussionGRPWaitPage(WaitPage):
                     'other': player.participant.other_faction,
                     # Add more if needed
                 }
-                discussion_temp = []
+                p.participant.discussion_grp = []
                 for key in faction_counts.keys():
-                    discussion_temp = discussion_temp + random.sample(faction_map[key],faction_counts[key])
-                p.discussion_grp = str(discussion_temp)
-                p.participant.discussion_grp = [o for o in p.get_others_in_group() if o.participant.code in discussion_temp]
+                    p.participant.discussion_grp = p.participant.discussion_grp + random.sample(faction_map[key],faction_counts[key])
+                p.discussion_grp = str(p.participant.discussion_grp)
 
         if group.group_size == 'N04':
             for p in group.get_players():
                 others = p.get_others_in_group()
-                p.participant.discussion_grp = others
-                p.discussion_grp = str([o.participant.code for o in others])
+                p.participant.discussion_grp = [o.participant.code for o in others]
+                p.discussion_grp = str(p.participant.discussion_grp)
 
-        for other in p.participant.discussion_grp:
-            print(other.id_in_group,other.old_response)
+        for player in group.get_players():
+            print(player.participant.discussion_grp)
 
     @staticmethod
     def is_displayed(player):
@@ -347,7 +346,7 @@ class Discussion(Page):
         print(C.SCENARIOS)
         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
 
-        discussion_partners = [o for o in player.get_others_in_group() if o.discussion_grp == player.discussion_grp]   
+        discussion_partners = [other for other in player.get_others_in_group() if other.participant.code in player.participant.discussion_grp]   
         return dict(
             scenario_title = row.iloc[0]['Title'],
             scenario_text = row.iloc[0]['Text'],
@@ -370,5 +369,5 @@ class Discussion(Page):
         return player.participant.active and not player.participant.single_group
 
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
 # page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]

@@ -37,6 +37,15 @@ class Subsession(BaseSubsession):
 
 
 def creating_session(subsession):
+    session = subsession.session
+    # counter for keepin track of treatments
+    session.N04_p00 = 0
+    session.N04_p25 = 0
+    session.N04_p50 = 0
+    session.N08_p00 = 0
+    session.N08_p25 = 0
+    session.N08_p50 = 0
+    
     for player in subsession.get_players():
         # Shuffle the scenario order for each player
         chosen_scenarios = C.SCENARIOS[:4]  # Select the first 4 scenarios for testing
@@ -50,14 +59,7 @@ def creating_session(subsession):
         player.participant.vars['anticonformist'] = False
         player.participant.vars['failed_commitment'] = False
 
-        session = subsession.session
-        # counter for keepin track of treatments
-        session.N04_p00 = 0
-        session.N04_p25 = 0
-        session.N04_p50 = 0
-        session.N08_p00 = 0
-        session.N08_p25 = 0
-        session.N08_p50 = 0
+        
         
 class Group(BaseGroup):
     pass
@@ -434,6 +436,10 @@ class FinalPage(Page):
         player.participant.wait_page_arrival = time.time()
 
 
-page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
+page_sequence = [Introduction, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
                  Scenario, Commitment, FinalPage]
+
+# page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
+#                  Scenario, Commitment, FinalPage]

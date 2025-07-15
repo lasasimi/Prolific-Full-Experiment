@@ -26,8 +26,10 @@ SESSION_CONFIG_DEFAULTS = dict(
 PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
-                      'scenario','anticonformist','position','own_faction','other_faction']
-SESSION_FIELDS = ['combined_responses']
+                      'scenario','anticonformist','position','own_faction','other_faction','discussion_grp']
+SESSION_FIELDS = ['combined_responses','N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50']
+
+
 
 ROOMS = [
     dict(
