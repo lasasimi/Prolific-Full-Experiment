@@ -4,13 +4,13 @@ SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
         app_sequence=['presurvey', 'mock'],
-        #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=20,
         display_name="Combined app",
         completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay
         returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus (no consent, fail attention check, fail training, fail commitment)
         waitingbonuslink='https://app.prolific.com/submissions/complete?cc=COQQW3A7',
         bonuslink='https://app.prolific.com/submissions/complete?cc=COANJBS5', # max bonus
+        scenario_id='s3_n',
     ),
 ]
 
