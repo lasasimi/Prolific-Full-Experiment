@@ -25,11 +25,11 @@ class C(BaseConstants):
     NAME_IN_URL = 'presurvey'
     PLAYERS_PER_GROUP = None
     # all scenarios: not used for the Prolific, but only used for the Collective Minds' app
-    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
+    CSV = open_CSV('presurvey/4scenarios_np.csv')
     SCENARIOS = CSV.to_dict(orient='records')
     #NUM_ROUNDS = len(CSV['code']) # number of scenarios
     # for testing: 
-    NUM_ROUNDS = 4
+    NUM_ROUNDS = 1
 
 
 class Subsession(BaseSubsession):
