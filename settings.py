@@ -3,7 +3,7 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
+        app_sequence=['presurvey', 'mock'],
         #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=20,
         display_name="Combined app",
@@ -26,7 +26,7 @@ SESSION_CONFIG_DEFAULTS = dict(
 PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
-                      'scenario','anticonformist','position']
+                      'scenario','anticonformist','position','own_faction','other_faction']
 SESSION_FIELDS = ['combined_responses']
 
 ROOMS = [

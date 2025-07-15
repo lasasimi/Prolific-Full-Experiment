@@ -25,7 +25,7 @@ class C(BaseConstants):
     NAME_IN_URL = 'presurvey'
     PLAYERS_PER_GROUP = None
     # all scenarios: not used for the Prolific, but only used for the Collective Minds' app
-    CSV = open_CSV('presurvey/dummy_4scenarios_n.csv')
+    CSV = open_CSV('presurvey/4scenarios_np.csv')
     SCENARIOS = CSV.to_dict(orient='records')
     #NUM_ROUNDS = len(CSV['code']) # number of scenarios
     # for testing: 
@@ -49,6 +49,15 @@ def creating_session(subsession):
         player.participant.vars['single_group'] = False
         player.participant.vars['anticonformist'] = False
         player.participant.vars['failed_commitment'] = False
+
+        session = subsession.session
+        # counter for keepin track of treatments
+        session.N04_p00 = 0
+        session.N04_p25 = 0
+        session.N04_p50 = 0
+        session.N08_p00 = 0
+        session.N08_p25 = 0
+        session.N08_p50 = 0
         
 class Group(BaseGroup):
     pass
