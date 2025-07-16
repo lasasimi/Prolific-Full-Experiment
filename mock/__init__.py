@@ -374,7 +374,7 @@ class Discussion(Page):
     form_fields = ['new_response']
 
     @staticmethod
-    def vars_for_template(player):  
+    def vars_for_template(player): 
         print(player.participant.scenario)
         print(C.SCENARIOS)
         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
