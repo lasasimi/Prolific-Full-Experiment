@@ -14,8 +14,10 @@ class PlayerBot(Bot):
             neighborhood_type='Urban')
         yield NeighborhoodInstruction
         yield Neighborhood
-
-        yield Submission(Training, {'test_scenario': 'Do not help with the search'}, check_html=False)    
+        # This is because the submit button is not a default submit button
+        yield Submission(Training, 
+                         {'test_scenario': 'Do not help with the search'}, 
+                         check_html=False)    
         yield TrainingNeighbor_1, dict(
             dilemmatopic=1,
             majority=1,
