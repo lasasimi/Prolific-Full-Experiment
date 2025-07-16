@@ -436,10 +436,10 @@ class FinalPage(Page):
         player.participant.wait_page_arrival = time.time()
 
 
-page_sequence = [Introduction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
-                 Scenario, Commitment, FinalPage]
-
-# page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
-#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
+# page_sequence = [Introduction, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
 #                  Scenario, Commitment, FinalPage]
+
+page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
+                 Scenario, Commitment, FinalPage]

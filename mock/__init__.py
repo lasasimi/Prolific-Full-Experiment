@@ -263,14 +263,19 @@ class DiscussionGRPWaitPage(WaitPage):
                 n_anti = 2
             elif group.anti_prop == 'p25':
                 n_anti = 1
+            else:
+                n_anti = 0
+            print(f"Debug: n_anti = {n_anti}, group.anti_prop = {group.anti_prop}")
             # Select participants to be anticonformists 
             if group.group_size == 'N08':
                 faction_A = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==-1]
                 faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
                 anticonformists = random.sample(faction_A,n_anti) + random.sample(faction_F,n_anti) 
+                print(f"Debug: anticonformists = {anticonformists}")
             elif group.group_size == 'N04':
                 faction_U = group.get_players() 
                 anticonformists = random.sample(faction_U,n_anti)
+                print(f"Debug: anticonformists = {anticonformists}")
             else:
                 anticonformists = []
             # Assign anticonformists to their participant level variable
@@ -308,15 +313,17 @@ class DiscussionGRPWaitPage(WaitPage):
 
         if group.group_size == 'N08':
             for p in group.get_players():
-                factions = [random.choice(['own','other']) for i in range((C.N_TEST/2)-1)]
+                factions = [random.choice(['own','other']) for i in range(int(C.N_TEST/2)-1)]
                 labels, counts = np.unique(factions, return_counts=True)
                 # Convert to plain str and int types
                 faction_counts = {str(label): int(count) for label, count in zip(labels, counts)}
                 faction_map = {
-                    'own': player.participant.own_faction,
-                    'other': player.participant.other_faction,
+                    'own': p.participant.own_faction,
+                    'other': p.participant.other_faction,
                     # Add more if needed
                 }
+                
+                print(f"Debug: faction map {faction_map}, faction counts {faction_counts}")
                 p.participant.discussion_grp = []
                 for key in faction_counts.keys():
                     p.participant.discussion_grp = p.participant.discussion_grp + random.sample(faction_map[key],faction_counts[key])
@@ -329,7 +336,7 @@ class DiscussionGRPWaitPage(WaitPage):
                 p.discussion_grp = str(p.participant.discussion_grp)
 
         for player in group.get_players():
-            print(player.participant.discussion_grp)
+            print(f"Debug: player's discussion group: {player.participant.discussion_grp}")
 
     @staticmethod
     def is_displayed(player):
@@ -395,6 +402,7 @@ class Discussion(Page):
 
     @staticmethod
     def is_displayed(player):
+        print(f"Debug: Bot is {player.participant.code}, on round {player.round_number}")
         return player.participant.active and not player.participant.single_group
 
 page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
