@@ -32,12 +32,16 @@ class ExitPage(Page):
     # Conditional JS variables based on participant status, same links but different reasons
     @staticmethod
     def js_vars(player: Player):
+        # From presurvey app
         if player.participant.failed_attention_check:
             player.participant.reason="You did not pass the attention check."
         elif player.participant.training_attempt == 0:
             player.participant.reason="You did not pass the Training phase by answering incorrectly for too many times."
+        elif player.participant.gives_consent == False:
+            player.participant.reason="You did not consent to participate in the study."
+        # From mock app
         elif player.participant.active == False:
-            player.participant.reason="You did not consent to participate in the study or or timed out for inactivity."
+            player.participant.reason="You have been timed out for inactivity."
         
         return dict(
                 nopay=player.subsession.session.config['returnlink'],
@@ -46,6 +50,6 @@ class ExitPage(Page):
     @staticmethod
     def is_displayed(player: Player):
         if not player.participant.failed_commitment:
-            return not player.participant.gives_consent or not player.participant.active 
+            return not player.participant.gives_consent or not player.participant.complete_presurvey 
 
 page_sequence = [ExitPage]

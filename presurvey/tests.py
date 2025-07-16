@@ -16,7 +16,7 @@ class PlayerBot(Bot):
         yield Neighborhood
         # This is because the submit button is not a default submit button
         yield Submission(Training, 
-                         {'test_scenario': 'Do not help with the search'}, 
+                         {'test_scenario': '-1'}, 
                          check_html=False)    
         yield TrainingNeighbor_1, dict(
             dilemmatopic=1,
@@ -25,13 +25,25 @@ class PlayerBot(Bot):
 
         yield ExperimentInstruction
         yield Neighborhood_1
-        if self.player.id_in_group in [1, 2, 3, 4]:
+        if self.player.id_in_group in range(1,5):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,
                 response=-1
             )
-        elif self.player.id_in_group in [5, 6, 7, 8]:
+        elif self.player.id_in_group in range(5, 9):
+            yield Scenario, dict(
+                political_charge=1,
+                emotional_charge=1,
+                response=1
+            )
+        # elif self.player.id_in_group in range(37, 73):
+        #     yield Scenario, dict(
+        #         political_charge=1,
+        #         emotional_charge=1,
+        #         response=1
+        #     )
+        else:
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,

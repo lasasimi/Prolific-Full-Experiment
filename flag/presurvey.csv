@@ -1,0 +1,33 @@
+participant.id_in_session,participant.code,participant.label,participant._is_bot,participant._index_in_pages,participant._max_page_index,participant._current_app_name,participant._current_page_name,participant.time_started_utc,participant.visited,participant.mturk_worker_id,participant.mturk_assignment_id,participant.payoff,player.id_in_group,player.role,player.payoff,player.gives_consent,player.scenario_code,player.dropout,player.test_scenario,player.dilemmatopic,player.majority,player.howmanyneighbors,player.total_correct,player.training_counter,player.attention_check,player.age,player.gender,player.education_lvl,player.neighborhood_type,player.response,player.attitude_certainty,player.likelihood,player.political_charge,player.emotional_charge,player.disagree_conform,player.commit_attention_Q1,player.commit_attention_Q2,player.commit_attention_Q3,group.id_in_subsession,subsession.round_number,session.code,session.label,session.mturk_HITId,session.mturk_HITGroupId,session.comment,session.is_demo
+1,fv8i7fdc,,0,53,53,Pay,MyPage,2025-07-16 10:48:27.161550,1,,,0.0,1,,0.0,1,,0,0,1,1,0,,0,0,24,Woman,High school diploma or equivalent,Suburban,,,,,,,,,,1,1,7vn34ek8,,,,,1
+2,ox7yn1ey,,0,1,53,presurvey,Introduction,2025-07-16 10:59:44.307399,1,,,0.0,2,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,7vn34ek8,,,,,1
+3,uryrv0m9,,0,0,53,,,,0,,,0.0,3,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,7vn34ek8,,,,,1
+4,is0zfje5,,0,0,53,,,,0,,,0.0,4,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,7vn34ek8,,,,,1
+5,rpgqo7yk,,0,0,53,,,,0,,,0.0,5,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,7vn34ek8,,,,,1
+6,5io74502,,0,0,53,,,,0,,,0.0,6,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,7vn34ek8,,,,,1
+7,x6bigscj,,0,0,53,,,,0,,,0.0,7,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,7vn34ek8,,,,,1
+8,zudcnljz,,0,0,53,,,,0,,,0.0,8,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,7vn34ek8,,,,,1
+1,xyd2ztnl,,0,53,53,Pay,MyPage,2025-07-16 10:59:47.557037,1,,,0.0,1,,0.0,1,,0,-1,1,1,0,,0,1,24,Woman,Less than high school,Urban,,,,,,,,,,1,1,qimxyuxz,,,,,1
+2,as9u5ibs,,0,0,53,,,,0,,,0.0,2,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,qimxyuxz,,,,,1
+3,x6nnc78v,,0,0,53,,,,0,,,0.0,3,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,qimxyuxz,,,,,1
+4,t53m10nu,,0,0,53,,,,0,,,0.0,4,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,qimxyuxz,,,,,1
+5,yfcp2nxj,,0,0,53,,,,0,,,0.0,5,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,qimxyuxz,,,,,1
+6,0acfah4a,,0,0,53,,,,0,,,0.0,6,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,qimxyuxz,,,,,1
+7,uourtfdz,,0,0,53,,,,0,,,0.0,7,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,qimxyuxz,,,,,1
+8,dnvfyrod,,0,0,53,,,,0,,,0.0,8,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,qimxyuxz,,,,,1
+1,38xy5x0z,,0,51,53,noPay,ExitPage,2025-07-16 11:01:05.867303,1,,,0.0,1,,0.0,1,,0,-1,1,1,0,,0,1,23,Prefer not to say,University degree or more,Urban,,,,,,,,,,1,1,v7g27zvo,,,,,1
+2,g3hormoe,,0,51,53,noPay,ExitPage,2025-07-16 11:01:26.854713,1,,,0.0,2,,0.0,0,,0,,,,,,0,,,,,,,,,,,,,,,1,1,v7g27zvo,,,,,1
+3,ea7o61rv,,0,53,53,Pay,MyPage,2025-07-16 11:01:32.967313,1,,,0.0,3,,0.0,1,s2_n,0,0,1,1,1,,0,2,35,Woman,Less than high school,Suburban,-1,,,1,2,,0,1,0,1,1,v7g27zvo,,,,,1
+4,jp8a9gp8,,0,0,53,,,,0,,,0.0,4,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,v7g27zvo,,,,,1
+5,vbs4wuxd,,0,0,53,,,,0,,,0.0,5,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,v7g27zvo,,,,,1
+6,ui9sdzzm,,0,0,53,,,,0,,,0.0,6,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,v7g27zvo,,,,,1
+7,ncilqmdd,,0,0,53,,,,0,,,0.0,7,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,v7g27zvo,,,,,1
+8,iqtzyyx6,,0,0,53,,,,0,,,0.0,8,,0.0,,,0,,,,,,0,,,,,,,,,,,,,,,1,1,v7g27zvo,,,,,1
+1,fo4i1914,,1,51,50,mock,Discussion,2025-07-16 14:38:06.030388,1,,,0.0,1,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,-1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0
+2,9xzdcrlw,,1,51,50,mock,Discussion,2025-07-16 14:38:06.090350,1,,,0.0,2,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,-1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0
+3,5bl2czfj,,1,51,50,mock,Discussion,2025-07-16 14:38:06.106683,1,,,0.0,3,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,-1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0
+4,l08hwk7m,,1,51,50,mock,Discussion,2025-07-16 14:38:06.108965,1,,,0.0,4,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,-1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0
+5,g0rmyimw,,1,51,50,mock,Discussion,2025-07-16 14:38:06.140509,1,,,0.0,5,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0
+6,lt1l31qc,,1,51,50,mock,Discussion,2025-07-16 14:38:06.172316,1,,,0.0,6,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0
+7,qiyjvccw,,1,51,50,mock,Discussion,2025-07-16 14:38:06.203909,1,,,0.0,7,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0
+8,pa0tum3l,,1,51,50,mock,Discussion,2025-07-16 14:38:06.220093,1,,,0.0,8,,0.0,1,s2_n,0,-1,1,1,1,,0,,34,Woman,Less than high school,Urban,1,,,1,1,,1,1,1,1,1,gzpi401m,,,,,0

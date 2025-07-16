@@ -31,7 +31,7 @@ class Feedback(Page):
     
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.active and not player.participant.single_group
+        return player.participant.complete_presurvey and not player.participant.single_group
 
 # PAGES
 class MyPage(Page):
@@ -42,13 +42,13 @@ class MyPage(Page):
         if player.participant.single_group == False and player.participant.failed_commitment == True:
             player.participant.reason="You did not commit to entering the next phase of the study."
             return dict(
-                pay= player.subsession.session.config['completionlink']
+                pay= player.subsession.session.config['basepaylink']
             )
 
         elif player.participant.single_group == True:
             player.participant.reason="You were the only participant in your group and we could not find you other participants to join your group. Thanks for your time!"
             return dict(
-                pay= player.subsession.session.config['waitingbonuslink']
+                pay= player.subsession.session.config['bonuslink']
             )
         
         elif player.participant.single_group == False and player.participant.failed_commitment == False:
