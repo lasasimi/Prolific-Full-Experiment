@@ -3,7 +3,7 @@ import numpy as np # type: ignore
 import json
 import time
 import random
-import pandas as pd
+import pandas as pd # type: ignore
 
 
 doc = """
