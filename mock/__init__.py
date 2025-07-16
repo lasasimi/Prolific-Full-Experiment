@@ -283,12 +283,12 @@ class DiscussionGRPWaitPage(WaitPage):
             for player in group.get_players():
                 scenario_position = player.participant.all_responses[player.participant.scenario]
                 if scenario_position==-1:
-                    player.participant.own_faction = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==-1]
-                    player.participant.other_faction = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
+                    player.participant.own_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==-1]
+                    player.participant.other_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==1]
 
                 elif scenario_position==1:
-                    player.participant.own_faction = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
-                    player.participant.other_faction = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==-1] 
+                    player.participant.own_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==1]
+                    player.participant.other_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==-1] 
                 
                 else:
                     player.participant.own_faction = []
