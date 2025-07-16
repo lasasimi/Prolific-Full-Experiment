@@ -233,9 +233,11 @@ class GroupSizeWaitPage(WaitPage):
             for condition, action in conditions:
                 if condition:
                     action(group)
+                    print('Condition: non-fallback (random choice)', group.beta_50, group.anti_prop)
                     break
-            else:
-                print("Condition: fallback (random choice)")
+            else: 
+                # The else is not tied to the if. It runs only if none of the conditions were True, because only then does the for loop finish without breaking.
+                print("Condition: fallback (random choice)", group.beta_50, group.anti_prop)
                 # if all quotas are full, choose randomly
                 random_p(group)
 
@@ -308,7 +310,7 @@ class DiscussionGRPWaitPage(WaitPage):
 
         if group.group_size == 'N08':
             for p in group.get_players():
-                factions = [random.choice(['own','other']) for i in range((C.N_TEST/2)-1)]
+                factions = [random.choice(['own','other']) for i in range(int(C.N_TEST/2)-1)]
                 labels, counts = np.unique(factions, return_counts=True)
                 # Convert to plain str and int types
                 faction_counts = {str(label): int(count) for label, count in zip(labels, counts)}
