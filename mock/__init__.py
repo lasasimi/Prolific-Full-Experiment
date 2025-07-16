@@ -182,6 +182,7 @@ def random_p(group:Group):
     group.anti_prop = random.choice(['p00','p25','p50'])
     counters_update(group)
 
+
 # PAGES
 class GroupingWaitPage(WaitPage):
     template_name = 'mock/GroupingWaitPage.html'
