@@ -36,13 +36,15 @@ class C(BaseConstants):
     N08_p25 = 3
     N08_p50 = 3
 
-
 class Subsession(BaseSubsession):
     pass
 
 
 def medium_wait(player):
     participant = player.participant
+    ### For testing bots, always return True to check the medium wait condition
+    if participant._is_bot:
+        return True  
     return (time.time() - participant.wait_page_arrival) > C.MEDIUM_WAIT * 60  # in mins
 
 
@@ -96,27 +98,31 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 return group
                 break
 
-    else: 
-        print('not enough players yet to create a group')
-        # players waiting for medium time, check if smaller group possible 
-        medium_waiting = [p for p in waiting_players if medium_wait(p)]
-        if len(medium_waiting) >= C.N_TEST/2:
-            print('Ready to check SMALL discussion group')
-            temp_scenarios = scenarios.copy()
-            temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
-            
-            for i_sce, sce in enumerate(temp_scenarios):
-                if len(scenario_counts[sce]['A']) == C.N_TEST/2:
-                    group = scenario_counts[sce]['A']
-                elif len(scenario_counts[sce]['F']) == C.N_TEST/2:
-                    group = scenario_counts[sce]['F']
-                else:
-                    continue  # if neither condition is met, skip to the next 'sce'
+    #else: 
+    #print('not enough players yet to create a group')
+    # players waiting for medium time, check if smaller group possible 
+    medium_waiting = [p for p in waiting_players if medium_wait(p)]
+    print(f"Debug: medium_waiting players = {[p.participant.code for p in medium_waiting]}")
+    if len(medium_waiting) >= C.N_TEST/2:
+        print('Ready to check SMALL discussion group')
+        temp_scenarios = scenarios.copy()
+        temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
+        
+        for i_sce, sce in enumerate(temp_scenarios):
+            if len(scenario_counts[sce]['A']) == C.N_TEST/2:
+                group = scenario_counts[sce]['A']
+            elif len(scenario_counts[sce]['F']) == C.N_TEST/2:
+                group = scenario_counts[sce]['F']
+            else:
+                continue  # if neither condition is met, skip to the next 'sce'
 
-                for p in group:
-                    p.participant.scenario = sce
-                return group  # only runs if 'group' was set
-                break
+            for p in group:
+                p.participant.scenario = sce
+            return group  # only runs if 'group' was set
+            
+    # Fallback if no group can be formed
+    print('not enough players yet to create a group')
+    return []
 
 
 class Group(BaseGroup):
@@ -140,15 +146,6 @@ class Player(BasePlayer):
                                             widget=widgets.RadioSelectHorizontal())
     forced_response = models.BooleanField(initial=False)
 
-
-# session.N04_p00 = 0
-#     session.N04_p25 = 0
-#     session.N04_p50 = 0
-#     session.N08_p00 = 0
-#     session.N08_p25 = 0
-#     session.N08_p50 = 0
-
-# ADD THE COUNTERS
 
 def counters_update(group:Group):
     if group.group_size == 'N08':
@@ -190,7 +187,7 @@ class GroupingWaitPage(WaitPage):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.active 
+        return player.round_number == 1 and player.participant.complete_presurvey 
 
 
 class GroupSizeWaitPage(WaitPage):
@@ -249,7 +246,7 @@ class GroupSizeWaitPage(WaitPage):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.active 
+        return player.round_number == 1 and player.participant.complete_presurvey
 
 
 class DiscussionGRPWaitPage(WaitPage):
@@ -340,7 +337,7 @@ class DiscussionGRPWaitPage(WaitPage):
 
     @staticmethod
     def is_displayed(player):
-        return player.participant.active and not player.participant.single_group
+        return player.participant.complete_presurvey and not player.participant.single_group
 
 
 class Phase3(Page):
@@ -348,7 +345,7 @@ class Phase3(Page):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.active and not player.participant.single_group    
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group    
 
 
 class Nudge(Page):
@@ -361,7 +358,7 @@ class Nudge(Page):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.active and not player.participant.single_group
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group
 
 
 class Discussion(Page):
@@ -403,6 +400,6 @@ class Discussion(Page):
     @staticmethod
     def is_displayed(player):
         print(f"Debug: Bot is {player.participant.code}, on round {player.round_number}")
-        return player.participant.active and not player.participant.single_group
+        return player.participant.complete_presurvey and not player.participant.single_group
 
 page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]

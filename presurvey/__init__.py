@@ -54,11 +54,12 @@ def creating_session(subsession):
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
         player.participant.vars['training_success'] = False # Initialize training success
         player.participant.vars['all_responses'] = {} # Initialize empty dictionary for all responses, will be appended on each round
-        player.participant.vars['active'] = True # Initialize active status, will be set to False if Training_3 fails or timeout_happened
+        player.participant.vars['active'] = True # Initialize active status for the mock app later
         player.participant.vars['single_group'] = False
         player.participant.vars['anticonformist'] = False
         player.participant.vars['failed_commitment'] = False
-
+        player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
+        player.participant.vars['eligible_notneutral'] = True # Initialize eligible status, will be set to False if neutral in all responses
         
         
 class Group(BaseGroup):
@@ -75,10 +76,9 @@ class Player(BasePlayer):
     # Training variables
     test_scenario = models.StringField(
     label="What do you think the community should do?",
-    choices=[['Do not help with the search', 'Do not help with the search'],
-            ['Verify the cat in the garden', 'Verify the cat in the garden'],
-            ['Help search near the sewage', 'Help search near the sewage']],
-    widget=widgets.RadioSelectHorizontal())
+    choices=[[-1, 'Against'],
+            [0, 'Neutral'],
+            [1, 'For']])
  
     dilemmatopic = models.BooleanField(
         label="The dilemma is about what the community should do with the lost cat.",
@@ -110,7 +110,8 @@ class Player(BasePlayer):
         [3, 'Cheeseburger'],
         [4, 'Pizza'],
         [5, 'Milk'],
-    ])
+    ],
+    widget=widgets.RadioSelectHorizontal,)
     
     # Demographics
     age = models.IntegerField(label='How old are you?', min=18, max=100)
@@ -191,7 +192,7 @@ class Introduction(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         player.participant.gives_consent = player.gives_consent
-        player.participant.active = player.participant.gives_consent # Assigning active status based on consent
+        player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
  
    
 class Demographics(Page):
@@ -200,19 +201,19 @@ class Demographics(Page):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.active
+        return player.round_number == 1 and player.participant.complete_presurvey
     
 
 class Neighborhood(Page):
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.active
+        return player.round_number == 1 and player.participant.complete_presurvey
 
 
 class NeighborhoodInstruction(Page):
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.active 
+        return player.round_number == 1 and player.participant.complete_presurvey 
     
 
 class Training(Page):
@@ -221,7 +222,7 @@ class Training(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.active 
+        return player.round_number == 1 and player.participant.complete_presurvey 
 
 
 class TrainingNeighbor_1(Page):
@@ -252,7 +253,7 @@ class TrainingNeighbor_1(Page):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.active 
+        return player.round_number == 1 and player.participant.complete_presurvey 
         # return player.participant.training_attempt == 3 and not player.participant.training_success and player.round_number == 1 and not player.participant.failed_attention_check and player.participant.gives_consent
 
 
@@ -285,7 +286,7 @@ class TrainingNeighbor_2(Page):
     @staticmethod
     def is_displayed(player):
         #print(f"Round:{player.round_number} and Training Counter: {player.participant.vars['training_attempt']}")
-        if player.round_number == 1 and player.participant.active:
+        if player.round_number == 1 and player.participant.complete_presurvey:
             return player.participant.training_attempt == 2 and not player.participant.training_success
 
 
@@ -296,19 +297,19 @@ class AttentionCheck(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         if timeout_happened:
-            player.participant.vars['failed_attention_check'] = True 
-            player.participant.active = False
+            player.participant.failed_attention_check = True 
+            player.participant.complete_presurvey = False
         else:
             if player.attention_check != 2: # wrong answer
-               player.participant.vars['failed_attention_check'] = True 
-               player.participant.active = False
+               player.participant.failed_attention_check = True 
+               player.participant.complete_presurvey = False
             else:
-                player.participant.vars['failed_attention_check'] = False 
-                player.participant.active = True
+                player.participant.failed_attention_check = False 
+                player.participant.complete_presurvey = True
 
     @staticmethod
     def is_displayed(player:Player):
-        if player.round_number == 1 and player.participant.active:
+        if player.round_number == 1 and player.participant.complete_presurvey:
             return player.participant.training_attempt == 1 and not player.participant.training_success
     
 
@@ -334,27 +335,27 @@ class TrainingNeighbor_3(Page):
                                 player.howmanyneighbors])
         if total_correct != 3:
             player.participant.vars['training_attempt'] -= 1
-            player.participant.active = False
+            player.participant.complete_presurvey = False
         else:
             player.participant.vars['training_success'] = True
-            player.participant.active = True
+            player.participant.complete_presurvey = True
 
     @staticmethod
     def is_displayed(player):
-        if player.round_number == 1 and player.participant.active:
+        if player.round_number == 1 and player.participant.complete_presurvey:
             return player.participant.training_attempt == 1 
 
 
 class ExperimentInstruction(Page):
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.active and player.round_number == 1
+        return player.participant.complete_presurvey and player.round_number == 1
 
 
 class Neighborhood_1(Page):
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.active and player.round_number == 1
+        return player.participant.complete_presurvey and player.round_number == 1
     
 
 class Scenario(Page):
@@ -387,8 +388,14 @@ class Scenario(Page):
         
         player.session.vars['combined_responses'][player.participant.code] = player.participant.vars['all_responses']
 
+        # In the last round, check whether the player is eligible for the discussion
         if player.round_number == C.NUM_ROUNDS:
-            pass
+            
+            # If all responses are neutral, set eligible_notneutral from True to False    
+            player.participant.eligible_notneutral = not all(
+                response == 0 for response in player.participant.vars['all_responses'].values()
+            )
+
             """
             in the last round, check whether the player is eligible for the discussion
             if neutral in all options:
@@ -399,7 +406,7 @@ class Scenario(Page):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.gives_consent and player.participant.active and player.round_number <= C.NUM_ROUNDS 
+        return player.participant.gives_consent and player.participant.complete_presurvey and player.round_number <= C.NUM_ROUNDS 
 
 
 class Commitment(Page):
@@ -413,11 +420,11 @@ class Commitment(Page):
         
         if total_commitment < 3:
             player.participant.failed_commitment = True # initially false
-            player.participant.active = False
+            player.participant.complete_presurvey = False
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.active and player.round_number == C.NUM_ROUNDS
+        return player.participant.complete_presurvey and player.participant.eligible_notneutral and player.round_number == C.NUM_ROUNDS
         """
         only displayed if participant eligible
         if not eligible, plan accordingly. 
@@ -429,7 +436,7 @@ class FinalPage(Page):
     timeout_seconds = 5
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS and player.participant.active
+        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey
     
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -440,6 +447,7 @@ class FinalPage(Page):
 #                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
 #                  Scenario, Commitment, FinalPage]
 
+# Full page sequence
 page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
                  Scenario, Commitment, FinalPage]

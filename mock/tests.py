@@ -5,9 +5,6 @@ from . import *
 
 class PlayerBot(Bot):
     def play_round(self):
-        #yield GroupingWaitPage
-        #yield GroupSizeWaitPage
-        #yield DiscussionGRPWaitPage
         if self.player.round_number == 1:
             yield Phase3
             yield Nudge

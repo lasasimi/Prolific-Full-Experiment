@@ -5,12 +5,14 @@ SESSION_CONFIGS = [
         name='pilotsurveyALL',
         #app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
-        num_demo_participants=8,
+        num_demo_participants=8, # 9x4 + 9x8
         display_name="Combined app",
-        completionlink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay
-        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus (no consent, fail attention check, fail training, fail commitment)
-        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=COQQW3A7',
-        bonuslink='https://app.prolific.com/submissions/complete?cc=COANJBS5', # max bonus
+        # no consent, failed training, faield attention check, and became inactive in mock app
+        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
+        # finished presurvey, no commitment
+        basepaylink='https://app.prolific.com/submissions/complete?cc=COQQW3A7', # base pay only
+        # finished presurvey, commitment, waited too long OR completed mock app
+        bonuslink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay + waiting bonus OR max pay
         scenario_id='s3_n',
     ),
 ]
@@ -27,7 +29,9 @@ SESSION_CONFIG_DEFAULTS = dict(
 PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
-                      'scenario','anticonformist','position','own_faction','other_faction','discussion_grp']
+                      'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
+                      'eligible_notneutral',
+                      'simulated_time']# For bots, this will be used to simulate wait time
 SESSION_FIELDS = ['combined_responses','N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50']
 
 
