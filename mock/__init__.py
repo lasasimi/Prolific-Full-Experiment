@@ -140,18 +140,47 @@ class Player(BasePlayer):
                                             widget=widgets.RadioSelectHorizontal())
     forced_response = models.BooleanField(initial=False)
 
+
+# session.N04_p00 = 0
+#     session.N04_p25 = 0
+#     session.N04_p50 = 0
+#     session.N08_p00 = 0
+#     session.N08_p25 = 0
+#     session.N08_p50 = 0
+
+# ADD THE COUNTERS
+
+def counters_update(group:Group):
+    if group.group_size == 'N08':
+        if group.anti_prop == 'p00':
+            group.subsession.session.N08_p00 += 1
+        if group.anti_prop == 'p25':
+            group.subsession.session.N08_p25 += 1
+        if group.anti_prop == 'p50':
+            group.subsession.session.N08_p50 += 1
+    if group.group_size == 'N04':
+        if group.anti_prop == 'p00':
+            group.subsession.session.N04_p00 += 1
+        if group.anti_prop == 'p25':
+            group.subsession.session.N04_p25 += 1
+        if group.anti_prop == 'p50':
+            group.subsession.session.N04_p50 += 1
+
 def p_00(group:Group):
     group.anti_prop = 'p00'
+    counters_update(group)
 
 def p_25(group:Group):
     group.anti_prop = 'p25'
+    counters_update(group)
 
 def p_50(group:Group):
     group.anti_prop = 'p50'
+    counters_update(group)
 
 def random_p(group:Group):
     group.anti_prop = random.choice(['p00','p25','p50'])
-
+    counters_update(group)
 
 # PAGES
 class GroupingWaitPage(WaitPage):
@@ -220,7 +249,6 @@ class GroupSizeWaitPage(WaitPage):
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1 and player.participant.active 
-
 
 
 class DiscussionGRPWaitPage(WaitPage):
@@ -368,6 +396,4 @@ class Discussion(Page):
     def is_displayed(player):
         return player.participant.active and not player.participant.single_group
 
-
 page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
-# page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
