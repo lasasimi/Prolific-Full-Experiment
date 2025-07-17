@@ -1,63 +1,50 @@
 {{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ endblock }}
 {{ block content }}
 
+<!-- Dismissible & auto-fading banner -->
+<div id="banner-wrapper">
+    <div id="banner">
+        <span>Congratulations, you have successfully completed the Training phase.</span>
+
+        <!-- Close button -->
+        <span class="banner-close" onclick="dismissBanner()">&times;</span>
+    </div>
+</div>
+
+ 
 <div class="card bg-mid m-0">
     <h2 class="card-header">🟨 Phase 2: Survey</h2>
     <div class="card-body"> 
-    <p> Congratulations, you have successfully completed the Training phase.</p> 
+
+    
     <h5><strong>Welcome to Phase 2: Survey </strong></h5>
-   In the next phase, you will read a series of neighborhood dilemmas encountered by your village. After each dilemma, you will be asked a set of questions. Before we begin, we will show you the neighborhood situation again to help you recall the context
+    
+    In the next phase, you will read a series of dilemmas encountered by your village. After each dilemma, you will be asked a set of questions. Before we begin, we will show you the neighborhood situation again to help you recall the context. 
     <p class="green-box">✅ You must complete this phase, along with Phase 1, to receive the base payment.</p>
+    
+    <img src="/static/village-image.jpg" class="img-fluid" alt="Neighborhood Image" style="float:left; margin-right: 20px; max-width: 100%; height: 300px; "> 
+    <p>🏘️ Imagine that <strong>you live in a village of around 50 houses owned by neighbors</strong> of different ages, occupations, and incomes. </p>
+    <p>👨‍👨‍👦‍👦 The village has <strong>many shared facilities</strong> and sometimes issues arise about what to do collectively about these facilities. </p>
+    <p>🏡 There are often different opinions on how to handle these issues. <strong>All neighbors meet as a community once every six months to make a decision</strong> about the neighborhood problems. </p>
+    
+    <p>💭 We’d like to hear <strong>your initial opinions on the dilemmas</strong> your neighborhood is facing, which will be introduced on the next screen.</p>
+
     </div>
 </div>
 
 <br>
     <button class="next-button" type="submit">Next</button>
-<style>
-    .green-box{
-        margin-top: 20px; 
-        background-color: #d4edda; 
-        padding: 12px; 
-        border-left: 5px solid #28a745; 
-        border-radius: 4px;
-    }.responsive-image {
-        max-width: 100%; /* Ensures the image does not exceed the container width */
-        height: auto; /* Maintains the aspect ratio */
-        display: block; /* Centers the image when combined with margin auto */
-        margin: auto;
-        border-radius: 8px; /* Optional: Adds rounded corners */
+
+<!-- JavaScript to handle the banner dismissal -->
+<script>
+    function dismissBanner() {
+        const banner = document.getElementById('banner');
+        banner.style.opacity = '0';
+        banner.style.visibility = 'hidden';
     }
 
-    /* Media query for narrow devices */
-    @media (max-width: 600px) {
-        .responsive-image {
-            max-width: 90%; /* Slightly smaller width for narrow screens */
-            height: auto; /* Maintain aspect ratio */
-        }
-    }
-        .next-button {
-        background-color: white;
-        color: black;
-        border: 2px solid #008CBA;
-        font-size: 16px;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .next-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .next-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    
-    </style>
-</style>
+    setTimeout(dismissBanner, 2300);
+</script>
 {{ endblock }}

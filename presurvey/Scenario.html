@@ -1,4 +1,5 @@
 {{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ endblock }}
 
 {{ block content }}
@@ -36,7 +37,7 @@
 
 <!-- Display the form fields in a table format -->
 
-<table class="table">
+<table class="likert-table">
   <thead>
     <colgroup>
       <col>
@@ -85,120 +86,4 @@
   }
 </script>
 
-<style>
-    .button {
-        background-color: #3182bd;
-        border: none;
-        color: white;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 18px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .button2 {
-      background-color: white;
-      color: black;
-      border: 2px solid #008CBA;
-      font-size: 16px;
-    }
-    .button2:hover {
-      background-color: #008CBA;
-      color: white;
-    }
-    .button2.selected {
-        background-color: #005f8b; /* Darker blue for selected state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    
-    .button-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns, change 3 to 2 for 2 answer options */
-      gap: 10px; /* Spacing between buttons */
-      margin-top: 10px;
-    }
-    
-    /* Media query for narrow devices */
-    @media (max-width: 600px) {
-        .button-container {
-            grid-template-columns: 1fr; /* Switch to a single column layout */
-            gap: 5px; /* Reduce spacing between buttons */
-        }
-    }    
-    .button-container.button {
-      text-align: center;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-    .next-button {
-        background-color: white;
-        color: black;
-        border: 2px solid #008CBA;
-        font-size: 16px;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .next-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .next-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    .matrix-table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
-
-    table {
-      width: 75%;
-      padding: 10px;
-      table-layout: fixed; /* Key: enforces equal column width */
-      
-    }
-    th {
-      padding: 10px;
-      font-size: normal;
-      text-align: left;
-      word-wrap:normal; /* Prevents overflow in fixed layout */
-      font-weight: normal; /* Ensures text is not bold */
-    }
-    th.scale-label { /* style for the likert label */
-      width: 15%; /* Adjust this value as needed */
-      text-align: center;
-    }
-    td {
-      padding: 8px;
-      text-align: center;
-      word-wrap: break-word; /* Prevents overflow in fixed layout */
-    }
-    colgroup col:first-child {
-      width: 60%; /* First column (question label) */
-    }
-    colgroup col:not(:first-child) {
-      width: 10%; /* Evenly divide the rest (5 columns = 60% total) */
-    }
-
-    /* Speech bubble background classes */
-.bg-sage {
-    background-color: #c7dbb2;
-}
-.bg-gray {
-    background-color: #e4e9eb;
-}
-.bg-lavender {
-    background-color: #c8b6e3;
-}
-    </style>
 {{ endblock }}

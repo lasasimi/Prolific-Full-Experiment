@@ -1,4 +1,6 @@
-{{ block title }}{{ endblock }}
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
 {{ block content }}
 
 <div class="card bg-mid m-0">
@@ -9,63 +11,20 @@
     <p>Before we begin, we will give you a short training session to familiarize you with the task.
     The next screen will show you an example of a dilemma and you can see how your neighbors responded to it. You will be given a chance to respond to the dilemma and then answer some questions about it to test 
     your comprehension.
-  </p>
+    </p>
 
-  <p class="green-box">
-    ✅ You must complete this phase to be eligible for payment and to continue in the study.
-  </p>
-
+    <p class="green-box">
+        ✅ You must complete this phase to be eligible for payment and to continue in the study.
+    </p>
+    <br>
+    <img src="/static/village-image.jpg" class="img-fluid" alt="Neighborhood Image" style="float:left; margin-right: 20px; max-width: 100%; height: 300px; "> 
+    <p>🏘️ Imagine that you live in a village of around 50 houses owned by neighbors of different ages, occupations, and incomes. </p>
+    <p>👨‍👨‍👦‍👦 The village has many shared facilities, such as the children's playground, the community garden, garbage collection area, community halls, and so on. </p>
+    🤝All neighbors meet as a community once every six months to discuss issues regarding maintenance and neighborhood problems.
     </div>
 </div>
 
 <br>
     {{ formfields }}
     <button class="next-button" type="submit">Next</button>
-<style>
-    .green-box{
-        margin-top: 20px; 
-        background-color: #d4edda; 
-        padding: 12px; 
-        border-left: 5px solid #28a745; 
-        border-radius: 4px;
-    }
-    .responsive-image {
-        max-width: 100%; /* Ensures the image does not exceed the container width */
-        height: auto; /* Maintains the aspect ratio */
-        display: block; /* Centers the image when combined with margin auto */
-        margin: auto;
-        border-radius: 8px; /* Optional: Adds rounded corners */
-    }
-
-    /* Media query for narrow devices */
-    @media (max-width: 600px) {
-        .responsive-image {
-            max-width: 90%; /* Slightly smaller width for narrow screens */
-            height: auto; /* Maintain aspect ratio */
-        }
-    }
-        .next-button {
-        background-color: white;
-        color: black;
-        border: 2px solid #008CBA;
-        font-size: 16px;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .next-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .next-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    
-    </style>
-</style>
 {{ endblock }}

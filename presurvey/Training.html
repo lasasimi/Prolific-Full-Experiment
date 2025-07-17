@@ -1,4 +1,5 @@
 {{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ endblock }}
 {{ block content }}
 
@@ -37,100 +38,6 @@
     </form>
       
     </div>
-
-<br>
-
-
-<style>
-    .yellow-box{
-        margin-top: 20px; 
-        background-color: #f5e4c3; 
-        padding: 12px; 
-        border-left: 5px solid rgb(255, 191, 0); 
-        border-radius: 4px;
-    }
-   .button {
-        background-color: #3182bd;
-        border: none;
-        color: white;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 18px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .button2 {
-      background-color: white;
-      color: black;
-      border: 2px solid #008CBA;
-      font-size: 16px;
-    }
-    .button2:hover {
-      background-color: #008CBA;
-      color: white;
-    }
-    .button2.selected {
-        background-color: #005f8b; /* Darker blue for selected state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    
-    .button-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns, change 3 to 2 for 2 answer options */
-      gap: 10px; /* Spacing between buttons */
-      margin-top: 10px;
-    }
-
-    .next-button {
-    background-color: white;
-    color: black;
-    border: 2px solid #008CBA;
-    font-size: 16px;
-    padding: 10px 24px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    cursor: pointer;
-    border-radius: 12px;
-    }
-    .next-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .next-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-
-
-/* Speech bubble background classes */
-.bg-sage {
-    background-color: #c7dbb2;
-}
-.bg-gray {
-    background-color: #e4e9eb;
-}
-.bg-lavender {
-    background-color: #c8b6e3;
-}
-
-/* Matching triangle tips */
-.bg-sage::after {
-    border-color: #c7dbb2 transparent transparent transparent;
-}
-.bg-gray::after {
-    border-color: #e4e9eb transparent transparent transparent;
-}
-.bg-lavender::after {
-    border-color: #c8b6e3 transparent transparent transparent;
-}
-
-</style>
 
 <script>
 

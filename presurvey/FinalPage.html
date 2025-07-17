@@ -1,6 +1,6 @@
 
-
 {{ block content }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 <div class="card bg-mid m-0">
     <h2 class="card-header">Waiting For Group</h2>
     <div class="card-body">
@@ -10,31 +10,6 @@
 </div>
 <br>
 <button class="next-button" type="submit">Next</button>
-<style>
-        .next-button {
-        background-color: white;
-        color: black;
-        border: 2px solid #008CBA;
-        font-size: 16px;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .next-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .next-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    
-    </style>
-</style>
 {{ endblock }}
 
 

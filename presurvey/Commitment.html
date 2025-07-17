@@ -1,20 +1,28 @@
 {{ block title }}
-
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ endblock }}
 {{ block content }}
+
+<!-- Dismissible & auto-fading banner -->
+<div id="banner-wrapper">
+    <div id="banner">
+        <span>Congratulations, you have successfully completed the Survey phase.</span>
+
+        <!-- Close button -->
+        <span class="banner-close" onclick="dismissBanner()">&times;</span>
+    </div>
+</div>
 
 <div class="card bg-mid m-0">
     <h2 class="card-header">Next phase: 🟥 Phase 3 Introduction – Group Discussions </h2>
     <div class="card-body">
         
 
-        <h5><strong>🗣️ Next Phase: Group Discussion with Neighbors</strong></h5>
-
-        <p><strong>You have successfully completed the Survey phase.</strong>
-            <br>
-            In this next phase, you’ll be <strong>placed into a small discussion group</strong> with other participants from your neighborhood.</p>
+        <h5><strong>🚶‍➡️🚶🏻 Next Phase: Meeting with Neighbors</strong></h5>
+         <p>📅 The next community meeting is scheduled for <strong>next week</strong>.
+           In this next phase, imagine that you <strong>run into some neighbors by chance</strong>—imagine you're out for a walk and strike up a brief chat. You get   to <strong>talk about a dilemma that’s up for discussion in the upcoming village meeting</strong>. 
              
-            Together, you’ll <strong>talk about the same dilemma</strong> and hear each other’s perspectives.
+           <p>Together, you’ll <strong>share your opinion about the same dilemma</strong> and get to hear each other’s perspectives.</p>
         </p>
 
         <h5><strong>⚠️ Please note:</strong></strong></h5>
@@ -40,46 +48,21 @@
 
         <h5><strong>📌 By selecting “Agree,” you confirm that:</strong></strong></h5>
 
-        {{ formfield 'commit_attention_Q1' }}
-        {{ formfield 'commit_attention_Q2' }}
-        {{ formfield 'commit_attention_Q3' }}
+        {{ formfields }}
     </div>
 
 </div>
 <br>
 <button class="next-button" type="submit">Next</button>
-<style>
-    .green-box{
-    margin-top: 20px; 
-    background-color: #d4edda; 
-    padding: 12px; 
-    border-left: 5px solid #28a745; 
-    border-radius: 4px;
-}
-    .card{
-        max-width: 1600px;
-        overflow-x:visible;
+
+<!-- JavaScript to handle the banner dismissal -->
+<script>
+    function dismissBanner() {
+        const banner = document.getElementById('banner');
+        banner.style.opacity = '0';
+        banner.style.visibility = 'hidden';
     }
-    .next-button {
-    background-color: white;
-    color: black;
-    border: 2px solid #008CBA;
-    font-size: 16px;
-    padding: 10px 24px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    cursor: pointer;
-    border-radius: 12px;
-}
-.next-button:hover {
-    background-color: #008CBA;
-    color: white;
-}
-.next-button:active {
-    background-color: #005f8b; /* Darker blue for clicked state */
-    color: white;
-    border: 2px solid #005f8b;
-}
-</style>
+
+    setTimeout(dismissBanner, 2300);
+</script>
 {{ endblock }}

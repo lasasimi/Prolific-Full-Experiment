@@ -1,0 +1,282 @@
+/* Card Styles */
+.card{
+    max-width: 1600px;
+    overflow-x:visible;
+}
+/* Banner Styles */
+#banner-wrapper {
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+#banner {
+    position: relative;
+    background-color: #c6cec9;
+    color: black;
+    padding: 5px 20px 5px 5px;
+    border-radius: 5px;
+    transition: opacity 1s ease-out, visibility 1s ease-out;
+    text-align: center;
+    opacity: 1;
+    visibility: visible;
+}
+
+.banner-close {
+    position: absolute;
+    top: 1px;
+    right: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    color: black;
+}
+
+/* Colored Box Styles */
+.yellow-box{
+        margin-top: 20px; 
+        background-color: #f5e4c3; 
+        padding: 12px; 
+        border-left: 5px solid rgb(255, 191, 0); 
+        border-radius: 4px;
+}
+.green-box{
+    margin-top: 20px; 
+    background-color: #d4edda; 
+    padding: 12px; 
+    border-left: 5px solid #28a745; 
+    border-radius: 4px;
+}
+
+/* Responsive Image Styles */
+.responsive-image {
+    max-width: 100%; /* Ensures the image does not exceed the container width */
+    height: auto; /* Maintains the aspect ratio */
+    display: block; /* Centers the image when combined with margin auto */
+    margin: auto;
+    border-radius: 8px; /* Optional: Adds rounded corners */
+}
+
+/* Media query for narrow devices */
+@media (max-width: 600px) {
+    .responsive-image {
+        max-width: 90%; /* Slightly smaller width for narrow screens */
+        height: auto; /* Maintain aspect ratio */
+    }
+}
+
+
+/* Button Styles */
+.button {
+    background-color: #3182bd;
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.button2 {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+    font-size: 16px;
+}
+
+.button2:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+.button2.selected {
+    background-color: #005f8b; /* Darker blue for selected state */
+    color: white;
+    border: 2px solid #005f8b;
+}
+
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns, change 3 to 2 for 2 answer options */
+    gap: 10px; /* Spacing between buttons */
+    margin-top: 10px;
+}
+
+/* Next Button Styles */
+.next-button {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+    font-size: 16px;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 12px;
+}
+.next-button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+.next-button:active {
+    background-color: #005f8b; /* Darker blue for clicked state */
+    color: white;
+    border: 2px solid #005f8b;
+}
+
+/* Table Styles */
+table {
+      width: 100%;
+      padding: 20px;
+      table-layout: fixed; /* Key: enforces equal column width */
+
+    }
+    th {
+      font-size:normal;
+      text-align: center;
+      word-wrap:normal; /* Prevents overflow in fixed layout */
+      font-weight: normal; /* Ensures text is not bold */
+      
+    }
+    td {
+      padding: 8px;
+      border:none;
+      text-align: center;
+      word-wrap: break-word; /* Prevents overflow in fixed layout */
+    }
+
+/* Table for Likert scale*/
+.likert-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        
+    }
+
+    table {
+      width: 100%;
+      padding: 10px;
+      table-layout: fixed; /* Key: enforces equal column width */
+      
+    }
+    th {
+      padding: 10px;
+      font-size: normal;
+      text-align: left;
+      word-wrap:normal; /* Prevents overflow in fixed layout */
+      font-weight: normal;
+      border-bottom: 1px solid #b9b9b9; /* Adds a border to table headers */
+    }
+    th.scale-label { /* style for the likert label */
+      width: 15%; /* Adjust this value as needed */
+      text-align: center;
+      border-bottom: 1px solid #b9b9b9; /* Adds a border to table headers */
+    }
+    td {
+      padding: 8px;
+      text-align: center;
+      word-wrap: break-word; /* Prevents overflow in fixed layout */
+      border-bottom: 1px solid #b9b9b9; /* Adds a border to table headers */    
+    }
+    colgroup col:first-child {
+      width: 60%; /* First column (question label) */
+    }
+    colgroup col:not(:first-child) {
+      width: 10%; /* Evenly divide the rest (5 columns = 60% total) */
+    }
+
+/* Alert for warning */
+.alert {
+    background-color: #fdecea;
+    color: #d32f2f;
+    border-left: 5px solid #d32f2f;
+    padding: 12px 16px;
+    margin-top: 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}  
+
+/* Player and neighbors avatars */
+.players-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.players-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 0.4rem 0.4rem;
+}
+.neighbors {
+    padding: 0.2rem;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #ccc;
+    border-radius: 50%;
+}
+
+/* Speech bubble styles */
+.speech-bubble {
+    position: relative;
+    background: #f0f0f0;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    margin-bottom: 10px;
+    text-align: center;
+    min-width: 120px;
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0 10px;
+    border-style: solid;
+}
+
+/* Speech bubble background classes */
+.bg-sage {
+    background-color: #c7dbb2;
+}
+.bg-gray {
+    background-color: #e4e9eb;
+}
+.bg-lavender {
+    background-color: #c8b6e3;
+}
+
+/* Matching triangle tips */
+.bg-sage::after {
+    border-color: #c7dbb2 transparent transparent transparent;
+}
+.bg-gray::after {
+    border-color: #e4e9eb transparent transparent transparent;
+}
+.bg-lavender::after {
+    border-color: #c8b6e3 transparent transparent transparent;
+}

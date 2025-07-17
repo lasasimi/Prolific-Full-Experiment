@@ -202,12 +202,6 @@ class Demographics(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.complete_presurvey
-    
-
-class Neighborhood(Page):
-    @staticmethod
-    def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.complete_presurvey
 
 
 class NeighborhoodInstruction(Page):
@@ -227,8 +221,13 @@ class Training(Page):
 
 class TrainingNeighbor_1(Page):
     form_model='player'
-    form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
 
+    @staticmethod
+    def get_form_fields(player:Player):  
+        form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
+        random.shuffle(form_fields)  
+        return form_fields
+    
     @staticmethod
     def vars_for_template(player: Player):
         # Some made up responses of other players' to be displayed
@@ -259,7 +258,12 @@ class TrainingNeighbor_1(Page):
 
 class TrainingNeighbor_2(Page):
     form_model='player'
-    form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
+    #form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
+    @staticmethod
+    def get_form_fields(player:Player):  
+        form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
+        random.shuffle(form_fields)  
+        return form_fields
     
     @staticmethod
     def vars_for_template(player: Player):
@@ -315,7 +319,12 @@ class AttentionCheck(Page):
 
 class TrainingNeighbor_3(Page):
     form_model='player'
-    form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
+
+    @staticmethod
+    def get_form_fields(player:Player):  
+        form_fields = ['dilemmatopic', 'majority', 'howmanyneighbors']
+        random.shuffle(form_fields)  
+        return form_fields
     
     @staticmethod
     def vars_for_template(player: Player):
@@ -350,13 +359,6 @@ class ExperimentInstruction(Page):
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.complete_presurvey and player.round_number == 1
-
-
-class Neighborhood_1(Page):
-    @staticmethod
-    def is_displayed(player:Player):
-        return player.participant.complete_presurvey and player.round_number == 1
-    
 
 class Scenario(Page):
     form_model = 'player'
@@ -411,8 +413,13 @@ class Scenario(Page):
 
 class Commitment(Page):
     form_model = 'player'
-    form_fields = ['commit_attention_Q1','commit_attention_Q2', 'commit_attention_Q3']
 
+    @staticmethod
+    def get_form_fields(player:Player):  
+        form_fields = ['commit_attention_Q1','commit_attention_Q2', 'commit_attention_Q3']
+        random.shuffle(form_fields)  
+        return form_fields
+    
     @staticmethod
     def before_next_page(player, timeout_happened):
         total_commitment = np.sum([player.commit_attention_Q1, player.commit_attention_Q2,
@@ -421,7 +428,11 @@ class Commitment(Page):
         if total_commitment < 3:
             player.participant.failed_commitment = True # initially false
             player.participant.complete_presurvey = False
-
+    
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        player.participant.wait_page_arrival = time.time()
+        
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.complete_presurvey and player.participant.eligible_notneutral and player.round_number == C.NUM_ROUNDS
@@ -448,6 +459,6 @@ class FinalPage(Page):
 #                  Scenario, Commitment, FinalPage]
 
 #Full page sequence
-page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Neighborhood, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction, Neighborhood_1,
-                 Scenario, Commitment, FinalPage]
+page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+                 Scenario, Commitment]

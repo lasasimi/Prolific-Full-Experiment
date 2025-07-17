@@ -1,5 +1,5 @@
 {{ block title }}
-
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ endblock }}
 {{ block content }}
 <h2>🟦 Phase 1: Training & Comprehension</h2>
@@ -53,9 +53,7 @@
     <div class="card-body">
             <p> Please answer the following questions about the dilemma you just read. 
             You can only proceed to the next steps after <b>answering all questions correctly</b> within 2 attempts. </p>
-            {{ formfield 'majority' }}
-            {{ formfield 'dilemmatopic' }}
-            {{ formfield 'howmanyneighbors' }}
+            {{ formfields }}
     </div>
 </div>
 
@@ -63,118 +61,4 @@
 <br>
     <button class="next-button" type="submit">Next</button>
 
-
-<style>
-        .next-button {
-        background-color: white;
-        color: black;
-        border: 2px solid #008CBA;
-        font-size: 16px;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .next-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .next-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-
-/* To display the player avatars and speech bubbles */
-.players-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.players-row {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-.player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    padding: 0.4rem 0.4rem;
-}
-.neighbors {
-    padding: 0.2rem;
-}
-
-.avatar {
-    width: 50px;
-    height: 50px;
-    background-color: #ccc;
-    border-radius: 50%;
-}
-
-.speech-bubble {
-    position: relative;
-    background: #f0f0f0;
-    border-radius: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    margin-bottom: 10px;
-    text-align: center;
-    min-width: 120px;
-}
-
-.speech-bubble:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 10px 10px 0 10px;
-    border-style: solid;
-}
-
-.alert {
-    background-color: #fdecea;
-    color: #d32f2f;
-    border-left: 5px solid #d32f2f;
-    padding: 12px 16px;
-    margin-top: 10px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-/* Speech bubble background classes */
-.bg-sage {
-    background-color: #c7dbb2;
-}
-.bg-gray {
-    background-color: #e4e9eb;
-}
-.bg-lavender {
-    background-color: #c8b6e3;
-}
-
-/* Matching triangle tips */
-.bg-sage::after {
-    border-color: #c7dbb2 transparent transparent transparent;
-}
-.bg-gray::after {
-    border-color: #e4e9eb transparent transparent transparent;
-}
-.bg-lavender::after {
-    border-color: #c8b6e3 transparent transparent transparent;
-}
-</style>
 {{ endblock }}
