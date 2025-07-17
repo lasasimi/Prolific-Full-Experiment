@@ -37,19 +37,19 @@ class ExitPage(Page):
             player.participant.reason="You did not pass the attention check."
         elif player.participant.training_attempt == 0:
             player.participant.reason="You did not pass the Training phase by answering incorrectly for too many times."
-        elif player.participant.gives_consent == False:
+        elif not player.participant.gives_consent:
             player.participant.reason="You did not consent to participate in the study."
         # From mock app
-        elif player.participant.active == False:
+        elif not player.participant.active:
             player.participant.reason="You have been timed out for inactivity."
-        
         return dict(
                 nopay=player.subsession.session.config['returnlink'],
             )
 
     @staticmethod
     def is_displayed(player: Player):
-        if not player.participant.failed_commitment:
-            return not player.participant.gives_consent or not player.participant.complete_presurvey 
+        # if they did not complete presurvey, they did not get payment either because they were not active in the mock app, or did not pass the attention/training(complete_presurvey), or did not give consent
+        if not player.participant.complete_presurvey:
+            return not player.participant.active or not player.participant.complete_presurvey or not player.participant.gives_consent
 
 page_sequence = [ExitPage]

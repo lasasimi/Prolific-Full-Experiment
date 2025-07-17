@@ -1,5 +1,5 @@
 {{ extends 'otree/WaitPage.html' }}
-
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ block title }}
 <!-- Custom title handled inside content -->
 {{ endblock }}
@@ -7,33 +7,8 @@
 {{ block content }}
 
 <style>
-    .progress {
-        width: 80%;
-        height: 20px;
-        margin: 0 auto;
-    }
     body {
-        background-color: #d3d3d3;
-    }
-    .wait-container {
-        max-width: 700px;
-        margin: auto;
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        padding: 20px;
-        background-color: #f8f8f8;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .progress-wrapper {
-        width: 100%;
-        margin: 20px 0;
-    }
-    .custom-title {
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
+        background-color: #d3d3d3; /* Light gray background */
     }
 </style>
 

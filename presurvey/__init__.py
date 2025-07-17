@@ -301,15 +301,12 @@ class AttentionCheck(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         if timeout_happened:
-            player.participant.failed_attention_check = True 
-            player.participant.complete_presurvey = False
+            player.participant.failed_attention_check = True # initially False
+            player.participant.complete_presurvey = False # initially True
         else:
             if player.attention_check != 2: # wrong answer
                player.participant.failed_attention_check = True 
                player.participant.complete_presurvey = False
-            else:
-                player.participant.failed_attention_check = False 
-                player.participant.complete_presurvey = True
 
     @staticmethod
     def is_displayed(player:Player):
@@ -381,7 +378,7 @@ class Scenario(Page):
         # Get the current scenario code
         player.scenario_code = player.participant.vars['scenario_order'][player.round_number - 1]['code']
         
-        # Store the response in the participant's vars and record the time of waiting
+        # Store the response in the participant's vars 
         player.participant.vars['all_responses'][player.scenario_code] = player.response
         # Combine all participants' all_responses dictionaries into a session-level variable
         if 'combined_responses' not in player.session.vars:
@@ -389,7 +386,7 @@ class Scenario(Page):
             # Add the current player's all_responses dictionary to the combined dictionary
         
         player.session.vars['combined_responses'][player.participant.code] = player.participant.vars['all_responses']
-
+        
         # In the last round, check whether the player is eligible for the discussion
         if player.round_number == C.NUM_ROUNDS:
             
@@ -398,6 +395,8 @@ class Scenario(Page):
                 response == 0 for response in player.participant.vars['all_responses'].values()
             )
 
+            player.participant.complete_presurvey = player.participant.eligible_notneutral
+            print(f"Debug: eligibility: {player.participant.eligible_notneutral}" )
             """
             in the last round, check whether the player is eligible for the discussion
             if neutral in all options:
@@ -428,30 +427,30 @@ class Commitment(Page):
         if total_commitment < 3:
             player.participant.failed_commitment = True # initially false
             player.participant.complete_presurvey = False
-    
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        player.participant.wait_page_arrival = time.time()
-        
+        else:
+            player.participant.complete_presurvey = True # this is to check if participant moves forward to the mock app
+            player.participant.wait_page_arrival = time.time()
+
+        print(f"Commitment attempt: {player.participant.failed_commitment}, Complete presurvey: {player.participant.complete_presurvey}")
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.complete_presurvey and player.participant.eligible_notneutral and player.round_number == C.NUM_ROUNDS
+        return player.participant.complete_presurvey and player.round_number == C.NUM_ROUNDS
         """
         only displayed if participant eligible
         if not eligible, plan accordingly. 
         """
   
     
-class FinalPage(Page):
-    form_model = 'player'
-    timeout_seconds = 5
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey
+# class FinalPage(Page):
+#     form_model = 'player'
+#     timeout_seconds = 5
+#     @staticmethod
+#     def is_displayed(player: Player):
+#         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey
     
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        player.participant.wait_page_arrival = time.time()
+#     @staticmethod
+#     def before_next_page(player: Player, timeout_happened):
+#         player.participant.wait_page_arrival = time.time()
 
 
 # page_sequence = [Introduction, Training, TrainingNeighbor_1, 

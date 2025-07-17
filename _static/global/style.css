@@ -104,6 +104,18 @@
     gap: 10px; /* Spacing between buttons */
     margin-top: 10px;
 }
+    /* Media query for narrow devices */
+    @media (max-width: 600px) {
+        .button-container {
+            grid-template-columns: 1fr; /* Switch to a single column layout */
+            gap: 5px; /* Reduce spacing between buttons */
+        }
+    }    
+    .button-container.button {
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
 
 /* Next Button Styles */
 .next-button {
@@ -191,9 +203,9 @@ table {
 
 /* Alert for warning */
 .alert {
-    background-color: #fdecea;
-    color: #d32f2f;
-    border-left: 5px solid #d32f2f;
+    background-color: #fdfbea;
+    color: #d7901f;
+    border-left: 5px solid #dc942f;
     padding: 12px 16px;
     margin-top: 10px;
     border-radius: 4px;
@@ -279,4 +291,49 @@ table {
 }
 .bg-lavender::after {
     border-color: #c8b6e3 transparent transparent transparent;
+}
+
+/* Nudge styles */
+.nudge-anti-card{
+    margin-top: 20px;
+    background-color: #e9caca; 
+    padding: 12px; 
+    border-left: 5px solid #d43d3b; 
+    border-radius: 4px;
+
+}
+.nudge-confo-card{
+    margin-top: 20px;
+    background-color: #b6c6e7; 
+    padding: 12px; 
+    border-left: 5px solid #1b54d0; 
+    border-radius: 4px;
+}
+
+/* Progress bar and waiting pages styles */
+.progress {
+    width: 80%;
+    height: 20px;
+    margin: 0 auto;
+}
+
+.wait-container {
+    max-width: 700px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.progress-wrapper {
+    width: 100%;
+    margin: 20px 0;
+}
+.custom-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }

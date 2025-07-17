@@ -1,6 +1,6 @@
 
 {{ block title }}
-
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 What others are thinking
     
 {{ endblock }}
@@ -13,14 +13,14 @@ What others are thinking
             To help reach the best decision, someone needs to voice a different 
             view to empower others to speak up.
             <br>
-                👉 <strong>That someone is you.</strong> Try not to conform—challenge the norm and make space for overlooked ideas.
+            👉 <strong>That someone is you.</strong> Try not to conform—challenge the norm and make space for overlooked ideas.
     </div>       
 {% else %}
     <div class="nudge-confo-card">
         <h2>💡 Tip: Wisdom of Crowds</h2>
             Not sure what to choose? When the answer isn’t obvious, it’s helpful to see what others are doing.
             <br>
-            👀 We'll soon show you your neighbors' choices—see if the majority points you in a clearer direction.
+            👀 We are showing you your neighbors' choices—see if the majority points you in a clearer direction.
     </div>     
 
 {% endif %}
@@ -80,11 +80,7 @@ What others are thinking
 </div>
 
 <br>
-
-
-
 <br>
-
 
 <script>
   function selectAnswer(button, value) {
@@ -101,198 +97,4 @@ What others are thinking
   }
 </script>
 
-<style>
-    .nudge-anti-card{
-        margin-top: 20px;
-        background-color: #e9caca; 
-        padding: 12px; 
-        border-left: 5px solid #d43d3b; 
-        border-radius: 4px;
-
-    }
-    .nudge-confo-card{
-        margin-top: 20px;
-        background-color: #b6c6e7; 
-        padding: 12px; 
-        border-left: 5px solid #1b54d0; 
-        border-radius: 4px;
-    }
-    .button {
-        background-color: #3182bd;
-        border: none;
-        color: white;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 18px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .button2 {
-      background-color: white;
-      color: black;
-      border: 2px solid #008CBA;
-      font-size: 16px;
-    }
-    .button2:hover {
-      background-color: #008CBA;
-      color: white;
-    }
-    .button2.selected {
-        background-color: #005f8b; /* Darker blue for selected state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    
-    .button-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns, change 3 to 2 for 2 answer options */
-      gap: 10px; /* Spacing between buttons */
-      margin-top: 10px;
-    }
-    /* Media query for narrow devices */
-    @media (max-width: 600px) {
-        .button-container {
-            grid-template-columns: 1fr; /* Switch to a single column layout */
-            gap: 5px; /* Reduce spacing between buttons */
-        }
-    }    
-    .button-container.button {
-      text-align: center;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-    .next-button {
-        background-color: white;
-        color: black;
-        border: 2px solid #008CBA;
-        font-size: 16px;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 12px;
-    }
-    .next-button:hover {
-        background-color: #008CBA;
-        color: white;
-    }
-    .next-button:active {
-        background-color: #005f8b; /* Darker blue for clicked state */
-        color: white;
-        border: 2px solid #005f8b;
-    }
-    .matrix-table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
-
-    table {
-      width: 75%;
-      padding: 10px;
-      table-layout: fixed; /* Key: enforces equal column width */
-      
-    }
-    th {
-      padding: 10px;
-      font-size: normal;
-      text-align: left;
-      word-wrap:normal; /* Prevents overflow in fixed layout */
-      font-weight: normal; /* Ensures text is not bold */
-    }
-    th.scale-label { /* style for the likert label */
-      width: 15%; /* Adjust this value as needed */
-      text-align: center;
-    }
-    td {
-      padding: 8px;
-      text-align: center;
-      word-wrap: break-word; /* Prevents overflow in fixed layout */
-    }
-    colgroup col:first-child {
-      width: 60%; /* First column (question label) */
-    }
-    colgroup col:not(:first-child) {
-      width: 10%; /* Evenly divide the rest (5 columns = 60% total) */
-    }
-
-/* To display the player avatars and speech bubbles */
-.players-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.players-row {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-.player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    padding: 0.4rem 0.4rem;
-}
-.neighbors {
-    padding: 0.2rem;
-}
-
-.avatar {
-    width: 50px;
-    height: 50px;
-    background-color: #ccc;
-    border-radius: 50%;
-}
-
-.speech-bubble {
-    position: relative;
-    border-radius: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    margin-bottom: 10px;
-    text-align: center;
-    min-width: 120px;
-}
-
-.speech-bubble:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 10px 10px 0 10px;
-    border-style: solid;
-}
-
-/* Speech bubble background classes */
-.bg-sage {
-    background-color: #c7dbb2;
-}
-.bg-gray {
-    background-color: #e4e9eb;
-}
-.bg-lavender {
-    background-color: #c8b6e3;
-}
-
-/* Matching triangle tips */
-.bg-sage::after {
-    border-color: #c7dbb2 transparent transparent transparent;
-}
-.bg-gray::after {
-    border-color: #e4e9eb transparent transparent transparent;
-}
-.bg-lavender::after {
-    border-color: #c8b6e3 transparent transparent transparent;
-}
-    </style>
 {{ endblock }}

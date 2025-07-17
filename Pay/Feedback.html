@@ -23,7 +23,7 @@
     </div>
 </div>
 <br>
-<button class="next-button" type="submit">Submit</button>
+<button class="next-button" id="submit-button" type="submit">Submit</button>
 <style>
         .next-button {
         background-color: white;
@@ -47,8 +47,17 @@
         border: 2px solid #005f8b;
     }
     
-    </style>
+
 </style>
+
+<script>
+    let pay = js_vars.pay; // Retrieve the Prolific URL from js_vars
+
+    document.getElementById('submit-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        window.location.href = pay; // Redirect to the Prolific URL immediately
+    });
+</script>
 {{ endblock }}
 
 
