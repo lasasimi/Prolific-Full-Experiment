@@ -232,7 +232,7 @@ class TrainingNeighbor_1(Page):
     def vars_for_template(player: Player):
         # Some made up responses of other players' to be displayed
         return dict(
-            others_responses = [-1,1,1,1],
+            others_responses = [-1,1,1],
             scenario_title = "The Lost Cat",
             scenario_against = "Do not help with the search",
             scenario_neutral = "Verify the cat in the garden",
@@ -269,7 +269,7 @@ class TrainingNeighbor_2(Page):
     def vars_for_template(player: Player):
         # Some made up responses of other players' to be displayed
         return dict(
-            others_responses = [-1,1,1,1],
+            others_responses = [-1,1,1],
             scenario_title = "The Lost Cat",
             scenario_against = "Do not help with the search",
             scenario_neutral = "Verify the cat in the garden",
@@ -327,7 +327,7 @@ class TrainingNeighbor_3(Page):
     def vars_for_template(player: Player):
         # Some made up responses of other players' to be displayed
         return dict(
-            others_responses = [-1,1,1,1],
+            others_responses = [-1,1,1],
             scenario_title = "The Lost Cat",
             scenario_against = "Do not help with the search",
             scenario_neutral = "Verify the cat in the garden",
