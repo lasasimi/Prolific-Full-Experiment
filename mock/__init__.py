@@ -35,6 +35,8 @@ class C(BaseConstants):
     N08_p00 = 3
     N08_p25 = 3
     N08_p50 = 3
+    # MAX NUMBER OF FORCED RESPONSES 
+    MAX_FORCED = 3 
 
 class Subsession(BaseSubsession):
     pass
@@ -398,6 +400,11 @@ class Discussion(Page):
             ### REVIEW THE RULE #### 
             player.forced_response = True # only in the last round, make them inactive
             player.new_response = random.choice([-1, 0, 1])
+            player.participant.forced_response_counter += 1
+            if player.participant.forced_response_counter > C.MAX_FORCED:
+                player.participant.active = False 
+        if player.round_number == C.NUM_ROUNDS and not player.participant.active:
+            player.participant.complete_presurvey = False
 
     @staticmethod
     def is_displayed(player):

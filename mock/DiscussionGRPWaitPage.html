@@ -6,11 +6,11 @@
 
 {{ block content }}
 
-<style>
-    body {
-        background-color: #d3d3d3; /* Light gray background */
-    }
-</style>
+{{ if player.participant.active == 0 }}
+<div class="inactive_box">
+    <h1 class="inactive_text">We're sorry, you cannot continue with the study.</h1>
+</div>
+{{ endif }}
 
 <div class="wait-container">
 
@@ -43,3 +43,48 @@
 {% endif %}
 
 {{ endblock }}
+
+{{ block styles }}
+<style>
+    body {
+        background-color: #d3d3d3; /* Light gray background */
+    }
+</style>
+
+{% if player.participant.active == 0 %}
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    .inactive_box {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(211, 211, 211, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .inactive_text {
+        color: #cc0000;
+        font-weight: bold;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+{% else %}
+<style>
+    .inactive_box {
+        display: none;
+    }
+</style>
+{% endif %}
+{{ endblock}}

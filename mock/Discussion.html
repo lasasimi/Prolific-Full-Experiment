@@ -6,6 +6,12 @@ What others are thinking
 {{ endblock }}
 {{ block content }}
 
+{{ if player.participant.active == 0 }}
+<div class="inactive_box">
+    <h1 class="inactive_text">We're sorry, you cannot continue with the study.</h1>
+</div>
+{{ endif }}
+
 {% if anticonformist %}
     <div class="nudge-anti-card">
         <h2>💡 Tip: Be the Agent of Change</h2>
@@ -98,3 +104,42 @@ What others are thinking
 </script>
 
 {{ endblock }}
+
+{{ block styles }}
+{% if player.participant.active == 0 %}
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    .inactive_box {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(211, 211, 211, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .inactive_text {
+        color: #cc0000;
+        font-weight: bold;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+{% else %}
+<style>
+    .inactive_box {
+        display: none;
+    }
+</style>
+{% endif %}
+{{ endblock}}
