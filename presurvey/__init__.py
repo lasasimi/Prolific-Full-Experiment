@@ -60,7 +60,7 @@ def creating_session(subsession):
         player.participant.vars['failed_commitment'] = False
         player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
         player.participant.vars['eligible_notneutral'] = True # Initialize eligible status, will be set to False if neutral in all responses
-        
+        player.participant.vars['forced_response_counter'] = 0 
         
 class Group(BaseGroup):
     pass
