@@ -13,7 +13,6 @@ class PlayerBot(Bot):
             education_lvl='Less than high school', 
             neighborhood_type='Urban')
         yield NeighborhoodInstruction
-        yield Neighborhood
         # This is because the submit button is not a default submit button
         yield Submission(Training, 
                          {'test_scenario': '-1'}, 
@@ -24,7 +23,6 @@ class PlayerBot(Bot):
             howmanyneighbors=1)
 
         yield ExperimentInstruction
-        yield Neighborhood_1
         if self.player.id_in_group in range(1,5):
             yield Scenario, dict(
                 political_charge=1,
@@ -54,4 +52,3 @@ class PlayerBot(Bot):
             commit_attention_Q2=True,
             commit_attention_Q3=True,
         )
-        yield FinalPage
