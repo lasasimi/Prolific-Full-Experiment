@@ -74,6 +74,6 @@ class MyPage(Page):
         if not player.participant.eligible_notneutral: # those who were not eligible
             return player.participant.active and not player.participant.failed_attention_check 
         else:
-            return player.participant.single_group
+            return player.participant.single_group or player.participant.active
         
 page_sequence = [Feedback, MyPage]
