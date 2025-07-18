@@ -439,19 +439,6 @@ class Commitment(Page):
         only displayed if participant eligible
         if not eligible, plan accordingly. 
         """
-  
-    
-# class FinalPage(Page):
-#     form_model = 'player'
-#     timeout_seconds = 5
-#     @staticmethod
-#     def is_displayed(player: Player):
-#         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey
-    
-#     @staticmethod
-#     def before_next_page(player: Player, timeout_happened):
-#         player.participant.wait_page_arrival = time.time()
-
 
 # page_sequence = [Introduction, Training, TrainingNeighbor_1, 
 #                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
