@@ -26,13 +26,13 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
 
-PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
+PARTICIPANT_FIELDS = ['gives_consent', 'political_affiliation', 'scenario_type', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral',
                       'simulated_time']# For bots, this will be used to simulate wait time
-SESSION_FIELDS = ['combined_responses','AC_n', 'C_n', 'AC_p', 'C_p']
+SESSION_FIELDS = ['combined_responses','AC_n', 'C_n', 'AC_p', 'C_p', 'AC_Dem_p', 'AC_Rep_p']
 
 
 

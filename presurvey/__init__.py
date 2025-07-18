@@ -31,70 +31,30 @@ class C(BaseConstants):
     # for testing: 
     NUM_ROUNDS = 1
     # SETTING REQUIRED NUMBER OF GROUPS PER TREATMENT COMBINATION 
-    AC_n = 3
-    C_n = 3
-    AC_p = 3
-    C_p = 3
+    AC_n = 4
+    AC_p = 4
+    C_n = 4
+    C_p = 4
+    AC_Dem_p = AC_n // 2
+    AC_Rep_p = AC_n // 2
 
 
 class Subsession(BaseSubsession):
     pass
 
 # Shuffle possible treatments [AC_n, C_n, AC_p, C_p: Anticonformist/Conformist, Nonpolitical/Political]
-def shuffle_treatment(player: Player):
-    treatments = ['AC_n', 'C_n', 'AC_p', 'C_p']
-    random.shuffle(treatments)  
-    return treatments[0]
-
-def nudge_type(player: Player):
-    if player.treatment in ['AC_n', 'AC_p']:
-        return 'Anticonformist'
-    elif player.treatment in ['C_n', 'C_p']:
-        return 'Conformist'
-
-def scenario_type(player: Player):
-    if player.treatment in ['AC_n', 'C_n']:
-        return 'nonpolitical'
-    elif player.treatment in ['AC_p', 'C_p']:
-        return 'political'
-
-def counters_update(player:Player):
-    if player.participant.treatment == 'AC_n':
-        player.session.AC_n += 1
-    elif player.participant.treatment == 'C_n':
-        player.session.C_n += 1
-    elif player.participant.treatment == 'AC_p':
-        player.session.AC_p += 1
-    elif player.participant.treatment == 'C_p':
-        player.session.C_p += 1
 
 
 def creating_session(subsession):
     session = subsession.session
-    # counter for keeping track of treatments 
     session.AC_n = 0
-    session.C_n = 0
     session.AC_p = 0
+    session.C_n = 0
     session.C_p = 0
+    session.AC_Dem_p = 0
+    session.AC_Rep_p = 0
     
     for player in subsession.get_players():
-        # Shuffle the scenario order for each player
-        player.participant.vars['treatment'] = shuffle_treatment(player)
-
-        # Assign treatment to the player
-        player.participant.vars['scenario_type'] = scenario_type(player) 
-        player.participant.vars['nudge_type'] = nudge_type(player)
-
-        # Update the session-wide counter for the treatment
-        counters_update(player)
-
-        if player.participant.scenario_type == 'nonpolitical':
-            chosen_scenarios = C.SCENARIOS[0:4]
-            player.participant.vars['scenario_order'] = chosen_scenarios
-        elif player.participant.scenario_type == 'political':
-            chosen_scenarios = C.SCENARIOS[4:8]
-            player.participant.vars['scenario_order'] = chosen_scenarios
-        
         # Initialize variables for the player
         player.participant.vars['training_attempt'] = 3 # Initialize training attempt
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
@@ -107,12 +67,24 @@ def creating_session(subsession):
         player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
         #player.participant.vars['eligible_notneutral'] = True # Initialize eligible status, will be set to False if neutral in all responses
 
-        
+def nudge_type(player):
+    if player.participant.treatment in ['AC_n', 'AC_p']:
+        return 'Anticonformist'
+    elif player.participant.treatment in ['C_n', 'C_p']:
+        return 'Conformist'
+
+def scenario_type(player):
+    if player.participant.treatment in ['AC_n', 'C_n']:
+        return 'nonpolitical'
+    elif player.participant.treatment in ['AC_p', 'C_p']:
+        return 'political'
+      
 class Group(BaseGroup):
     pass
 
 
 class Player(BasePlayer):
+
     gives_consent = models.BooleanField(
         label="I acknowledge that I have read and understood the information above "
         "and confirm that I wish to participate in this study.")
@@ -208,6 +180,12 @@ class Player(BasePlayer):
     emotional_charge = make_field("The situation described in the dilemma is emotionally charged.")
     disagree_conform = make_field("I will change my mind if most people in my neighborhood disagreed with my position.")
 
+    # To assign treatments equally across the political spectrum
+    political_affiliation = models.StringField(label="In politics, where would you place yourself on the Liberal/Democrat and Conservative/Republican scale?",
+        choices=[['Democrat','Liberal/Democrat'],
+                 ['Republican','Conservative/Republican']],
+                 widget=widgets.RadioSelectHorizontal())
+    
     # Commitment questions
     commit_attention_Q1 = models.BooleanField(
         label="I commit to giving this study my full and undivided attention.",
@@ -243,12 +221,57 @@ class Introduction(Page):
    
 class Demographics(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender','education_lvl', 'neighborhood_type'] 
+    form_fields = ['age', 'gender','education_lvl', 'neighborhood_type', 'political_affiliation'] 
 
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.complete_presurvey
 
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        # Get player's political affiliation to determine treatment
+        player.participant.political_affiliation = player.political_affiliation
+        
+        # Assign based on AC quotas and count on political affiliation quotas (only counting the political, because it's mirrored)
+        if player.subsession.session.AC_p < C.AC_p:
+            player.participant.treatment = random.choice(['AC_n', 'AC_p'])
+            if player.participant.treatment == 'AC_p':
+                player.subsession.session.AC_p += 1 
+                if player.participant.political_affiliation == 'Democrat':
+                    player.subsession.session.AC_Dem_p += 1
+                elif player.participant.political_affiliation == 'Republican':
+                    player.subsession.session.AC_Rep_p += 1
+            else:
+                player.subsession.session.AC_n += 1
+
+        else:
+            player.participant.treatment = random.choice(['C_n', 'C_p'])
+            if player.participant.treatment == 'C_p':
+                player.subsession.session.C_p += 1
+                if player.participant.political_affiliation == 'Democrat':
+                    player.subsession.session.C_Dem_p += 1
+                elif player.participant.political_affiliation == 'Republican':
+                    player.subsession.session.C_Rep_p += 1
+            else:
+                player.subsession.session.C_n += 1
+        
+        player.participant.anticonformist = (player.participant.treatment in ['AC_n', 'AC_p'])
+
+        # Debugging output
+        print(f"Assigned treatment: {player.participant.treatment}, AC: {player.participant.anticonformist}")
+        print(f"AC_p: {player.subsession.session.AC_p}, AC_Dem_p: {player.subsession.session.AC_Dem_p}, AC_Rep_p: {player.subsession.session.AC_Rep_p}")
+    
+
+        # Assign treatment to the player
+        player.participant.vars['scenario_type'] = scenario_type(player) 
+        player.participant.vars['nudge_type'] = nudge_type(player)
+
+        if player.participant.scenario_type == 'nonpolitical':
+            chosen_scenarios = C.SCENARIOS[0:4]
+            player.participant.vars['scenario_order'] = chosen_scenarios
+        elif player.participant.scenario_type == 'political':
+            chosen_scenarios = C.SCENARIOS[4:8]
+            player.participant.vars['scenario_order'] = chosen_scenarios
 
 class NeighborhoodInstruction(Page):
     @staticmethod
