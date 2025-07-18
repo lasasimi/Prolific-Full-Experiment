@@ -30,37 +30,83 @@ class C(BaseConstants):
     #NUM_ROUNDS = len(CSV['code']) # number of scenarios
     # for testing: 
     NUM_ROUNDS = 1
+    # SETTING REQUIRED NUMBER OF GROUPS PER TREATMENT COMBINATION 
+    AC_n = 3
+    C_n = 3
+    AC_p = 3
+    C_p = 3
 
 
 class Subsession(BaseSubsession):
     pass
 
+# Shuffle possible treatments [AC_n, C_n, AC_p, C_p: Anticonformist/Conformist, Nonpolitical/Political]
+def shuffle_treatment(player: Player):
+    treatments = ['AC_n', 'C_n', 'AC_p', 'C_p']
+    random.shuffle(treatments)  
+    return treatments[0]
+
+def nudge_type(player: Player):
+    if player.treatment in ['AC_n', 'AC_p']:
+        return 'Anticonformist'
+    elif player.treatment in ['C_n', 'C_p']:
+        return 'Conformist'
+
+def scenario_type(player: Player):
+    if player.treatment in ['AC_n', 'C_n']:
+        return 'nonpolitical'
+    elif player.treatment in ['AC_p', 'C_p']:
+        return 'political'
+
+def counters_update(player:Player):
+    if player.participant.treatment == 'AC_n':
+        player.session.AC_n += 1
+    elif player.participant.treatment == 'C_n':
+        player.session.C_n += 1
+    elif player.participant.treatment == 'AC_p':
+        player.session.AC_p += 1
+    elif player.participant.treatment == 'C_p':
+        player.session.C_p += 1
+
 
 def creating_session(subsession):
     session = subsession.session
-    # counter for keepin track of treatments
-    session.N04_p00 = 0
-    session.N04_p25 = 0
-    session.N04_p50 = 0
-    session.N08_p00 = 0
-    session.N08_p25 = 0
-    session.N08_p50 = 0
+    # counter for keeping track of treatments 
+    session.AC_n = 0
+    session.C_n = 0
+    session.AC_p = 0
+    session.C_p = 0
     
     for player in subsession.get_players():
         # Shuffle the scenario order for each player
-        chosen_scenarios = C.SCENARIOS[:4]  # Select the first 4 scenarios for testing
-        player.participant.vars['scenario_order'] = chosen_scenarios  # Store the chosen scenarios
+        player.participant.vars['treatment'] = shuffle_treatment(player)
+
+        # Assign treatment to the player
+        player.participant.vars['scenario_type'] = scenario_type(player) 
+        player.participant.vars['nudge_type'] = nudge_type(player)
+
+        # Update the session-wide counter for the treatment
+        counters_update(player)
+
+        if player.participant.scenario_type == 'nonpolitical':
+            chosen_scenarios = C.SCENARIOS[0:4]
+            player.participant.vars['scenario_order'] = chosen_scenarios
+        elif player.participant.scenario_type == 'political':
+            chosen_scenarios = C.SCENARIOS[4:8]
+            player.participant.vars['scenario_order'] = chosen_scenarios
+        
+        # Initialize variables for the player
         player.participant.vars['training_attempt'] = 3 # Initialize training attempt
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
         player.participant.vars['training_success'] = False # Initialize training success
         player.participant.vars['all_responses'] = {} # Initialize empty dictionary for all responses, will be appended on each round
         player.participant.vars['active'] = True # Initialize active status for the mock app later
-        player.participant.vars['single_group'] = False
+        #player.participant.vars['single_group'] = False
         player.participant.vars['anticonformist'] = False
         player.participant.vars['failed_commitment'] = False
         player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
-        player.participant.vars['eligible_notneutral'] = True # Initialize eligible status, will be set to False if neutral in all responses
-        
+        #player.participant.vars['eligible_notneutral'] = True # Initialize eligible status, will be set to False if neutral in all responses
+
         
 class Group(BaseGroup):
     pass

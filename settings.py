@@ -32,7 +32,7 @@ PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', '
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral',
                       'simulated_time']# For bots, this will be used to simulate wait time
-SESSION_FIELDS = ['combined_responses','N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50']
+SESSION_FIELDS = ['combined_responses','AC_n', 'C_n', 'AC_p', 'C_p']
 
 
 

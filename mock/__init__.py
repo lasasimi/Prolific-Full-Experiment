@@ -126,10 +126,11 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
 
 class Group(BaseGroup):
-    group_size = models.StringField(initial='single')
-    is_group_single = models.BooleanField()
-    beta_50 = models.BooleanField()  # for beta 0.50 treatment
-    anti_prop = models.StringField()  # for p value treatment
+    pass
+    # group_size = models.StringField(initial='single')
+    # is_group_single = models.BooleanField()
+    # beta_50 = models.BooleanField()  # for beta 0.50 treatment
+    # anti_prop = models.StringField()  # for p value treatment
 
 class Player(BasePlayer):
     scenario = models.StringField()
@@ -145,39 +146,7 @@ class Player(BasePlayer):
                                             [1, 'For']],
                                             widget=widgets.RadioSelectHorizontal())
     forced_response = models.BooleanField(initial=False)
-
-
-def counters_update(group:Group):
-    if group.group_size == 'N08':
-        if group.anti_prop == 'p00':
-            group.subsession.session.N08_p00 += 1
-        if group.anti_prop == 'p25':
-            group.subsession.session.N08_p25 += 1
-        if group.anti_prop == 'p50':
-            group.subsession.session.N08_p50 += 1
-    if group.group_size == 'N04':
-        if group.anti_prop == 'p00':
-            group.subsession.session.N04_p00 += 1
-        if group.anti_prop == 'p25':
-            group.subsession.session.N04_p25 += 1
-        if group.anti_prop == 'p50':
-            group.subsession.session.N04_p50 += 1
-
-def p_00(group:Group):
-    group.anti_prop = 'p00'
-    counters_update(group)
-
-def p_25(group:Group):
-    group.anti_prop = 'p25'
-    counters_update(group)
-
-def p_50(group:Group):
-    group.anti_prop = 'p50'
-    counters_update(group)
-
-def random_p(group:Group):
-    group.anti_prop = random.choice(['p00','p25','p50'])
-    counters_update(group)
+    treatment = models.StringField() 
 
 
 # PAGES
