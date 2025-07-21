@@ -6,12 +6,14 @@ from . import *
 class PlayerBot(Bot):
     def play_round(self):
         if self.player.round_number == 1:
-            yield Phase3
-            yield Nudge
+            yield Submission(GroupingWaitPage, check_html=False)
+            yield Submission(DiscussionGRPWaitPage, check_html=False)
+            yield Submission(Nudge, check_html=False)
             yield Submission(Discussion, 
                         dict(new_response= random.choice([-1, 0, 1])),
                         check_html=False)
         else:
+            yield Submission(DiscussionGRPWaitPage, check_html=False)
             yield Submission(Discussion, 
                         dict(new_response= random.choice([-1, 0, 1])),
                         check_html=False)

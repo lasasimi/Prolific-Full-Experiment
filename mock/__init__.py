@@ -112,10 +112,22 @@ class Discussion(Page):
 
     @staticmethod
     def vars_for_template(player): 
-        if player.participant.scenario_type == 'nonpolitical':
-            player.participant.scenario = 's2_n'  # Example scenario code for non-political
-        elif player.participant.scenario_type == 'political':
-            player.participant.scenario = 's2_p'
+        # if not_neutral consists of more than 1 scenario code, then choose one randomly, if it is empty, then choose  randomly based on the scenario_type
+        if player.participant.vars['not_neutral']:
+            # Choose a random scenario code from the not neutral responses
+            scenario_code = random.choice(list(player.participant.vars['not_neutral'].keys()))
+            player.participant.scenario = scenario_code
+        else:
+            # If not_neutral is empty, choose a scenario based on the scenario_type
+            if player.participant.scenario_type == 'nonpolitical':
+                player.participant.scenario = random.choice(player.participant.vars['scenario_order'])
+            elif player.participant.scenario_type == 'political':
+                player.participant.scenario = random.choice(player.participant.vars['scenario_order'])
+
+        # if player.participant.scenario_type == 'nonpolitical':
+        #     player.participant.scenario = 's2_n'  # Example scenario code for non-political
+        # elif player.participant.scenario_type == 'political':
+        #     player.participant.scenario = 's2_p'
 
         neighbors_current = player.participant.neighbors_configurations[player.round_number - 1]
        # Extract all keys starting with "neighbor" and get their values

@@ -3,16 +3,15 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        #app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
-        app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
+        app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
+        #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=8, # 9x4 + 9x8
         display_name="Combined app",
-        # no consent, failed training, faield attention check, and became inactive in mock app
+        # no consent, failed training, faield attention check
         returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
-        # finished presurvey, no commitment
-        basepaylink='https://app.prolific.com/submissions/complete?cc=COQQW3A7', # base pay only
-        # finished presurvey, commitment, waited too long OR completed mock app
-        bonuslink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay + waiting bonus OR max pay
+        # finished everything
+        completelink='https://app.prolific.com/submissions/complete?cc=COQQW3A7',
+        #bonuslink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay + waiting bonus OR max pay
         scenario_id='s3_n',
     ),
 ]
@@ -30,7 +29,7 @@ PARTICIPANT_FIELDS = ['gives_consent', 'political_affiliation', 'scenario_type',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
-                      'eligible_notneutral', 'neighbors_configurations', 'neighbors',
+                      'not_neutral', 'neighbors_configurations', 'neighbors',
                       'simulated_time']# For bots, this will be used to simulate wait time
 SESSION_FIELDS = ['combined_responses', 
                   'AC_p', 'AC_n', 

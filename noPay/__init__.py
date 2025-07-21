@@ -50,6 +50,6 @@ class ExitPage(Page):
     def is_displayed(player: Player):
         # if they did not complete presurvey, they did not get payment either because they were not active in the mock app, or did not pass the attention/training(complete_presurvey), or did not give consent
         if not player.participant.complete_presurvey:
-            return not player.participant.active or not player.participant.complete_presurvey or not player.participant.gives_consent
+            return not player.participant.active or player.participant.failed_commitment or player.participant.failed_attention_check or not player.participant.training_success or not player.participant.gives_consent
 
 page_sequence = [ExitPage]
