@@ -36,7 +36,7 @@ class PlayerBot(Bot):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,
-                response=1
+                response=0
             )
         else:
             yield Scenario, dict(

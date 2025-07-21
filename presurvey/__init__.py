@@ -186,8 +186,7 @@ class Player(BasePlayer):
             #blank=True, # Remove this to make it mandatory, this is done for testing purposes
         )
     
-    attitude_certainty = make_field("I am certain about my position on this issue.")   
-    likelihood = make_field("This dilemma is likely to happen in a neighborhood.")
+
     political_charge = make_field("The situation described in the dilemma is politically controversial.")
     emotional_charge = make_field("The situation described in the dilemma is emotionally charged.")
     disagree_conform = make_field("I will change my mind if most people in my neighborhood disagreed with my position.")

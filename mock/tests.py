@@ -10,12 +10,12 @@ class PlayerBot(Bot):
             yield Submission(DiscussionGRPWaitPage, check_html=False)
             yield Submission(Nudge, check_html=False)
             yield Submission(Discussion, 
-                        dict(new_response= random.choice([-1, 0, 1])),
+                        dict(response= random.choice([-1, 0, 1])),
                         check_html=False)
         else:
             yield Submission(DiscussionGRPWaitPage, check_html=False)
             yield Submission(Discussion, 
-                        dict(new_response= random.choice([-1, 0, 1])),
+                        dict(response= random.choice([-1, 0, 1])),
                         check_html=False)
         # if self.player.round_number == 1:
         #     yield Discussion, dict(

@@ -26,7 +26,7 @@ class C(BaseConstants):
     LONG_WAIT = 10  # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS 
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     # CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### TK (GJ): REVIEW TO DELETE IF POSSIBLE
-    SCENARIOS = open_CSV('presurvey/3scenarios_pilot_np.csv')
+    SCENARIOS = open_CSV('presurvey/3scenarios_pilot_np.csv').to_dict(orient='records')  # Convert to a list of dictionaries
     NEIGHBORS = open_CSV('mock/neighbors_configurations.csv').to_dict(orient='records')  # Convert to a list of dictionaries
 
 class Subsession(BaseSubsession):
@@ -42,18 +42,15 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     scenario = models.StringField()
     discussion_grp = models.StringField()
-    old_response = models.IntegerField(label="What do you think the community should do?",
+    response = models.IntegerField(label="What do you think the community should do?",
                                    choices=[[-1, 'Against'],
                                             [0, 'Neutral'],
                                             [1, 'For']],
                                             widget=widgets.RadioSelectHorizontal())
-    new_response = models.IntegerField(label="What do you think the community should do?",
-                                   choices=[[-1, 'Against'],
-                                            [0, 'Neutral'],
-                                            [1, 'For']],
-                                            widget=widgets.RadioSelectHorizontal())
+    
     forced_response = models.BooleanField(initial=False)
     treatment = models.StringField() 
+
 
 
 # PAGES
@@ -108,51 +105,46 @@ class Discussion(Page):
             return 30
         
     form_model = 'player'
-    form_fields = ['new_response']
+    form_fields = ['response']
 
     @staticmethod
     def vars_for_template(player): 
-        # if not_neutral consists of more than 1 scenario code, then choose one randomly, if it is empty, then choose  randomly based on the scenario_type
-        if player.participant.vars['not_neutral']:
-            # Choose a random scenario code from the not neutral responses
-            scenario_code = random.choice(list(player.participant.vars['not_neutral'].keys()))
-            player.participant.scenario = scenario_code
-        else:
-            # If not_neutral is empty, choose a scenario based on the scenario_type
-            if player.participant.scenario_type == 'nonpolitical':
-                player.participant.scenario = random.choice(player.participant.vars['scenario_order'])
-            elif player.participant.scenario_type == 'political':
-                player.participant.scenario = random.choice(player.participant.vars['scenario_order'])
-
-        # if player.participant.scenario_type == 'nonpolitical':
-        #     player.participant.scenario = 's2_n'  # Example scenario code for non-political
-        # elif player.participant.scenario_type == 'political':
-        #     player.participant.scenario = 's2_p'
-
+        if player.round_number == 1:
+            if player.participant.vars['not_neutral']:
+                # Choose a random scenario code from the not neutral responses
+                player.participant.scenario = random.choice(list(player.participant.vars['not_neutral'].keys()))
+            elif player.participant.vars['not_neutral'] == {}:
+                print(f"not_neutral is empty. Choosing one randomly from scenario_order: {player.participant.vars['scenario_order']}")
+                # If not_neutral is empty, choose a scenario based on the scenario_type
+            scenario_codes = [scenario['code'] for scenario in player.participant.vars['scenario_order']]
+            player.participant.scenario = random.choice(scenario_codes)
+            print(f"Chosen scenario from scenario_order: {player.participant.scenario}")
+        
+        # Find the scenario row where the 'code' matches player.participant.scenario
+        row = next((scenario for scenario in C.SCENARIOS if scenario['code'] == player.participant.scenario), None)
+        
+        # Get the neighbors for the current round
         neighbors_current = player.participant.neighbors_configurations[player.round_number - 1]
-       # Extract all keys starting with "neighbor" and get their values
-        player.participant.neighbors = [
-        neighbors_current[key] for key in neighbors_current if key.startswith("neighbor")]
-
+        # Extract all keys starting with "neighbor" and get their values
+        player.participant.neighbors = [neighbors_current[key] for key in neighbors_current if key.startswith("neighbor")]
         print(f"Neighbors for round {player.round_number}: {player.participant.neighbors}")
-        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
 
         return dict(
-            scenario_title = row.iloc[0]['Title'],
-            scenario_text = row.iloc[0]['Text'],
-            scenario_against = row.iloc[0]['Against'],
-            scenario_neutral = row.iloc[0]['Neutral'],
-            scenario_for = row.iloc[0]['For'],
-            others_responses = player.participant.neighbors,
-            anticonformist = player.participant.anticonformist,
+            scenario_title=row['Title'],
+            scenario_text=row['Text'],
+            scenario_against=row['Against'],
+            scenario_neutral=row['Neutral'],
+            scenario_for=row['For'],
+            others_responses=player.participant.neighbors,
+            anticonformist=player.participant.anticonformist,
         )
-
+    
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
             ### REVIEW THE RULE #### 
             player.forced_response = True # only in the last round, make them inactive
-            player.new_response = random.choice([-1, 0, 1])
+            player.response = random.choice([-1, 0, 1])
 
     @staticmethod
     def is_displayed(player):
