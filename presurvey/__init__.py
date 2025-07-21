@@ -25,18 +25,24 @@ class C(BaseConstants):
     NAME_IN_URL = 'presurvey'
     PLAYERS_PER_GROUP = None
     # all scenarios: not used for the Prolific, but only used for the Collective Minds' app
-    CSV = open_CSV('presurvey/4scenarios_np.csv')
+    CSV = open_CSV('presurvey/3scenarios_pilot_np.csv')
     SCENARIOS = CSV.to_dict(orient='records')
     #NUM_ROUNDS = len(CSV['code']) # number of scenarios
     # for testing: 
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 3
     # SETTING REQUIRED NUMBER OF GROUPS PER TREATMENT COMBINATION 
-    AC_n = 4
-    AC_p = 4
-    C_n = 4
-    C_p = 4
-    AC_Dem_p = AC_n // 2
-    AC_Rep_p = AC_n // 2
+    AC_n = 2
+    AC_p = 2
+    C_n = 2
+    C_p = 2
+    AC_Dem_p = AC_p // 2
+    AC_Rep_p = AC_p // 2
+    AC_Dem_n = AC_n // 2
+    AC_Rep_n = AC_n // 2
+    C_Dem_p = C_p // 2
+    C_Rep_p = C_p // 2
+    C_Dem_n = C_n // 2
+    C_Rep_n = C_n // 2
 
 
 class Subsession(BaseSubsession):
@@ -53,7 +59,13 @@ def creating_session(subsession):
     session.C_p = 0
     session.AC_Dem_p = 0
     session.AC_Rep_p = 0
-    
+    session.AC_Dem_n = 0
+    session.AC_Rep_n = 0
+    session.C_Dem_p = 0
+    session.C_Rep_p = 0
+    session.C_Dem_n = 0
+    session.C_Rep_n = 0
+
     for player in subsession.get_players():
         # Initialize variables for the player
         player.participant.vars['training_attempt'] = 3 # Initialize training attempt
@@ -233,45 +245,76 @@ class Demographics(Page):
         player.participant.political_affiliation = player.political_affiliation
         
         # Assign based on AC quotas and count on political affiliation quotas (only counting the political, because it's mirrored)
-        if player.subsession.session.AC_p < C.AC_p:
-            player.participant.treatment = random.choice(['AC_n', 'AC_p'])
-            if player.participant.treatment == 'AC_p':
-                player.subsession.session.AC_p += 1 
-                if player.participant.political_affiliation == 'Democrat':
-                    player.subsession.session.AC_Dem_p += 1
-                elif player.participant.political_affiliation == 'Republican':
-                    player.subsession.session.AC_Rep_p += 1
-            else:
-                player.subsession.session.AC_n += 1
+        available_treatments = []
 
-        else:
-            player.participant.treatment = random.choice(['C_n', 'C_p'])
-            if player.participant.treatment == 'C_p':
-                player.subsession.session.C_p += 1
-                if player.participant.political_affiliation == 'Democrat':
-                    player.subsession.session.C_Dem_p += 1
-                elif player.participant.political_affiliation == 'Republican':
-                    player.subsession.session.C_Rep_p += 1
+        # Check quotas for AC and C treatments
+        if player.participant.political_affiliation == 'Democrat':
+            if player.subsession.session.AC_Dem_p < C.AC_Dem_p:
+                available_treatments.append('AC_p')
+            if player.subsession.session.C_Dem_p < C.C_Dem_p:
+                available_treatments.append('C_p')
+            if player.subsession.session.AC_Dem_n < C.AC_Dem_n:
+                available_treatments.append('AC_n')
+            if player.subsession.session.C_Dem_n < C.C_Dem_n:
+                available_treatments.append('C_n')
+        elif player.participant.political_affiliation == 'Republican':
+            if player.subsession.session.AC_Rep_p < C.AC_Rep_p:
+                available_treatments.append('AC_p')
+            if player.subsession.session.C_Rep_p < C.C_Rep_p:
+                available_treatments.append('C_p')
+            if player.subsession.session.AC_Rep_n < C.AC_Rep_n:
+                available_treatments.append('AC_n')
+            if player.subsession.session.C_Rep_n < C.C_Rep_n:
+                available_treatments.append('C_n')
+
+        # Randomly select a treatment from the available options
+        player.participant.treatment = random.choice(available_treatments)
+
+        # Update the session's treatment counts
+        if player.participant.treatment == 'AC_p':
+            player.subsession.session.AC_p += 1
+            if player.participant.political_affiliation == 'Democrat':
+                player.subsession.session.AC_Dem_p += 1
             else:
-                player.subsession.session.C_n += 1
+                player.subsession.session.AC_Rep_p += 1
+        elif player.participant.treatment == 'C_p':
+            player.subsession.session.C_p += 1
+            if player.participant.political_affiliation == 'Democrat':
+                player.subsession.session.C_Dem_p += 1
+            else:
+                player.subsession.session.C_Rep_p += 1
+        elif player.participant.treatment == 'AC_n':
+            player.subsession.session.AC_n += 1
+            if player.participant.political_affiliation == 'Democrat':
+                player.subsession.session.AC_Dem_n += 1
+            else:
+                player.subsession.session.AC_Rep_n += 1
+        elif player.participant.treatment == 'C_n':
+            player.subsession.session.C_n += 1
+            if player.participant.political_affiliation == 'Democrat':
+                player.subsession.session.C_Dem_n += 1
+            else:
+                player.subsession.session.C_Rep_n += 1
         
+        # Assign anticonformist status based on treatment
         player.participant.anticonformist = (player.participant.treatment in ['AC_n', 'AC_p'])
 
         # Debugging output
         print(f"Assigned treatment: {player.participant.treatment}, AC: {player.participant.anticonformist}")
-        print(f"AC_p: {player.subsession.session.AC_p}, AC_Dem_p: {player.subsession.session.AC_Dem_p}, AC_Rep_p: {player.subsession.session.AC_Rep_p}")
-    
+        print(f"AC_p: {player.subsession.session.AC_p}, AC_n: {player.subsession.session.AC_n}, C_p: {player.subsession.session.C_p}, C_n: {player.subsession.session.C_n}, AC_Dem_p: {player.subsession.session.AC_Dem_p}, AC_Rep_p: {player.subsession.session.AC_Rep_p}, AC_Dem_n: {player.subsession.session.AC_Dem_n}, AC_Rep_n: {player.subsession.session.AC_Rep_n}, C_Dem_p: {player.subsession.session.C_Dem_p}, C_Rep_p: {player.subsession.session.C_Rep_p}, C_Dem_n: {player.subsession.session.C_Dem_n}, C_Rep_n: {player.subsession.session.C_Rep_n}")
 
         # Assign treatment to the player
         player.participant.vars['scenario_type'] = scenario_type(player) 
         player.participant.vars['nudge_type'] = nudge_type(player)
 
         if player.participant.scenario_type == 'nonpolitical':
-            chosen_scenarios = C.SCENARIOS[0:4]
-            player.participant.vars['scenario_order'] = chosen_scenarios
+            chosen_scenarios = C.SCENARIOS[0:3]
         elif player.participant.scenario_type == 'political':
-            chosen_scenarios = C.SCENARIOS[4:8]
-            player.participant.vars['scenario_order'] = chosen_scenarios
+            chosen_scenarios = C.SCENARIOS[3:6]
+
+        # Shuffle and assign scenarios to the player    
+        random.shuffle(chosen_scenarios)  
+        player.participant.vars['scenario_order'] = chosen_scenarios
 
 class NeighborhoodInstruction(Page):
     @staticmethod
@@ -500,7 +543,7 @@ class Commitment(Page):
             player.participant.complete_presurvey = True # this is to check if participant moves forward to the mock app
             player.participant.wait_page_arrival = time.time()
 
-        print(f"Commitment attempt: {player.participant.failed_commitment}, Complete presurvey: {player.participant.complete_presurvey}")
+        print(f"Failed commitment: {player.participant.failed_commitment}, Complete presurvey: {player.participant.complete_presurvey}")
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.complete_presurvey and player.round_number == C.NUM_ROUNDS
@@ -509,11 +552,12 @@ class Commitment(Page):
         if not eligible, plan accordingly. 
         """
 
-# page_sequence = [Introduction, Training, TrainingNeighbor_1, 
-#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
-#                  Scenario, Commitment, FinalPage]
+# Test sequence
+page_sequence = [Introduction, Demographics, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
+                 Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-                 Scenario, Commitment]
+# page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+#                  Scenario, Commitment]

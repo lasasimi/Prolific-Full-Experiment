@@ -1,6 +1,5 @@
-{{ extends 'otree/WaitPage.html' }}
-<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 <!-- Custom title handled inside content -->
 {{ endblock }}
 
@@ -18,7 +17,7 @@
     <div class="custom-title">🕒 Preparing Your Next Discussion Group</div>
     
     <p>
-        Other participants are selecting their positions. Once ready, you’ll join a new group of 5 neighbors for the next discussion.
+        Other participants are selecting their positions. Once ready, you’ll join a new group neighbors for the next discussion.
     </p>
 
     <hr>
@@ -29,17 +28,10 @@
         </p>
     <p style="text-align: center;"><strong>Thank you for your patience!</strong></p>
 </div>
-
-{% if view.group_by_arrival_time %}
-<script>
-    if (!window.reloadScheduled) {
-        window.reloadScheduled = true;
-        var SECOND = 1000;
-        setInterval(function () {
-            window.location.reload();
-        }, 30 * SECOND);
+<style>
+    .otree-timer {
+        display: none !important;
     }
-</script>
-{% endif %}
+</style>
 
 {{ endblock }}

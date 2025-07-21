@@ -7,11 +7,20 @@ class PlayerBot(Bot):
     def play_round(self):
         yield Introduction, dict(
             gives_consent=True)
-        yield Demographics, dict(
+        if self.player.id_in_group in range(1,5):
+            yield Demographics, dict(
             age=34,
             gender="Woman",
             education_lvl='Less than high school', 
-            neighborhood_type='Urban')
+            neighborhood_type='Urban',
+            political_affiliation='Democrat')
+        elif self.player.id_in_group in range(5, 9):
+            yield Demographics, dict(
+            age=34,
+            gender="Woman",
+            education_lvl='Less than high school', 
+            neighborhood_type='Urban',
+            political_affiliation='Republican')
         yield NeighborhoodInstruction
         # This is because the submit button is not a default submit button
         yield Submission(Training, 

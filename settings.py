@@ -3,8 +3,8 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
-        #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
+        #app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
+        app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=8, # 9x4 + 9x8
         display_name="Combined app",
         # no consent, failed training, faield attention check, and became inactive in mock app
@@ -30,9 +30,15 @@ PARTICIPANT_FIELDS = ['gives_consent', 'political_affiliation', 'scenario_type',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
-                      'eligible_notneutral',
+                      'eligible_notneutral', 'neighbors_configurations', 'neighbors',
                       'simulated_time']# For bots, this will be used to simulate wait time
-SESSION_FIELDS = ['combined_responses','AC_n', 'C_n', 'AC_p', 'C_p', 'AC_Dem_p', 'AC_Rep_p']
+SESSION_FIELDS = ['combined_responses', 
+                  'AC_p', 'AC_n', 
+                  'C_p', 'C_n', 
+                  'AC_Dem_p', 'AC_Rep_p', 
+                  'AC_Dem_n', 'AC_Rep_n',
+                  'C_Dem_p', 'C_Rep_p', 
+                  'C_Dem_n', 'C_Rep_n']
 
 
 

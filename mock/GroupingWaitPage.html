@@ -1,6 +1,7 @@
-{{ extends 'otree/WaitPage.html' }}
-<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+
+
 {{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 <!-- We leave this blank so the title can be fully handled inside content -->
 {{ endblock }}
 
@@ -52,17 +53,10 @@
 
     <p style="text-align: center;"><strong>Thank you for staying with us!</strong></p>
 </div>
-
-{% if view.group_by_arrival_time %}
-    <script>
-        if (!window.reloadScheduled) {
-            window.reloadScheduled = true;
-            var SECOND = 1000;
-            setInterval(function () {
-                window.location.reload();
-            }, 30 * SECOND);
-        }
-    </script>
-{% endif %}
+<style>
+    .otree-timer {
+        display: none !important;
+    }
+</style>
 
 {{ endblock }}
