@@ -22,10 +22,6 @@ class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 10 # FOR PRETEST TWO, PREVIOUSLY 5 
-    MEDIUM_WAIT = 6  # IF A DISCUSSION GROUP HASN'T BEEN FORMED BY THEN, CHECK FOR OTHER GROUP SIZES 
-    LONG_WAIT = 10  # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS 
-    N_TEST = 8 # SIZE OF DISCUSSION GROUP 
-    # CSV = open_CSV('presurvey/dummy_4scenarios_n.csv') ### TK (GJ): REVIEW TO DELETE IF POSSIBLE
     SCENARIOS = open_CSV('presurvey/3scenarios_pilot_np.csv').to_dict(orient='records')  # Convert to a list of dictionaries
     NEIGHBORS = open_CSV('mock/neighbors_configurations.csv').to_dict(orient='records')  # Convert to a list of dictionaries
 
@@ -34,10 +30,6 @@ class Subsession(BaseSubsession):
 
 class Group(BaseGroup):
     pass
-    # group_size = models.StringField(initial='single')
-    # is_group_single = models.BooleanField()
-    # beta_50 = models.BooleanField()  # for beta 0.50 treatment
-    # anti_prop = models.StringField()  # for p value treatment
 
 class Player(BasePlayer):
     scenario = models.StringField()
@@ -78,13 +70,7 @@ class GroupingWaitPage(Page): # this one has the image of neighbor discussion
 
         # Assign the shuffled configurations to the participant
         player.participant.neighbors_configurations = shuffled_neighbors
-        # # Shuffle the neighbor configurations
-        # player.participant.neighbors_configurations = C.NEIGHBORS.copy()
-        # print(f"Before shuffle: {player.participant.neighbors_configurations}")
-        # random.shuffle(player.participant.neighbors_configurations)
-        # print(f"After shuffle: {player.participant.neighbors_configurations}")
-        # # Save to a participant field
-        # player.participant.neighbors_configurations = player.participant.neighbors_configurations
+        
 
     @staticmethod
     def is_displayed(player):
@@ -93,23 +79,35 @@ class GroupingWaitPage(Page): # this one has the image of neighbor discussion
 
 class DiscussionGRPWaitPage(Page): # round by round, call the row for the neighbors_configurations
     template_name = 'mock/DiscussionGRPWaitPage.html'
-    timeout_seconds = random.randint(3,10)  # Random wait time between 3 and 10 seconds
+    timeout_seconds = random.randint(3,5)  # Random wait time between 3 and 10 seconds
 
     @staticmethod
     def is_displayed(player):
         return player.participant.complete_presurvey 
+    
+    @staticmethod
+    def vars_for_template(player):    
+        print(f"Participant does not have nudge is: {player.participant.no_nudge}")    
+        return dict(
+            anticonformist = player.participant.anticonformist,
+            no_nudge = player.participant.no_nudge,  
+        )
+        
 
 class Nudge(Page):
     timeout_seconds = 30 # to force proceed after 30 seconds of inactivity
+
     @staticmethod
-    def vars_for_template(player):        
+    def vars_for_template(player):     
         return dict(
             anticonformist = player.participant.anticonformist,
+            no_nudge = player.participant.no_nudge,  
         )
+        
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey 
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.no_nudge
 
 
 class Discussion(Page):
@@ -154,6 +152,7 @@ class Discussion(Page):
             scenario_for=row['For'],
             others_responses=player.participant.neighbors,
             anticonformist=player.participant.anticonformist,
+            no_nudge=player.participant.no_nudge,
         )
     
     @staticmethod

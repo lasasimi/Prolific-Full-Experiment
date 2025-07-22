@@ -8,14 +8,14 @@ class PlayerBot(Bot):
         if self.player.round_number == 1:
             yield Introduction, dict(
                 gives_consent=True)
-            if self.player.id_in_group in range(1,5):
+            if self.player.id_in_group in range(1,7):
                 yield Demographics, dict(
                 age=34,
                 gender="Woman",
                 education_lvl='Less than high school', 
                 neighborhood_type='Urban',
                 political_affiliation='Democrat')
-            elif self.player.id_in_group in range(5, 9):
+            elif self.player.id_in_group in range(7, 13):
                 yield Demographics, dict(
                 age=34,
                 gender="Woman",
@@ -33,13 +33,13 @@ class PlayerBot(Bot):
                 howmanyneighbors=1)
 
             yield ExperimentInstruction
-            if self.player.id_in_group in range(1,5):
+            if self.player.id_in_group in range(1,7):
                 yield Scenario, dict(
                     political_charge=1,
                     emotional_charge=1,
                     response=1
                 )
-            elif self.player.id_in_group in range(5, 9):
+            elif self.player.id_in_group in range(7, 13):
                 yield Scenario, dict(
                     political_charge=1,
                     emotional_charge=1,
