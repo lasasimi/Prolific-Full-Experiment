@@ -28,19 +28,50 @@
     
     <hr>
 
-    <h3>💰 Compensation</h3>
-
-    If you are successfully placed in a group with other neighbors and <strong>complete the discussion rounds</strong>, you will receive a <strong>bonus payment</strong> on top of your base payment.
-
-
-    <p>We appreciate your patience and your commitment to participating fully. This phase is essential to the study, and your involvement makes it possible.</p>
-
     <p style="text-align: center;"><strong>Thank you for staying with us!</strong></p>
+
+    <div class="loading-bar">
+    <div class="loading-fill"></div>
+    </div>
 </div>
+
+
+
+
 <style>
     .otree-timer {
         display: none !important;
     }
+
+
+/* Loading bar */
+
+.loading-bar {
+    width: 100%;
+    height: 12px;
+    margin-top: 10px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: auto
+}
+
+.loading-fill {
+    height: 100%;
+    width: 100%;
+    background: repeating-linear-gradient(
+        -45deg,
+        #00aaff,
+        #00aaff 10px,
+        #4fc3f7 10px,
+        #4fc3f7 20px
+    );
+    animation: loading 1s linear infinite;
+}
+
+@keyframes loading {
+    from { background-position: -28px 0; }
+    to { background-position: 0px 0; }
+}
 </style>
 
 {{ endblock }}

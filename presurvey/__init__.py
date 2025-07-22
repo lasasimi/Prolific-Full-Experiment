@@ -31,12 +31,13 @@ class C(BaseConstants):
     # for testing: 
     NUM_ROUNDS = 3 # number of scenarios -> change depending the number of scenarios you want to test
     # SETTING REQUIRED NUMBER OF GROUPS PER TREATMENT COMBINATION 
-    AC_n = 2
-    AC_p = 2
-    C_n = 2
-    C_p = 2
-    NO_n = 2
-    NO_p = 2
+    N = 5
+    AC_n = 2 * N
+    AC_p = 2 * N
+    C_n = 2 * N
+    C_p = 2 * N
+    NO_n = 2 * N
+    NO_p = 2 * N
     AC_Dem_p = AC_p // 2
     AC_Rep_p = AC_p // 2
     AC_Dem_n = AC_n // 2
