@@ -56,18 +56,35 @@ class Player(BasePlayer):
 # PAGES
 class GroupingWaitPage(Page): # this one has the image of neighbor discussion
     template_name = 'mock/GroupingWaitPage.html'
-    timeout_seconds = 10
+    timeout_seconds = 20
 
    # Assign the neighbor configurations to participants
     @staticmethod
     def vars_for_template(player):
-        # Shuffle the neighbor configurations
-        player.participant.neighbors_configurations = C.NEIGHBORS.copy()
-        print(f"Before shuffle: {player.participant.neighbors_configurations}")
-        random.shuffle(player.participant.neighbors_configurations)
-        print(f"After shuffle: {player.participant.neighbors_configurations}")
-        # Save to a participant field
-        player.participant.neighbors_configurations = player.participant.neighbors_configurations
+        # Shuffle the neighbor configurations (rows)
+        shuffled_neighbors = C.NEIGHBORS.copy()
+        random.shuffle(shuffled_neighbors)  # Shuffle rows
+        print(f"After row shuffle: {shuffled_neighbors}")
+
+        # Shuffle the columns for each row
+        for row in shuffled_neighbors:
+            keys = list(row.keys())  # Get the column names (keys)
+            random.shuffle(keys)  # Shuffle the column order
+            shuffled_row = {key: row[key] for key in keys}  # Rebuild the row with shuffled keys
+            row.clear()
+            row.update(shuffled_row)  # Update the row with the shuffled order
+
+        print(f"After column shuffle: {shuffled_neighbors}")
+
+        # Assign the shuffled configurations to the participant
+        player.participant.neighbors_configurations = shuffled_neighbors
+        # # Shuffle the neighbor configurations
+        # player.participant.neighbors_configurations = C.NEIGHBORS.copy()
+        # print(f"Before shuffle: {player.participant.neighbors_configurations}")
+        # random.shuffle(player.participant.neighbors_configurations)
+        # print(f"After shuffle: {player.participant.neighbors_configurations}")
+        # # Save to a participant field
+        # player.participant.neighbors_configurations = player.participant.neighbors_configurations
 
     @staticmethod
     def is_displayed(player):
