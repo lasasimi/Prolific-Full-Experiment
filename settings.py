@@ -3,8 +3,8 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
-        #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
+        #app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
+        app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=8, # 9x4 + 9x8
         display_name="Combined app",
         # no consent, failed training, faield attention check

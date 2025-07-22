@@ -33,11 +33,18 @@ class PlayerBot(Bot):
                 howmanyneighbors=1)
 
             yield ExperimentInstruction
-            yield Scenario, dict(
-                political_charge=1,
-                emotional_charge=1,
-                response=0
-            )
+            if self.player.id_in_group in range(1,5):
+                yield Scenario, dict(
+                    political_charge=1,
+                    emotional_charge=1,
+                    response=1
+                )
+            elif self.player.id_in_group in range(5, 9):
+                yield Scenario, dict(
+                    political_charge=1,
+                    emotional_charge=1,
+                    response=0
+                )
         else:
             yield Scenario, dict(
                 political_charge=1,
