@@ -30,7 +30,8 @@ class C(BaseConstants):
 
     # CHANGE RECRUITED AND N BEFORE LAUNCHING THE EXPERIMENT
     # Total number of participants recruited in prolific, must be a multiply of 6! (1 Rep + 1 Dem)
-    RECRUITED = 12 # can you divide this by 6? 
+    # can you divide this by 6? is this a min. of 12?
+    RECRUITED = 96 
     
     # N = total recruited / 6 (N must result into an even number!)
     N = RECRUITED / 6 # number of participants per treatment (e.g. C_Dem_p) 5 for a total of 30 participants

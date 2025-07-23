@@ -17,7 +17,14 @@ print(os.getcwd())
 os.chdir('/Users/Lasmi Marbun/Documents/Git/Prolific-Full-Experiment/')
 data_clean = 'data/Clean_files/'
 
-df_raw = pd.read_csv('flag/all_apps_wide.csv') # change file name to current file
+# session code: k1hhm7lf
+df_raw = pd.read_csv('data/Raw_otree/all_apps_wide_k1hhm7lf.csv') # change file name to current file
+
+# remove participants with column participant._current_page_name != Feedback
+df_raw = df_raw[df_raw['participant._current_page_name'] == 'Feedback'].reset_index(drop=True)
+
+# remove returned participant (participant.label == '5f16f559325a640008bb9a07')
+df_raw = df_raw[df_raw['participant.label'] != '5f16f559325a640008bb9a07'].reset_index(drop=True)
 
 variables = df_raw.columns.to_list()
 
@@ -58,7 +65,7 @@ participant_vars_keep = [
                         'participant.failed_attention_check', 
                         'participant.active', 
                         'participant.reason', 
-                        'participant.scenario',
+                        'participant.scenario', # scenario code for the Discussion
                         'participant.anticonformist', 
                         'participant.no_nudge', 
                         'participant.complete_presurvey',
@@ -115,12 +122,11 @@ player_vars_all = [
     'mock.{i}.player.id_in_group',
     'mock.{i}.player.role',
     'mock.{i}.player.payoff',
-    'mock.{i}.player.scenario',
     'mock.{i}.player.forced_response',
     'mock.{i}.player.response',
     'mock.{i}.group.id_in_subsession',
     'mock.{i}.subsession.round_number',
-    'noPay.{i}.player.id_in_group',
+    'noPay.{i}.player.id_in_group', 
     'noPay.{i}.player.id_in_group',
     'Pay.{i}.player.feedback_final',
     'Pay.{i}.player.id_in_group',]
@@ -131,7 +137,6 @@ player_vars_allR = [
     'presurvey.{i}.player.political_charge',
     'presurvey.{i}.player.emotional_charge',
     'presurvey.{i}.player.scenario_code',
-    'mock.{i}.player.scenario',
     'mock.{i}.player.response',
     'mock.{i}.player.forced_response'
 ]
@@ -144,7 +149,6 @@ player_vars_presurvey_allR = [
 ]
 # variables that have multiple rounds in mock app
 player_vars_mock_allR = [
-    'mock.{i}.player.scenario',
     'mock.{i}.player.response',
     'mock.{i}.player.forced_response'
 ]
@@ -155,7 +159,6 @@ player_vars_allR1 = [
     'presurvey.{i}.player.role',
     'presurvey.{i}.player.payoff',
     'presurvey.{i}.player.gives_consent',
-    'presurvey.{i}.player.scenario_code',
     'presurvey.{i}.player.test_scenario',
     'presurvey.{i}.player.dilemmatopic',
     'presurvey.{i}.player.majority',
@@ -163,6 +166,7 @@ player_vars_allR1 = [
     'presurvey.{i}.player.total_correct',
     'presurvey.{i}.player.training_counter',
     'presurvey.{i}.player.attention_check',
+    'presurvey.{i}.player.political_affiliation',
     'presurvey.{i}.player.age',
     'presurvey.{i}.player.gender',
     'presurvey.{i}.player.education_lvl',
@@ -179,14 +183,13 @@ player_vars_allR1 = [
 # Mock app has 10 rounds whilst presurvey app have 3 rounds
 # Define variables that appear in rounds 4 to 10 of the mock app
 player_vars_R4_R10 = [
-    'mock.{i}.player.scenario',
     'mock.{i}.player.response',
     'mock.{i}.player.forced_response'
 ]
 
 
 player_vars_keep = []
-for r in range(1,6):
+for r in range(1,11):
     if r == 1:
         all_vars = player_vars_allR1 + player_vars_allR
     elif r > 3:
@@ -200,48 +203,36 @@ for r in range(1,6):
 all_vars_keep = participant_vars_keep + other_vars_keep + player_vars_keep  
 # df_clean = df_raw[all_vars_keep]
 df_clean = df_raw[[col for col in all_vars_keep if col in df_raw.columns]]
+# for real data:
 df_clean = df_clean[df_clean['participant.label'].notna()].reset_index(drop=True)
+
 print('Shape clean data:', df_clean.shape)
 
 df_clean['participant.scenario_order'] = df_clean['participant.scenario_order'].apply(ast.literal_eval)
 
-
-def player_info(df,k): 
-    varas = ['session.code','participant.code',
-             'participant.scenario',
-             'participant.anticonformist',
-             'participant.label',
-            'presurvey.1.player.gives_consent',
-            'presurvey.1.player.age',
-            'presurvey.1.player.gender',
-            'presurvey.1.player.education_lvl',
-            'presurvey.1.player.neighborhood_type']
-    
-    varas_lists = [df.loc[k,vara] for vara in varas]
-    
-    return varas_lists
-
-
-
-# For the mock app (discussion over 5 rounds), we need to keep the variables for all rounds
+# For the mock app (discussion over 10 rounds), we need to keep the variables for all rounds
 # and then create a dictionary with the player information for each round.
 # The player information will include the participant code, scenario order, and responses for each round.
 # Define the player_info variables (as in your player_info function)
 player_info_vars = ['session.code','participant.code',
              'participant.scenario',
+             'participant.scenario_order',
+             'participant.scenario_type',
              'participant.anticonformist',
              'participant.label',
+             'participant.treatment',
+             'participant.neighbors_configurations',
+             'participant.neighbors',
+            'participant.forced_response_counter',
             'presurvey.1.player.gives_consent',
             'presurvey.1.player.age',
             'presurvey.1.player.gender',
             'presurvey.1.player.education_lvl',
-            'presurvey.1.player.neighborhood_type']
+            'presurvey.1.player.neighborhood_type',
+            'presurvey.1.player.political_affiliation']
 
 player_vars_mock_allR = [
-    'mock.{i}.player.scenario',
-    'mock.{i}.player.discussion_grp',
-    'mock.{i}.player.old_response',
-    'mock.{i}.player.new_response',
+    'mock.{i}.player.response',
     'mock.{i}.player.forced_response'
 ]
 # variables that have multiple rounds in presurvey app
@@ -255,54 +246,22 @@ player_vars_presurvey_allR = [
 
 ### PRESURVEY APP participants 
 # Identify participants with incomplete presurvey answers
-invalid_presurvey = df_clean[df_clean['presurvey.4.player.response'].isnull()]
-len(pd.Series(invalid_presurvey['participant.code']).unique()) # 5 people
+invalid_presurvey = df_clean[df_clean['presurvey.3.player.response'].isnull()]
+len(pd.Series(invalid_presurvey['participant.code']).unique()) # 0 people
 # Print the participants with incomplete presurvey answers
 print("Participants with incomplete presurvey answers:")
 print(invalid_presurvey[['participant.label']])
 
 # Remove participants with incomplete presurvey answers
-df_clean_presurvey = df_clean[~df_clean['participant.label'].isin(invalid_presurvey['participant.label'])].reset_index(drop=True)
+df_clean = df_clean[~df_clean['participant.label'].isin(invalid_presurvey['participant.label'])].reset_index(drop=True)
 
 # Verify the remaining participants
-print(f"Remaining participants: {len(df_clean_presurvey['participant.label'].unique())}")
-print(f"Shape of df_clean after removal: {df_clean_presurvey.shape}") # 31 participants
-
-def extract_code(s):
-    if pd.isna(s):
-        return None
-    match = re.search(r"'code': '([^']+)'", s)
-    return match.group(1) if match else None
-
-for i in range(1, 5):  # Presurvey has 4 rounds
-    df_clean_presurvey['participant.scenario_order'] = df_clean_presurvey['presurvey.{i}.player.scenario'].apply(extract_code)
-
-### Prepare the long-format data for the 'presurvey app' participants
-long_data_presurvey = []
-# Iterate through each row in the cleaned DataFrame and create a dictionary for each round of the presurvey app with the player information and responses.
-for idx, row in df_clean_presurvey.iterrows():
-    scenario_order = row['participant.scenario_order']
-    for r in range(1, 5):  # Presurvey has 4 rounds
-        round_data = {var: row[var] for var in player_info_vars} #player_info_vars is the participant unique identifier
-        round_data['round_no'] = r
-        round_data['scenario'] = scenario_order[r-1] if len(scenario_order) >= r else None
-        # Add all presurvey round variables for this round, but drop the round number from the column name
-        for var in player_vars_presurvey_allR:
-            colname = var.format(i=r)
-            shortname = var.replace('presurvey.{i}.', '').replace('player.', '') # e.g. 'response', 'political_charge', 'emotional_charge'
-            round_data[shortname] = row.get(colname, None)
-        long_data_presurvey.append(round_data)
-
-df_long_presurvey = pd.DataFrame(long_data_presurvey)
-df_long_presurvey.shape # 15 vars over 10 participants (4 rows/rounds each)
-# Save the long-format DataFrame to a CSV file
-df_long_presurvey.to_csv(data_clean + 'presurvey_long_format.csv', index=False)
-
-
+print(f"Remaining participants: {len(df_clean['participant.label'].unique())}")
+print(f"Shape of df_clean after removal: {df_clean.shape}") # 23 participants
 
 ### MOCK APP participants
 # Identify participants with incomplete mock app answers
-invalid_participants = df_clean[df_clean['mock.5.player.new_response'].isnull()]
+invalid_participants = df_clean[df_clean['mock.10.player.response'].isnull()]
 len(pd.Series(invalid_participants['participant.code']).unique())
 
 # Print the participants with incomplete mock app answers
@@ -320,48 +279,54 @@ print(f"Shape of df_clean after removal: {df_clean.shape}")
 df_clean.columns
 
 
-# For the mock app (discussion over 5 rounds), we need to keep the variables for all rounds
-# and then create a dictionary with the player information for each round.
-# The player information will include the participant code, scenario order, and responses for each round.
-player_vars_mock_allR = [
-    'mock.{i}.player.scenario',
-    'mock.{i}.player.discussion_grp',
-    'mock.{i}.player.old_response',
-    'mock.{i}.player.new_response',
-    'mock.{i}.player.forced_response'
-]
 
-### Prepare the long-format data for the 'mock app' only over 5 rounds
+# ### Prepare the long-format data for the 'presurvey app' participants
+# long_data = []
+# # Iterate through each row in the cleaned DataFrame and create a dictionary for each round of the presurvey app with the player information and responses.
+
+
+# for idx, row in df_clean.iterrows():
+#     scenario_order = row['participant.scenario_order']
+#     # Presurvey variables
+#     for r in range(1, 4):  # Presurvey has 3 rounds
+#         round_data = {var: row[var] for var in player_info_vars} #player_info_vars is the participant unique identifier
+#         round_data['round_no'] = r
+#         round_data['scenario'] = scenario_order[r-1] if len(scenario_order) >= r else None
+#         # Add all presurvey round variables for this round, but drop the round number from the column name
+#         for var in player_vars_presurvey_allR:
+#             colname = var.format(i=r)
+#             shortname = var.replace('presurvey.{i}.', '').replace('player.', '') # e.g. 'response', 'political_charge', 'emotional_charge'
+#             round_data[shortname] = row.get(colname, None)
+#         for var in player_vars_mock_allR:
+#             colname = var.format(i=r)
+#             shortname = var.replace('mock.{i}.', '').replace('player.', '')
+#             round_data[shortname] = row.get(colname, None)
+
+#         long_data.append(round_data)
+#     for r in range(4, 11):  # Mock app has 10 rounds
+#         round_data = {var: row[var] for var in player_info_vars} #player_info_vars is the participant unique identifier
+#         round_data['round_no'] = r
+#         for var in player_vars_mock_allR:
+#             colname = var.format(i=r)
+#             shortname = var.replace('mock.{i}.', '').replace('player.', '')
+#             round_data[shortname] = row.get(colname, None)
+        
+#         long_data.append(round_data)
+
+# df_long = pd.DataFrame(long_data)
+# df_long.shape # 3 rows presurvey * N (23 participants) + 10 rows mock * N = 299
+# # Save the long-format DataFrame to a CSV file
+# df_long.to_csv(data_clean + 'clean_long_format_k1hhm7lf.csv', index=False)
+
+
+
+
 long_data = []
-df_clean.shape
-# Iterate through each row in the cleaned DataFrame and create a dictionary for each round of the mock app with the player information and responses.
-# This will create a long-format DataFrame with one row per round per participant.
-for idx, row in df_clean.iterrows():
-    scenario_order = row['participant.scenario']
-    for r in range(1, 6):
-        round_data = {var: row[var] for var in player_info_vars} #player_info_vars is the participant unique identifier
-        round_data['round_no'] = r
-        round_data['scenario'] = scenario_order[r-1] if len(scenario_order) >= r else None
-        # Add all mock round variables for this round, but drop the round number from the column name
-        for var in player_vars_mock_allR:
-            colname = var.format(i=r)
-            shortname = var.replace('mock.{i}.', '').replace('player.', '')  # e.g. 'scenario', 'discussion_grp'
-            round_data[shortname] = row.get(colname, None)
-        long_data.append(round_data)
-
-df_long = pd.DataFrame(long_data)
-df_long.shape # 16 vars over 10 participants (5 rows/rounds each)
-
-# Save the long-format DataFrame to a CSV file
-df_long.to_csv(data_clean + 'mock_long_format.csv', index=False)
-
-
-### Prepare the long-format data for the 'presurvey app' of those in the mock app
-long_data_presurvey = []
-# Iterate through each row in the cleaned DataFrame and create a dictionary for each round of the presurvey app with the player information and responses.
+## test
 for idx, row in df_clean.iterrows():
     scenario_order = row['participant.scenario_order']
-    for r in range(1, 5):  # Presurvey has 4 rounds
+    # Presurvey variables
+    for r in range(1, 4):  # Presurvey has 3 rounds
         round_data = {var: row[var] for var in player_info_vars} #player_info_vars is the participant unique identifier
         round_data['round_no'] = r
         round_data['scenario'] = scenario_order[r-1] if len(scenario_order) >= r else None
@@ -370,9 +335,42 @@ for idx, row in df_clean.iterrows():
             colname = var.format(i=r)
             shortname = var.replace('presurvey.{i}.', '').replace('player.', '') # e.g. 'response', 'political_charge', 'emotional_charge'
             round_data[shortname] = row.get(colname, None)
-        long_data_presurvey.append(round_data)
+    
+        long_data.append(round_data)
 
-df_long_presurvey = pd.DataFrame(long_data_presurvey)
-df_long_presurvey.shape # 15 vars over 10 participants (4 rows/rounds each)
-# Save the long-format DataFrame to a CSV file
-df_long_presurvey.to_csv(data_clean + 'presurvey_mock_long_format.csv', index=False)
+
+for idx, row in df_clean.iterrows():
+    for r in range(1, 11):  # Mock app has 10 rounds
+            round_data = {var: row[var] for var in player_info_vars} #player_info_vars is the participant unique identifier
+            round_data['round_no'] = r
+            for var in player_vars_mock_allR:
+                colname = var.format(i=r)
+                shortname = var.replace('mock.{i}.', '').replace('player.', '')
+                round_data[shortname] = row.get(colname, None)
+            
+            long_data.append(round_data)
+
+df_long = pd.DataFrame(long_data)
+
+
+
+
+import ast
+
+# Convert the string to a real Python list of dicts
+df_long['participant.neighbors_configurations'] = df_long['participant.neighbors_configurations'].apply(ast.literal_eval)
+
+# Extract the relevant dict based on round number and convert to list of values
+def get_neighbors(row):
+    config_list = row['participant.neighbors_configurations']
+    round_index = int(row['round_no']) - 1  # 0-based index
+    if isinstance(config_list, list) and 0 <= round_index < len(config_list):
+        d = config_list[round_index]
+        return list(d.values())
+    else:
+        return None  # or [] or [None, None, None] if preferred
+
+df_long['player.neighbors'] = df_long.apply(get_neighbors, axis=1)
+
+
+df_long.to_csv(data_clean + 'test2_clean_long_format_k1hhm7lf.csv', index=False)

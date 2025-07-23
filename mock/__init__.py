@@ -44,7 +44,7 @@ class Player(BasePlayer):
     
     forced_response = models.BooleanField(initial=False)
     treatment = models.StringField() 
-
+    neighbors = models.StringField()  # Store the neighbors for the current round
 
 
 # PAGES
@@ -145,7 +145,13 @@ class Discussion(Page):
         # Extract all keys starting with "neighbor" and get their values
         player.participant.neighbors = [neighbors_current[key] for key in neighbors_current if key.startswith("neighbor")]
         print(f"Neighbors for round {player.round_number}: {player.participant.neighbors}")
+        # Convert the list of neighbors to a comma-separated string
+        string_neighbors = ', '.join(map(str, player.participant.neighbors))
+        print(f"Neighbors for round {player.round_number}: {string_neighbors}")
+        # Assign the string to player.neighbors
+        player.neighbors = string_neighbors
 
+        
         return dict(
             scenario_title=row['Title'],
             scenario_text=row['Text'],

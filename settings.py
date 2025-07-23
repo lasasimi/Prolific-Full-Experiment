@@ -5,7 +5,7 @@ SESSION_CONFIGS = [
         name='pilotsurveyALL',
         app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
         #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
-        num_demo_participants=30, # 6 conditions x 2 participants per condition (1 Rep 1 Dem)
+        num_demo_participants=12, # 6 conditions x 2 participants per condition (1 Rep 1 Dem)
         display_name="Combined app",
         # no consent, failed training, faield attention check
         returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
@@ -45,8 +45,8 @@ SESSION_FIELDS = ['combined_responses',
 
 ROOMS = [
     dict(
-        name='pilot_20250723',
-        display_name='pilot_20250723',
+        name='pilot_20250724',
+        display_name='pilot_20250724',
     ),
 ]
 
