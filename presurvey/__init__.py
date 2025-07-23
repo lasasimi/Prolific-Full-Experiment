@@ -24,14 +24,14 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'presurvey'
     PLAYERS_PER_GROUP = None
-    # all scenarios: not used for the Prolific, but only used for the Collective Minds' app
     CSV = open_CSV('presurvey/3scenarios_pilot_np.csv')
     SCENARIOS = CSV.to_dict(orient='records')
-    #NUM_ROUNDS = len(CSV['code']) # number of scenarios
-    # for testing: 
     NUM_ROUNDS = 3 # number of scenarios -> change depending the number of scenarios you want to test
-    # SETTING REQUIRED NUMBER OF GROUPS PER TREATMENT COMBINATION 
-    N = 5
+
+    # CHANGE N BEFORE LAUNCHING THE EXPERIMENT
+    # N = total recruited / 6
+    RECRUITED = 12 # total number of participants recruited in prolific, minimum 12 (1 Rep + 1 Dem)
+    N = RECRUITED / 6 # number of participants per treatment (e.g. C_Dem_p) 5 for a total of 30 participants
     AC_n = 2 * N
     AC_p = 2 * N
     C_n = 2 * N
@@ -87,10 +87,9 @@ def creating_session(subsession):
         player.participant.vars['active'] = True # Initialize active status for the mock app later
         #player.participant.vars['single_group'] = False
         player.participant.vars['anticonformist'] = False
-        player.participant.vars['failed_commitment'] = False
         player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
         player.participant.vars['not_neutral'] = {} # Initialized to store if the player is not neutral in any scenario
-
+        player.participant.vars['forced_response_counter'] = 0 # Initialize forced response counter
 def no_nudge(player):
     if player.participant.treatment in ['AC_n', 'AC_p', 'C_n', 'C_p']:
         return False
@@ -203,27 +202,10 @@ class Player(BasePlayer):
     emotional_charge = make_field("The situation described in the dilemma is emotionally charged.")
 
     # To assign treatments equally across the political spectrum
-    political_affiliation = models.StringField(label="In politics, where would you place yourself on the Liberal/Democrat and Conservative/Republican scale?",
-        choices=[['Democrat','Liberal/Democrat'],
-                 ['Republican','Conservative/Republican']],
+    political_affiliation = models.StringField(label="In general, what is your political affiliation?",
+        choices=[['Democrat','Democrat'],
+                 ['Republican','Republican']],
                  widget=widgets.RadioSelectHorizontal())
-    
-    # Commitment questions
-    commit_attention_Q1 = models.BooleanField(
-        label="I commit to giving this study my full and undivided attention.",
-        choices=[[True, 'Agree'], 
-                 [False, 'Disagree']],
-        )
-    commit_attention_Q2 = models.BooleanField(
-        label="I will remain at my computer station and refrain from opening other tabs or browsers during the experiment.",
-        choices=[[True, 'Agree'], 
-             [False, 'Disagree']],
-    )
-    commit_attention_Q3 = models.BooleanField(
-        label="I am aware that abandoning the study prematurely could impede the other participants' ability to successfully complete it.",
-        choices=[[True, 'Agree'], 
-             [False, 'Disagree']],
-    )
 
 
 # PAGES

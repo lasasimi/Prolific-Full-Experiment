@@ -24,6 +24,8 @@ class C(BaseConstants):
     NUM_ROUNDS = 10 # FOR PRETEST TWO, PREVIOUSLY 5 
     SCENARIOS = open_CSV('presurvey/3scenarios_pilot_np.csv').to_dict(orient='records')  # Convert to a list of dictionaries
     NEIGHBORS = open_CSV('mock/neighbors_configurations.csv').to_dict(orient='records')  # Convert to a list of dictionaries
+    # MAX NUMBER OF FORCED RESPONSES 
+    MAX_FORCED = 3 
 
 class Subsession(BaseSubsession):
     pass
@@ -79,7 +81,7 @@ class GroupingWaitPage(Page): # this one has the image of neighbor discussion
 
 class DiscussionGRPWaitPage(Page): # round by round, call the row for the neighbors_configurations
     template_name = 'mock/DiscussionGRPWaitPage.html'
-    timeout_seconds = random.randint(3,5)  # Random wait time between 3 and 10 seconds
+    timeout_seconds = random.randint(3,5)  # Random wait time between 3 and 5 seconds
 
     @staticmethod
     def is_displayed(player):
@@ -157,10 +159,15 @@ class Discussion(Page):
     
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        print(f"Timeout counter: {player.participant.forced_response_counter}")
         if timeout_happened:
-            ### REVIEW THE RULE #### 
-            player.forced_response = True # only in the last round, make them inactive
+            player.forced_response = True 
             player.response = random.choice([-1, 0, 1])
+            player.participant.forced_response_counter += 1
+            if player.participant.forced_response_counter > C.MAX_FORCED:
+                player.participant.active = False 
+        if not player.participant.active:
+            player.participant.complete_presurvey = False
 
     @staticmethod
     def is_displayed(player):

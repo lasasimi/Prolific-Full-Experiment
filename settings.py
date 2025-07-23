@@ -10,8 +10,7 @@ SESSION_CONFIGS = [
         # no consent, failed training, faield attention check
         returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
         # finished everything
-        completelink='https://app.prolific.com/submissions/complete?cc=COQQW3A7',
-        #bonuslink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay + waiting bonus OR max pay
+        completelink='https://app.prolific.com/submissions/complete?cc=CTVV178T',
     ),
 ]
 
@@ -27,7 +26,7 @@ SESSION_CONFIG_DEFAULTS = dict(
 PARTICIPANT_FIELDS = ['gives_consent', 'political_affiliation', 'scenario_type', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'reason', 'scenario','anticonformist', 'no_nudge', 
-                      'complete_presurvey',
+                      'complete_presurvey','forced_response_counter',
                       'not_neutral', 'neighbors_configurations', 'neighbors',
                       'simulated_time']# For bots, this will be used to simulate wait time
 
@@ -46,8 +45,8 @@ SESSION_FIELDS = ['combined_responses',
 
 ROOMS = [
     dict(
-        name='pilot_20250722',
-        display_name='pilot_20250722',
+        name='pilot_20250723',
+        display_name='pilot_20250723',
     ),
 ]
 
