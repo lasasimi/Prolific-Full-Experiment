@@ -28,16 +28,18 @@ class C(BaseConstants):
     SCENARIOS = CSV.to_dict(orient='records')
     NUM_ROUNDS = 3 # number of scenarios -> change depending the number of scenarios you want to test
 
-    # CHANGE N BEFORE LAUNCHING THE EXPERIMENT
-    # N = total recruited / 6
-    RECRUITED = 12 # total number of participants recruited in prolific, minimum 12 (1 Rep + 1 Dem)
+    # CHANGE RECRUITED AND N BEFORE LAUNCHING THE EXPERIMENT
+    # Total number of participants recruited in prolific, must be a multiply of 6! (1 Rep + 1 Dem)
+    RECRUITED = 12 # can you divide this by 6? 
+    
+    # N = total recruited / 6 (N must result into an even number!)
     N = RECRUITED / 6 # number of participants per treatment (e.g. C_Dem_p) 5 for a total of 30 participants
-    AC_n = 2 * N
-    AC_p = 2 * N
-    C_n = 2 * N
-    C_p = 2 * N
-    NO_n = 2 * N
-    NO_p = 2 * N
+    AC_n = N
+    AC_p = N
+    C_n = N
+    C_p = N
+    NO_n = N
+    NO_p = N
     AC_Dem_p = AC_p // 2
     AC_Rep_p = AC_p // 2
     AC_Dem_n = AC_n // 2

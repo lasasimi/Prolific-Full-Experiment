@@ -14,10 +14,10 @@ import math
 
 print(os.getcwd())
 
-os.chdir('/Users/lasmimarbun/Documents/Git/Prolific-Full-Experiment/')
+os.chdir('/Users/Lasmi Marbun/Documents/Git/Prolific-Full-Experiment/')
 data_clean = 'data/Clean_files/'
 
-df_raw = pd.read_csv('data/Raw_otree/all_apps_wide_b0qkdyda.csv') # change file name to current file
+df_raw = pd.read_csv('flag/all_apps_wide.csv') # change file name to current file
 
 variables = df_raw.columns.to_list()
 
@@ -39,32 +39,56 @@ print("No. player variables:", len(player_vars))
 print("No. other variables:", len(other_vars)) 
 
 
+
 participant_vars_keep = [
- 'participant.code',
- 'participant.label',
- 'participant.time_started_utc',
- 'participant.gives_consent',
- 'participant.no_consent',
- 'participant.training_attempt',
- 'participant.training_success',
- 'participant.no_consent',
- 'participant.failed_commitment',
- 'participant.treatment',
- 'participant.scenario_order',
- 'participant.all_responses',
- 'participant.wait_page_arrival',
- 'participant.failed_attention_check',
- 'participant.active',
- 'participant.single_group',
- 'participant.reason',
- 'participant.is_group_single',
- 'participant.scenario',
- 'participant.anticonformist',
- 'participant.position']
+                        'participant.code',
+                        'participant.label',
+                        'participant.time_started_utc',
+                        'participant.gives_consent', 
+                        'participant.political_affiliation', 
+                        'participant.scenario_type', 
+                        'participant.training_attempt', 
+                        'participant.training_success', 
+                        'participant.no_consent', 
+                        'participant.failed_commitment',
+                        'participant.treatment', 
+                        'participant.scenario_order', 
+                        'participant.all_responses', 
+                        'participant.wait_page_arrival', 
+                        'participant.failed_attention_check', 
+                        'participant.active', 
+                        'participant.reason', 
+                        'participant.scenario',
+                        'participant.anticonformist', 
+                        'participant.no_nudge', 
+                        'participant.complete_presurvey',
+                        'participant.forced_response_counter',
+                        'participant.not_neutral', 
+                        'participant.neighbors_configurations', 
+                        'participant.neighbors']
 
 # keep variables in session vars
-other_vars_keep = ['session.code',
-                 'session.combined_responses',]
+other_vars_keep = [
+                    'session.code',
+                    'session.combined_responses', 
+                    'session.AC_p', 
+                    'session.AC_n', 
+                    'session.C_p', 
+                    'session.C_n', 
+                    'session.NO_p', 
+                    'session.NO_n',
+                    'session.AC_Dem_p', 
+                    'session.AC_Rep_p', 
+                    'session.AC_Dem_n', 
+                    'session.AC_Rep_n',
+                    'session.C_Dem_p', 
+                    'session.C_Rep_p', 
+                    'session.C_Dem_n', 
+                    'session.C_Rep_n',
+                    'session.NO_Dem_p', 
+                    'session.NO_Rep_p',
+                    'session.NO_Dem_n', 
+                    'session.NO_Rep_n']
 
 player_vars_all = [
     'presurvey.{i}.player.id_in_group',
@@ -72,7 +96,6 @@ player_vars_all = [
     'presurvey.{i}.player.payoff',
     'presurvey.{i}.player.gives_consent',
     'presurvey.{i}.player.scenario_code',
-    'presurvey.{i}.player.dropout',
     'presurvey.{i}.player.test_scenario',
     'presurvey.{i}.player.dilemmatopic',
     'presurvey.{i}.player.majority',
@@ -85,27 +108,17 @@ player_vars_all = [
     'presurvey.{i}.player.education_lvl',
     'presurvey.{i}.player.neighborhood_type',
     'presurvey.{i}.player.response',
-    'presurvey.{i}.player.attitude_certainty',
-    'presurvey.{i}.player.likelihood',
     'presurvey.{i}.player.political_charge',
     'presurvey.{i}.player.emotional_charge',
-    'presurvey.{i}.player.disagree_conform',
-    'presurvey.{i}.player.commit_attention_Q1',
-    'presurvey.{i}.player.commit_attention_Q2',
-    'presurvey.{i}.player.commit_attention_Q3',
     'presurvey.{i}.group.id_in_subsession',
     'presurvey.{i}.subsession.round_number',
     'mock.{i}.player.id_in_group',
     'mock.{i}.player.role',
     'mock.{i}.player.payoff',
     'mock.{i}.player.scenario',
-    'mock.{i}.player.discussion_grp',
-    'mock.{i}.player.old_response',
-    'mock.{i}.player.new_response',
     'mock.{i}.player.forced_response',
+    'mock.{i}.player.response',
     'mock.{i}.group.id_in_subsession',
-    'mock.{i}.group.group_size',
-    'mock.{i}.group.is_group_single',
     'mock.{i}.subsession.round_number',
     'noPay.{i}.player.id_in_group',
     'noPay.{i}.player.id_in_group',
@@ -115,15 +128,11 @@ player_vars_all = [
 # variables that have multiple rounds
 player_vars_allR = [
     'presurvey.{i}.player.response',
-   # 'presurvey.{i}.player.attitude_certainty',
-   # 'presurvey.{i}.player.likelihood',
     'presurvey.{i}.player.political_charge',
     'presurvey.{i}.player.emotional_charge',
     'presurvey.{i}.player.scenario_code',
     'mock.{i}.player.scenario',
-    'mock.{i}.player.discussion_grp',
-    'mock.{i}.player.old_response',
-    'mock.{i}.player.new_response',
+    'mock.{i}.player.response',
     'mock.{i}.player.forced_response'
 ]
 # variables that have multiple rounds in presurvey app
@@ -136,9 +145,7 @@ player_vars_presurvey_allR = [
 # variables that have multiple rounds in mock app
 player_vars_mock_allR = [
     'mock.{i}.player.scenario',
-    'mock.{i}.player.discussion_grp',
-    'mock.{i}.player.old_response',
-    'mock.{i}.player.new_response',
+    'mock.{i}.player.response',
     'mock.{i}.player.forced_response'
 ]
 
@@ -148,6 +155,7 @@ player_vars_allR1 = [
     'presurvey.{i}.player.role',
     'presurvey.{i}.player.payoff',
     'presurvey.{i}.player.gives_consent',
+    'presurvey.{i}.player.scenario_code',
     'presurvey.{i}.player.test_scenario',
     'presurvey.{i}.player.dilemmatopic',
     'presurvey.{i}.player.majority',
@@ -162,20 +170,17 @@ player_vars_allR1 = [
     'mock.{i}.player.id_in_group',
     'mock.{i}.player.role',
     'mock.{i}.player.payoff',
-    'mock.{i}.group.is_group_single',
+    'mock.{i}.group.id_in_subsession',
     'noPay.{i}.player.id_in_group',
     'noPay.{i}.player.id_in_group',
     'Pay.{i}.player.feedback_final',
-    'Pay.{i}.player.id_in_group',
-    ]
+    'Pay.{i}.player.id_in_group',]
 
-# Mock app has 5 rounds whilst presurvey app have 4 rounds
-# Define variables that only appear in round 5 (mock)
-player_vars_R5 = [
+# Mock app has 10 rounds whilst presurvey app have 3 rounds
+# Define variables that appear in rounds 4 to 10 of the mock app
+player_vars_R4_R10 = [
     'mock.{i}.player.scenario',
-    'mock.{i}.player.discussion_grp',
-    'mock.{i}.player.old_response',
-    'mock.{i}.player.new_response',
+    'mock.{i}.player.response',
     'mock.{i}.player.forced_response'
 ]
 
@@ -184,8 +189,8 @@ player_vars_keep = []
 for r in range(1,6):
     if r == 1:
         all_vars = player_vars_allR1 + player_vars_allR
-    elif r == 5:
-        all_vars = player_vars_R5
+    elif r > 3:
+        all_vars = player_vars_R4_R10
     else:
         all_vars = player_vars_allR 
     
