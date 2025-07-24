@@ -14,17 +14,29 @@ import math
 
 print(os.getcwd())
 
-os.chdir('/Users/Lasmi Marbun/Documents/Git/Prolific-Full-Experiment/')
-data_clean = 'data/Clean_files/'
+# mac
+os.chdir('/Users/lasmimarbun/Documents/Git/Prolific-Full-Experiment/data/')
+# windows
+#os.chdir('/Users/Lasmi Marbun/Documents/Git/Prolific-Full-Experiment/')
 
-# session code: k1hhm7lf
-df_raw = pd.read_csv('data/Raw_otree/all_apps_wide_k1hhm7lf.csv') # change file name to current file
+# Define the paths for raw and clean data
+data_clean = '/Users/lasmimarbun/Documents/Git/Prolific-Full-Experiment/data/Clean_files/'
+data_raw = '/Users/lasmimarbun/Documents/Git/Prolific-Full-Experiment/data/Raw_otree/'
+
+# Change the filename to the current file
+filename = 'all_apps_wide_k1hhm7lf.csv' # change file name as needed
+df_raw = pd.read_csv(data_raw + filename) # change file name to current file
 
 # remove participants with column participant._current_page_name != Feedback
 df_raw = df_raw[df_raw['participant._current_page_name'] == 'Feedback'].reset_index(drop=True)
 
-# remove returned participant (participant.label == '5f16f559325a640008bb9a07')
-df_raw = df_raw[df_raw['participant.label'] != '5f16f559325a640008bb9a07'].reset_index(drop=True)
+# remove returned participant from session k1hhm7lf (participant.code == '06jzthd0')
+df_raw = df_raw[df_raw['participant.code'] != '06jzthd0'].reset_index(drop=True)
+
+# remove returned participant from session pfu1qwfx (participant.code == 'kfziruzq')
+df_raw = df_raw[df_raw['participant.code'] != 'kfziruzq'].reset_index(drop=True)
+
+df_raw.shape
 
 variables = df_raw.columns.to_list()
 
@@ -124,6 +136,7 @@ player_vars_all = [
     'mock.{i}.player.payoff',
     'mock.{i}.player.forced_response',
     'mock.{i}.player.response',
+    #'mock.{i}.player.neighbors', # not valid for session k1hhm7lf
     'mock.{i}.group.id_in_subsession',
     'mock.{i}.subsession.round_number',
     'noPay.{i}.player.id_in_group', 
@@ -138,19 +151,21 @@ player_vars_allR = [
     'presurvey.{i}.player.emotional_charge',
     'presurvey.{i}.player.scenario_code',
     'mock.{i}.player.response',
-    'mock.{i}.player.forced_response'
+    'mock.{i}.player.forced_response',
+    #'mock.{i}.player.neighbors', # not valid for session k1hhm7lf
 ]
 # variables that have multiple rounds in presurvey app
 player_vars_presurvey_allR = [
     'presurvey.{i}.player.response',
     'presurvey.{i}.player.political_charge',
     'presurvey.{i}.player.emotional_charge',
-    'presurvey.{i}.player.scenario_code',
+    'presurvey.{i}.player.scenario_code'
 ]
 # variables that have multiple rounds in mock app
 player_vars_mock_allR = [
     'mock.{i}.player.response',
-    'mock.{i}.player.forced_response'
+    'mock.{i}.player.forced_response',
+    #'mock.{i}.player.neighbors', # not valid for session k1hhm7lf
 ]
 
 # variables that only appear in round 1
@@ -184,7 +199,8 @@ player_vars_allR1 = [
 # Define variables that appear in rounds 4 to 10 of the mock app
 player_vars_R4_R10 = [
     'mock.{i}.player.response',
-    'mock.{i}.player.forced_response'
+    'mock.{i}.player.forced_response',
+    #'mock.{i}.player.neighbors', # not valid for session k1hhm7lf
 ]
 
 
@@ -233,7 +249,8 @@ player_info_vars = ['session.code','participant.code',
 
 player_vars_mock_allR = [
     'mock.{i}.player.response',
-    'mock.{i}.player.forced_response'
+    'mock.{i}.player.forced_response',
+    #'mock.{i}.player.neighbors', # not valid for session k1hhm7lf
 ]
 # variables that have multiple rounds in presurvey app
 player_vars_presurvey_allR = [
@@ -352,8 +369,13 @@ for idx, row in df_clean.iterrows():
 
 df_long = pd.DataFrame(long_data)
 
+# Save the long-format DataFrame to a CSV file
+cleanfilename = 'clean_long_format_k1hhm7lf.csv'
+df_long.to_csv(data_clean + cleanfilename, index=False)
 
 
+### Only for k1hhm7lf session ###
+# Handling unsaved player.neighbors in session k1hhm7lf data
 
 import ast
 
@@ -370,7 +392,12 @@ def get_neighbors(row):
     else:
         return None  # or [] or [None, None, None] if preferred
 
-df_long['player.neighbors'] = df_long.apply(get_neighbors, axis=1)
+df_long['neighbors'] = df_long.apply(get_neighbors, axis=1)
+
+# If scenario_code is not NaN, remove the values from neighbors column
+df_long.loc[df_long['scenario_code'].notna(), 'neighbors'] = None
 
 
-df_long.to_csv(data_clean + 'test2_clean_long_format_k1hhm7lf.csv', index=False)
+# Save the long-format DataFrame to a CSV file
+cleanfilename = 'clean_long_format_k1hhm7lf.csv'
+df_long.to_csv(data_clean + cleanfilename, index=False)
