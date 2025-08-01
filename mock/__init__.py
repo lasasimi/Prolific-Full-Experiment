@@ -93,6 +93,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
         
         for i_sce, sce in enumerate(temp_scenarios):
             if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: 
+                # TODO: create a checking for N08 before creating a group
                 print('Ready to create a LARGE discussion group')
                 group = scenario_counts[sce]['A']+scenario_counts[sce]['F']
                 for p in group:
@@ -101,6 +102,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 break
 
     #else: 
+    # TODO: check the counter for N04, if it is not full, create a group of 4
     #print('not enough players yet to create a group')
     # players waiting for medium time, check if smaller group possible 
     medium_waiting = [p for p in waiting_players if medium_wait(p)]
@@ -121,7 +123,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
             for p in group:
                 p.participant.scenario = sce
             return group  # only runs if 'group' was set
-            
+            # break
     # Fallback if no group can be formed
     print('not enough players yet to create a group')
     return []
