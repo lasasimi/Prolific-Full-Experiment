@@ -28,7 +28,7 @@ PARTICIPANT_FIELDS = ['gives_consent', 'political_affiliation', 'scenario_type',
                       'active', 'reason', 'scenario','anticonformist', 'no_nudge', 
                       'complete_presurvey','forced_response_counter',
                       'not_neutral', 'neighbors_configurations', 'neighbors',
-                      'simulated_time']# For bots, this will be used to simulate wait time
+                      'simulated_time', 'treatment_available']# For bots, this will be used to simulate wait time
 
 SESSION_FIELDS = ['combined_responses', 
                   'AC_p', 'AC_n', 
@@ -45,8 +45,8 @@ SESSION_FIELDS = ['combined_responses',
 
 ROOMS = [
     dict(
-        name='pilot_20250724',
-        display_name='pilot_20250724',
+        name='pilot_20250724_1',
+        display_name='pilot_20250724_1',
     ),
 ]
 

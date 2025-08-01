@@ -31,27 +31,47 @@ class C(BaseConstants):
     # CHANGE RECRUITED AND N BEFORE LAUNCHING THE EXPERIMENT
     # Total number of participants recruited in prolific, must be a multiply of 6! (1 Rep + 1 Dem)
     # can you divide this by 6? is this a min. of 12?
-    RECRUITED = 96 
+    # RECRUITED = 24 
     
-    # N = total recruited / 6 (N must result into an even number!)
-    N = RECRUITED / 6 # number of participants per treatment (e.g. C_Dem_p) 5 for a total of 30 participants
-    AC_n = N
-    AC_p = N
-    C_n = N
-    C_p = N
-    NO_n = N
-    NO_p = N
+    # # N = total recruited / 6 (N must result into an even number!)
+    # N = RECRUITED / 6 # number of participants per treatment (e.g. C_Dem_p) 5 for a total of 30 participants
+    # AC_n = N
+    # AC_p = N
+    # C_n = N
+    # C_p = N
+    # NO_n = N
+    # NO_p = N
+    # AC_Dem_p = AC_p // 2
+    # AC_Rep_p = AC_p // 2
+    # AC_Dem_n = AC_n // 2
+    # AC_Rep_n = AC_n // 2
+    # C_Dem_p = C_p // 2
+    # C_Rep_p = C_p // 2
+    # C_Dem_n = C_n // 2
+    # C_Rep_n = C_n // 2
+    # NO_Dem_p = NO_p // 2
+    # NO_Rep_p = NO_p // 2
+    # NO_Dem_n = NO_n // 2
+    # NO_Rep_n = NO_n // 2
+
+    # Specific target
+    AC_n = 0
+    AC_p = 0
+    C_n = 0
+    C_p = 0
+    NO_n = 0
+    NO_p = 0
     AC_Dem_p = AC_p // 2
     AC_Rep_p = AC_p // 2
     AC_Dem_n = AC_n // 2
     AC_Rep_n = AC_n // 2
     C_Dem_p = C_p // 2
-    C_Rep_p = C_p // 2
+    C_Rep_p = 1
     C_Dem_n = C_n // 2
     C_Rep_n = C_n // 2
     NO_Dem_p = NO_p // 2
-    NO_Rep_p = NO_p // 2
-    NO_Dem_n = NO_n // 2
+    NO_Rep_p = 2
+    NO_Dem_n = 1
     NO_Rep_n = NO_n // 2
 
 class Subsession(BaseSubsession):
@@ -93,6 +113,7 @@ def creating_session(subsession):
         player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
         player.participant.vars['not_neutral'] = {} # Initialized to store if the player is not neutral in any scenario
         player.participant.vars['forced_response_counter'] = 0 # Initialize forced response counter
+        player.participant.vars['treatment_available'] = True # Initialize treatment availability
 def no_nudge(player):
     if player.participant.treatment in ['AC_n', 'AC_p', 'C_n', 'C_p']:
         return False
@@ -420,7 +441,14 @@ class ExperimentInstruction(Page):
                 available_treatments.append('NO_n')
 
         # Randomly select a treatment from the available options
-        player.participant.treatment = random.choice(available_treatments)
+        if not available_treatments:
+            print("No available treatments left, setting participant to inactive.")
+            player.participant.treatment_available = False
+            player.participant.complete_presurvey = False
+            return
+        else:
+            player.participant.treatment = random.choice(available_treatments)
+
 
         # Update the session's treatment counts
         if player.participant.treatment == 'AC_p':
@@ -465,7 +493,7 @@ class ExperimentInstruction(Page):
 
         # Debugging output
         print(f"Assigned treatment: {player.participant.treatment}, AC: {player.participant.anticonformist}")
-        print(f"AC_p: {player.subsession.session.AC_p}, AC_n: {player.subsession.session.AC_n}, C_p: {player.subsession.session.C_p}, C_n: {player.subsession.session.C_n}, AC_Dem_p: {player.subsession.session.AC_Dem_p}, AC_Rep_p: {player.subsession.session.AC_Rep_p}, AC_Dem_n: {player.subsession.session.AC_Dem_n}, AC_Rep_n: {player.subsession.session.AC_Rep_n}, C_Dem_p: {player.subsession.session.C_Dem_p}, C_Rep_p: {player.subsession.session.C_Rep_p}, C_Dem_n: {player.subsession.session.C_Dem_n}, C_Rep_n: {player.subsession.session.C_Rep_n}")
+        print(f"AC_p: {player.subsession.session.AC_p}, AC_n: {player.subsession.session.AC_n}, C_p: {player.subsession.session.C_p}, C_n: {player.subsession.session.C_n}, AC_Dem_p: {player.subsession.session.AC_Dem_p}, AC_Rep_p: {player.subsession.session.AC_Rep_p}, AC_Dem_n: {player.subsession.session.AC_Dem_n}, AC_Rep_n: {player.subsession.session.AC_Rep_n}, C_Dem_p: {player.subsession.session.C_Dem_p}, C_Rep_p: {player.subsession.session.C_Rep_p}, C_Dem_n: {player.subsession.session.C_Dem_n}, C_Rep_n: {player.subsession.session.C_Rep_n}, NO_Rep_p: {player.subsession.session.NO_Rep_p}, NO_Dem_p: {player.subsession.session.NO_Dem_p}, NO_Rep_n: {player.subsession.session.NO_Rep_n}, NO_Dem_n: {player.subsession.session.NO_Dem_n}")
 
         # Assign treatment to the player
         player.participant.vars['scenario_type'] = scenario_type(player) 
