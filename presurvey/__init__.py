@@ -24,11 +24,10 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'presurvey'
     PLAYERS_PER_GROUP = None
-    # all scenarios: not used for the Prolific, but only used for the Collective Minds' app
-    CSV = open_CSV('presurvey/scenarios_only3np.csv')
+
+    # REMEMBER TO CHANGE TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN
+    CSV = open_CSV('presurvey/scenarios_1np.csv')
     SCENARIOS = CSV.to_dict(orient='records')
-    #NUM_ROUNDS = len(CSV['code']) # number of scenarios
-    # for testing: 
     NUM_ROUNDS = 1
 
 
@@ -156,11 +155,8 @@ class Player(BasePlayer):
             #blank=True, # Remove this to make it mandatory, this is done for testing purposes
         )
     
-    attitude_certainty = make_field("I am certain about my position on this issue.")   
-    likelihood = make_field("This dilemma is likely to happen in a neighborhood.")
     political_charge = make_field("The situation described in the dilemma is politically controversial.")
     emotional_charge = make_field("The situation described in the dilemma is emotionally charged.")
-    disagree_conform = make_field("I will change my mind if most people in my neighborhood disagreed with my position.")
 
     # Commitment questions
     commit_attention_Q1 = models.BooleanField(
@@ -431,7 +427,7 @@ class Commitment(Page):
             player.participant.complete_presurvey = True # this is to check if participant moves forward to the mock app
             player.participant.wait_page_arrival = time.time()
 
-        print(f"Commitment attempt: {player.participant.failed_commitment}, Complete presurvey: {player.participant.complete_presurvey}")
+        print(f"Commitment failed?: {player.participant.failed_commitment}, Complete presurvey?: {player.participant.complete_presurvey}")
     @staticmethod
     def is_displayed(player:Player):
         return player.participant.complete_presurvey and player.round_number == C.NUM_ROUNDS
@@ -439,23 +435,9 @@ class Commitment(Page):
         only displayed if participant eligible
         if not eligible, plan accordingly. 
         """
-  
-    
-# class FinalPage(Page):
-#     form_model = 'player'
-#     timeout_seconds = 5
-#     @staticmethod
-#     def is_displayed(player: Player):
-#         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey
-    
-#     @staticmethod
-#     def before_next_page(player: Player, timeout_happened):
-#         player.participant.wait_page_arrival = time.time()
-
-
-# page_sequence = [Introduction, Training, TrainingNeighbor_1, 
-#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3,
-#                  Scenario, Commitment, FinalPage]
+# # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
+# page_sequence = [Introduction, 
+#                 Scenario, Commitment]
 
 #Full page sequence
 page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 

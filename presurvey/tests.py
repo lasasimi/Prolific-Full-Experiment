@@ -35,13 +35,19 @@ class PlayerBot(Bot):
                 emotional_charge=1,
                 response=1
             )
-        # elif self.player.id_in_group in range(37, 73):
-        #     yield Scenario, dict(
-        #         political_charge=1,
-        #         emotional_charge=1,
-        #         response=1
-        #     )
-        else:
+        elif self.player.id_in_group in range(9, 13):
+            yield Scenario, dict(
+                political_charge=1,
+                emotional_charge=1,
+                response=1
+            )
+        elif self.player.id_in_group in range(13, 17):
+            yield Scenario, dict(
+                political_charge=1,
+                emotional_charge=1,
+                response=-1
+            )
+        elif self.player.id_in_group in range(17, 21):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,

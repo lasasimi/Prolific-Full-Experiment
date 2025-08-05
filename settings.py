@@ -3,9 +3,9 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='pilotsurveyALL',
-        app_sequence=['presurvey', 'mock', 'Pay', 'noPay'],
+        app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
-        num_demo_participants=8, # 9x4 + 9x8
+        num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
         # no consent, failed training, faield attention check, and became inactive in mock app
         returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
@@ -13,8 +13,14 @@ SESSION_CONFIGS = [
         basepaylink='https://app.prolific.com/submissions/complete?cc=COQQW3A7', # base pay only
         # finished presurvey, commitment, waited too long OR completed mock app
         bonuslink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay + waiting bonus OR max pay
-        scenario_id='s3_n',
-    ),
+        # maximum groups in each condition
+        N04_p00 = 0,
+        N04_p25 = 0,
+        N04_p50 = 1,
+        N08_p00 = 0,
+        N08_p25 = 0,
+        N08_p50 = 0,
+    )
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
@@ -32,14 +38,15 @@ PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', '
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter',
                       'simulated_time']# For bots, this will be used to simulate wait time
-SESSION_FIELDS = ['combined_responses','N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50']
+SESSION_FIELDS = ['combined_responses','scenario_counts', 'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',
+                  'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50']
 
 
 
 ROOMS = [
     dict(
-        name='pilotsession1_20250625',
-        display_name='pilotsession1_20250625',
+        name='fullexperiment_20250805',
+        display_name='fullexperiment_20250805',
     ),
 ]
 
