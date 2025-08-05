@@ -8,18 +8,18 @@ SESSION_CONFIGS = [
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
         # no consent, failed training, faield attention check, and became inactive in mock app
-        returnlink='https://app.prolific.com/submissions/complete?cc=C68YG750', # no pay, no bonus
+        returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
         # finished presurvey, no commitment
-        basepaylink='https://app.prolific.com/submissions/complete?cc=COQQW3A7', # base pay only
+        basepaylink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
         # finished presurvey, commitment, waited too long OR completed mock app
-        bonuslink=' https://app.prolific.com/submissions/complete?cc=CTVV178T', # base pay + waiting bonus OR max pay
+        bonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         # maximum groups in each condition
         N04_p00 = 0,
         N04_p25 = 0,
-        N04_p50 = 1,
+        N04_p50 = 0,
         N08_p00 = 0,
-        N08_p25 = 0,
-        N08_p50 = 0,
+        N08_p25 = 1,
+        N08_p50 = 1,
     )
 ]
 

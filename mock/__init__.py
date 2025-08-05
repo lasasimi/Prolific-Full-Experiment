@@ -291,8 +291,8 @@ class DiscussionGRPWaitPage(WaitPage):
                 print(f"Debug: anticonformists = {anticonformists}")
 
                 # Extract participant codes from the anticonformists list
-                anticonformists_codes = [p.participant.code for p in anticonformists]
-                print(f"Debug: anticonformists codes = {anticonformists_codes}")
+                anticonformists_codes = anticonformists
+                print(f"Debug: anticonformists codes = {anticonformists}")
 
             elif group.group_size == 'N04':
                 faction_U = group.get_players() 
