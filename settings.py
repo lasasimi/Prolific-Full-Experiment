@@ -15,11 +15,11 @@ SESSION_CONFIGS = [
         bonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         # maximum groups in each condition
         N04_p00 = 0,
-        N04_p25 = 0,
-        N04_p50 = 0,
+        N04_p25 = 1,
+        N04_p50 = 1,
         N08_p00 = 0,
-        N08_p25 = 2,
-        N08_p50 = 2,
+        N08_p25 = 1,
+        N08_p50 = 1,
     )
 ]
 

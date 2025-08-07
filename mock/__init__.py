@@ -22,7 +22,8 @@ class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 20 # REPLACE WITH 20 FOR FULL EXPERIMENT
-    LONG_WAIT = 10 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS 
+    LONG_WAIT = 15 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
+    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
     
@@ -57,6 +58,10 @@ def N08_full(subsession):
 def long_wait(player):
     participant = player.participant
     return time.time() - participant.wait_page_arrival > C.LONG_WAIT * 60  # in mins
+
+def medium_wait(player):
+    participant = player.participant
+    return time.time() - participant.wait_page_arrival > C.MEDIUM_WAIT * 60  # in mins
 
 def counters_full(player):
     session = player.subsession.session
@@ -114,9 +119,11 @@ def group_by_arrival_time_method(subsession, waiting_players):
                     p.participant.vars['scenario'] = sce
                     p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
                 return group 
-    if N08_full(subsession):
-        print('N08 is full, checking for smaller groups')
-        if not group and len(waiting_players) == C.N_TEST/2:
+    # If N08 is full or any of the players has been waiting for medium time, create a group of 4
+    if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
+        print('N08 is full or medium wait, checking for smaller groups')
+        if len(waiting_players) == C.N_TEST/2:
+            print('Creating a group of 4')
             temp_scenarios = scenarios.copy()
             temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
             for i_sce, sce in enumerate(temp_scenarios):
@@ -370,7 +377,7 @@ class DiscussionGRPWaitPage(WaitPage):
 
 
 class Phase3(Page):
-    timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
+    timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
     
     @staticmethod
     def is_displayed(player):
@@ -378,7 +385,7 @@ class Phase3(Page):
 
 
 class Nudge(Page):
-    timeout_seconds = 45 # to force proceed after 30 seconds of inactivity
+    timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
     @staticmethod
     def vars_for_template(player):        
         return dict(
