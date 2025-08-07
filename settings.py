@@ -45,8 +45,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts', 'N04_p00','N04_p25','N
 
 ROOMS = [
     dict(
-        name='fullexperiment_20250805',
-        display_name='fullexperiment_20250805',
+        name='fullexperiment_20250807',
+        display_name='fullexperiment_20250807',
     ),
 ]
 
