@@ -33,7 +33,9 @@ class ExitPage(Page):
     @staticmethod
     def js_vars(player: Player):
         # From presurvey app
-        if player.participant.failed_attention_check:
+        if player.participant.too_late:
+            player.participant.reason="Sorry, we just received enough participations for this study. To save your time, we prevent you from continuing."
+        elif player.participant.failed_attention_check:
             player.participant.reason="You did not pass the attention check."
         elif player.participant.training_attempt == 0:
             player.participant.reason="You did not pass the Training phase by answering incorrectly for too many times."
