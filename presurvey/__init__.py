@@ -436,10 +436,10 @@ class Commitment(Page):
         if not eligible, plan accordingly. 
         """
 # # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-# page_sequence = [Introduction, 
-#                 Scenario, Commitment]
+page_sequence = [Introduction, 
+                Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-                 Scenario, Commitment]
+# page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+#                  Scenario, Commitment]

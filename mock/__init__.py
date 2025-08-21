@@ -29,7 +29,7 @@ class C(BaseConstants):
     
     # REMEMBER TO CHANGE TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN
     SCENARIOS = open_CSV('presurvey/scenarios_1np.csv')
-    
+    SCE = 's2_n'
     # NOTE: Max number of groups in each condition is set up in session config
 
  
@@ -76,16 +76,17 @@ def group_by_arrival_time_method(subsession, waiting_players):
         response[p.participant.code] = p.participant.all_responses
     
     # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
-    scenarios = list(C.SCENARIOS['code'])
+    #scenarios = list(C.SCENARIOS['code'])
+    
     # Dynamically reconstruct scenario_counts from participant.vars
-    scenario_counts = {sce: {'A': [], 'F': []} for sce in scenarios}
+    scenario_counts = {sce: {'A': [], 'F': []} for sce in C.SCENARIOS['code']}
+    sce = C.SCE
     for p in waiting_players:
-        for sce in scenarios:
-            if sce in response[p.participant.code].keys():
-                if response[p.participant.code][sce] == -1:
-                    scenario_counts[sce]['A'].append(p)
-                elif response[p.participant.code][sce] == 1:
-                    scenario_counts[sce]['F'].append(p)
+        if sce in response[p.participant.code].keys():
+            if response[p.participant.code][sce] == -1:
+                scenario_counts[sce]['A'].append(p)
+            elif response[p.participant.code][sce] == 1:
+                scenario_counts[sce]['F'].append(p)
     print(f"Debug: Scenario counts before grouping: {scenario_counts}")
 
     # Check if counters are full
@@ -106,40 +107,39 @@ def group_by_arrival_time_method(subsession, waiting_players):
     if len(waiting_players) == C.N_TEST and not N08_full(subsession):
     # check if creating 1 group of 8 is possible 
         print('N08 is not full, creating a group of 8')
-        temp_scenarios = scenarios.copy()
-        temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
-        for i_sce, sce in enumerate(temp_scenarios):
-            print(f"Debug: Scenario {sce}, A count: {len(scenario_counts[sce]['A'])}, F count: {len(scenario_counts[sce]['F'])}")
-            if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: 
-                print('Ready to create a LARGE discussion group')
-                group = scenario_counts[sce]['A'] + scenario_counts[sce]['F'] 
-                for p in group:
-                    p.participant.scenario = sce
-                    # Save the scenario and faction to participant.vars
-                    p.participant.vars['scenario'] = sce
-                    p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
-                return group 
+        sce = C.SCE
+        #temp_scenarios = scenarios.copy()
+        #temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
+        #for i_sce, sce in enumerate(temp_scenarios):
+        print(f"Debug: Scenario {sce}, A count: {len(scenario_counts[sce]['A'])}, F count: {len(scenario_counts[sce]['F'])}")
+        if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: 
+            print('Ready to create a LARGE discussion group')
+            group = scenario_counts[sce]['A'] + scenario_counts[sce]['F'] 
+            for p in group:
+                p.participant.scenario = sce
+                # Save the scenario and faction to participant.vars
+                p.participant.vars['scenario'] = sce
+                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
+            return group 
     # If N08 is full or any of the players has been waiting for medium time, create a group of 4
     if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
         if len(waiting_players) == C.N_TEST/2:
             print('Creating a group of 4')
-            temp_scenarios = scenarios.copy()
-            temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
-            for i_sce, sce in enumerate(temp_scenarios):
-                if len(scenario_counts[sce]['A']) == C.N_TEST/2:
-                    group = scenario_counts[sce]['A']
-                elif len(scenario_counts[sce]['F']) == C.N_TEST/2:
-                    group = scenario_counts[sce]['F']
-                else:
-                    continue
+            #temp_scenarios = scenarios.copy()
+            sce = C.SCE
+            #for i_sce, sce in enumerate(temp_scenarios):
+            if len(scenario_counts[sce]['A']) == C.N_TEST/2:
+                group = scenario_counts[sce]['A']
+            elif len(scenario_counts[sce]['F']) == C.N_TEST/2:
+                group = scenario_counts[sce]['F']
 
-                for p in group:
-                    p.participant.scenario = sce
-                    # Save the scenario and faction to participant.vars
-                    p.participant.vars['scenario'] = sce
-                    p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
-                return group
+            for p in group:
+                p.participant.scenario = sce
+                # Save the scenario and faction to participant.vars
+                p.participant.vars['scenario'] = sce
+                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
+            return group
 
     if not group:
         print('Not enough players yet to create a group')
