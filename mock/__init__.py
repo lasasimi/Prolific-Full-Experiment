@@ -22,7 +22,7 @@ class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 20 # REPLACE WITH 20 FOR FULL EXPERIMENT
-    LONG_WAIT = 15 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
+    LONG_WAIT = 20 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
     MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
@@ -74,13 +74,14 @@ def group_by_arrival_time_method(subsession, waiting_players):
     response = {}
     for p in waiting_players:
         response[p.participant.code] = p.participant.all_responses
+        p.participant.scenario = C.SCE
     
     # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
     #scenarios = list(C.SCENARIOS['code'])
     
     # Dynamically reconstruct scenario_counts from participant.vars
-    scenario_counts = {sce: {'A': [], 'F': []} for sce in C.SCENARIOS['code']}
     sce = C.SCE
+    scenario_counts = {sce: {'A': [], 'F': []}}
     for p in waiting_players:
         if sce in response[p.participant.code].keys():
             if response[p.participant.code][sce] == -1:
@@ -124,22 +125,23 @@ def group_by_arrival_time_method(subsession, waiting_players):
     # If N08 is full or any of the players has been waiting for medium time, create a group of 4
     if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
+        sce = C.SCE
         if len(waiting_players) == C.N_TEST/2:
             print('Creating a group of 4')
-            #temp_scenarios = scenarios.copy()
-            sce = C.SCE
-            #for i_sce, sce in enumerate(temp_scenarios):
-            if len(scenario_counts[sce]['A']) == C.N_TEST/2:
-                group = scenario_counts[sce]['A']
-            elif len(scenario_counts[sce]['F']) == C.N_TEST/2:
-                group = scenario_counts[sce]['F']
+            print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))
 
-            for p in group:
-                p.participant.scenario = sce
-                # Save the scenario and faction to participant.vars
-                p.participant.vars['scenario'] = sce
-                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
-            return group
+            if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
+                group = scenario_counts[sce]['A']
+            elif len(scenario_counts[sce]['F']) >= C.N_TEST//2:
+                group = scenario_counts[sce]['F']
+            
+                print("About to assign scenarios to group:", group)
+                for p in group:
+                    p.participant.scenario = sce
+                    # Save the scenario and faction to participant.vars
+                    p.participant.vars['scenario'] = sce
+                    p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
+                return group
 
     if not group:
         print('Not enough players yet to create a group')
