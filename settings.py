@@ -2,24 +2,27 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='pilotsurveyALL',
+        name='fullexperiment_pilot',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
         # no consent, failed training, faield attention check, and became inactive in mock app
         returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
-        # finished presurvey, no commitment
-        basepaylink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
-        # finished presurvey, commitment, waited too long OR completed mock app
-        bonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
+        # screened out, either because answered neutral (not eligible) or not wanting to commit
+        screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
+        # finished presurvey, waited too long, not matched with other participants
+        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
+        # finished presurvey, commitment, AND completed mock app
+        maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
+        
         # maximum groups in each condition
         N04_p00 = 0,
-        N04_p25 = 1,
-        N04_p50 = 1,
+        N04_p25 = 0,
+        N04_p50 = 2,
         N08_p00 = 0,
-        N08_p25 = 1,
-        N08_p50 = 1,
+        N08_p25 = 0,
+        N08_p50 = 2,
     )
 ]
 
@@ -47,8 +50,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
 
 ROOMS = [
     dict(
-        name='fullexperiment_20250807',
-        display_name='fullexperiment_20250807',
+        name='fullexperiment_20250822',
+        display_name='fullexperiment_20250822',
     ),
 ]
 

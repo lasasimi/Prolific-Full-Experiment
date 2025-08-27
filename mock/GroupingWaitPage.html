@@ -11,6 +11,27 @@
     body {
         background-color: #d3d3d3; /* Light gray background */
     }
+    #game-area {
+        width: 400px;
+        height: 100px;
+        border: 1px solid black;
+        position: relative;
+        margin: 20px auto;
+        background-color: white;
+    }
+    #circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%; /* circle by default */
+    background-color: rgb(255, 128, 0);
+    position: absolute;
+    cursor: pointer;
+    display: flex;             /* only needed if using emoji/text inside */
+    align-items: center;       /* center emoji vertically */
+    justify-content: center;   /* center emoji horizontally */
+    font-size: 14px;           /* size for emoji, optional */
+    text-align: center;
+}
 </style>
 
 <div class="wait-container">
@@ -26,32 +47,114 @@
     <p>📅 The next community meeting is scheduled for next week and <strong>you have to make up your mind about what to say</strong> so your community can decide on what to do. </p>    
     <hr>
 
-    <h3>🔔 Important Information</h3>
+    <strong>🔔 Important Information</strong>
     <ul>
-        <li>This part of the study involves <strong>real-time interaction</strong> with others.</li>
-        <li>Once you join the group discussion, you must:
-            <ul>
-                <li>Stay at your <strong>computer</strong> at all times.</li>
-                <li>Be <strong>actively attentive</strong> and ready to respond.</li>
-                <li>Remain connected until the discussion ends.</li>
-            </ul>
-        </li>
-        <li>You may need to <strong>wait up to <span style="color: red;">10 minutes</span></strong> while we form your group.</li>
-        <li><strong>Please do not leave your screen</strong> during this time.</li>
+    <li>This part of the study involves <strong>real-time interaction</strong> with others.</li>
+    <li>Once you join, please:
+        <ul>
+        <li>Stay at your <strong>computer</strong> and remain <strong>attentive</strong>.</li>
+        <li>Stay <strong>active</strong> until the discussion ends.</li>
+        </ul>
+    </li>
+    <li>You may wait up to <strong><span style="color: red;">20 minutes</span></strong> while your group is formed, <strong>do not be inactive</strong>.</li>
+    </ul>
+
+    <strong>💰 Compensation</strong>
+    <ul>
+    <li>If you complete the discussion rounds in a group, you will earn a <strong>bonus payment</strong>.</li>
+    <li>If no group can be formed, you will still receive <strong>compensation</strong>.</li>
     </ul>
 
     <hr>
+    <div class="green-box">
+    The <strong><span style="color: rgb(21, 149, 1);">green circle</span></strong> on your browser tab indicates you are active. Stay active by refreshing the page or playing the mini game below 👇</div>
+    <br>
+    <!-- 👇 Mini Catch-the-Circle Game -->
+    <div style="text-align:center;">
+        <h5>🎮 Mini Game While You Wait</h5>
+        Catch the shape as many times as you can before it refreshes!  
 
-    <h3>💰 Compensation</h3>
-    <ul>
-        <li>If you are successfully placed in a group with other neighbors and <strong>complete the discussion rounds</strong>, you will receive a <strong>bonus payment</strong> on top of your base payment.</li>
-        <li>If a group <strong>cannot be formed</strong> within the allowed time, you will still receive <strong>compensation</strong> for your time and effort.</li>
-    </ul>
+        <div id="game-area">
+            <div id="circle"></div>
+        </div>
+        Score: <span id="score">0</span>
+        🏆 High Score: <span id="highscore">0</span>
+        <button id="refreshBtn" class="button button2">
+            🔄 Refresh & Change Shape
+        </button>
+    </div>
 
-    <p>We appreciate your patience and your commitment to participating fully. This phase is essential to the study, and your involvement makes it possible.</p>
-
-    <p style="text-align: center;"><strong>Thank you for staying with us!</strong></p>
 </div>
+
+
+
+
+<script>
+    let score = 0;
+    const circle = document.getElementById("circle");
+    const gameArea = document.getElementById("game-area");
+    const scoreSpan = document.getElementById("score");
+    const highScoreSpan = document.getElementById("highscore");
+
+    // Load high score from browser storage
+    let highScore = localStorage.getItem("circleHighScore") || 0;
+    highScoreSpan.textContent = highScore;
+
+    function moveCircle() {
+        const areaWidth = gameArea.clientWidth - circle.clientWidth;
+        const areaHeight = gameArea.clientHeight - circle.clientHeight;
+        const newLeft = Math.floor(Math.random() * areaWidth);
+        const newTop = Math.floor(Math.random() * areaHeight);
+        circle.style.left = newLeft + "px";
+        circle.style.top = newTop + "px";
+    }
+
+    circle.addEventListener("click", function () {
+        score++;
+        scoreSpan.textContent = score;
+        moveCircle();
+
+        // Update high score if current score is higher
+        if (score > highScore) {
+            highScore = score;
+            highScoreSpan.textContent = highScore;
+            localStorage.setItem("circleHighScore", highScore);
+        }
+    });
+    
+    function changeShapeAndColor() {
+    // Shapes: circle, square, rounded square
+    const shapes = ["50%", "0%", "20%"];
+    const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+    circle.style.borderRadius = randomShape;
+    localStorage.setItem("circleShape", randomShape);
+
+    // Colors: pick a random color
+    const colors = ["rgb(255,128,0)", "rgb(0,128,255)", "rgb(128,0,255)", "rgb(0,200,0)", "rgb(255,0,128)"];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    circle.style.backgroundColor = randomColor;
+    localStorage.setItem("circleColor", randomColor);
+    }
+
+    // Apply saved shape and color on page load
+    const savedShape = localStorage.getItem("circleShape");
+    if (savedShape) {
+        circle.style.borderRadius = savedShape;
+    }
+    const savedColor = localStorage.getItem("circleColor");
+    if (savedColor) {
+        circle.style.backgroundColor = savedColor;
+    }
+
+    // Button click without delay
+    refreshBtn.addEventListener("click", function () {
+        changeShapeAndColor();
+        window.location.reload(); // reloads immediately
+    });
+
+    // Start game loop
+    moveCircle();
+</script>
 
 {% if view.group_by_arrival_time %}
     <script>
