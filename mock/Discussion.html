@@ -11,28 +11,39 @@ What others are thinking
     <h1 class="inactive_text">We're sorry, you cannot continue with the study as you were inactive for too long.</h1>
 </div>
 {{ endif }}
-
+ <!-- Pop up to show what they selected
+    {{ if player.round_number > 1 }}
+    <div id="popup" class="popup">
+        You selected: {{ player.old_response_text }}
+    </div>
+ -->
+{{ endif }}
     {% if anticonformist %}
     <div class="nudge-anti-card">
         <h2>💡 Tip: Be the Agent of Change</h2>
             Some people might feel hesitant to express unpopular opinions. To help reach the best decision, someone needs to voice a different 
             view to empower others to speak up.
             <br>
-                👉 Be the Agent of Change. <strong>Challenge the norm</strong>-support opinions that are different from others in your group.
+                👉 Be the Agent of Change. <strong>Challenge the norm</strong>, support opinions that are different from others in your group.
     </div>              
     {% else %}
     <div class="nudge-confo-card">
         <h2>💡 Tip: Wisdom of Crowds</h2>
             Not sure what to choose? To help reach the best decision when the answer is not obvious, you might find the majority view helpful. 
             <br>
-                👉 Use the wisdom of crowds. <strong>Try to conform</strong>–follow the majority opinions and support strong ideas. 
+                👉 Use the wisdom of crowds. <strong>Try to conform</strong>,follow the majority opinions and support strong ideas. 
     </div>        
 
     {% endif %}
 <br>
 <div class="card bg-mid m-0">
-  <h4 class="card-header">{{ scenario_title }}</h4>
-
+<h4 class="card-header">
+   {{ scenario_title }}
+   <span class="active-indicator" aria-live="polite">
+     <span id="activeNowText" class="active-text">(Live)</span>
+     <span id="activeNowDot" class="active-dot" aria-hidden="true"></span>
+   </span>
+ </h4>
     <div class="card-body">
       {{ scenario_text }} 
       <br><br>
@@ -57,7 +68,11 @@ What others are thinking
                       {{ scenario_for }}
                   {{ endif }}
                 </div>
-            <img src="{{ static 'person-shape.png' }}" class="avatar">
+            <img src="{{ static 'person-shape.png' }}" class="avatar
+                                                            {% if r == -1 %} bg-sage 
+                                                            {% elif r == 0 %} bg-gray
+                                                            {% else %} bg-lavender
+                                                            {% endif %}">
           </div>
       {{ endfor }}
 
@@ -100,6 +115,33 @@ What others are thinking
       // Submit the form
       button.closest('form').submit();
   }
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const textEl = document.getElementById('activeNowText');
+    const dotEl = document.getElementById('activeNowDot');
+    if (!textEl || !dotEl) return;
+
+    // start visible
+    textEl.classList.add('visible');
+    dotEl.classList.add('visible');
+
+    setInterval(() => {
+      textEl.classList.toggle('visible');
+      textEl.classList.toggle('hidden');
+      dotEl.classList.toggle('visible');
+      dotEl.classList.toggle('hidden');
+    }, 1600);
+  });
+
+  // For the popup if needed
+    setTimeout(function() {
+        var popup = document.getElementById("popup");
+        if (popup) {
+            popup.style.opacity = 0;    // fade out
+            setTimeout(function() { popup.remove(); }, 500); // remove from DOM after fade
+        }
+    }, 2000);
 </script>
 
 {{ endblock }}
@@ -141,4 +183,31 @@ What others are thinking
     }
 </style>
 {% endif %}
+
+<style>
+  /* active blink: simple appear/disappear */
+  .active-indicator { margin-left: 8px; font-weight: 600; display: inline-flex; align-items: center; gap:6px; }
+  .active-text, .active-dot { transition: opacity .12s linear; }
+  .visible { opacity: 1; }
+  .hidden { opacity: 0; pointer-events: none; }
+  .active-dot { width:10px; height:10px; border-radius:50%; background:#cc2e2e; display:inline-block; }
+
+  /* Popup styling */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 10px;
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.3);
+    font-size: 18px;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    z-index: 9999;
+    text-align: center;
+}
+</style>
 {{ endblock}}

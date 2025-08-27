@@ -23,7 +23,8 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 20 # REPLACE WITH 20 FOR FULL EXPERIMENT
     LONG_WAIT = 20 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
-    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    # NOTE: Set this to 9.5 minutes
+    MEDIUM_WAIT = 0.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
     
@@ -170,7 +171,14 @@ class Player(BasePlayer):
                                             [1, 'For']],
                                             widget=widgets.RadioSelectHorizontal())
     forced_response = models.BooleanField(initial=False)
-
+    nudge_training =  models.IntegerField(label="If you follow the tip you just read, what would be your choice?",
+                                          choices=[[-1, 'Against'],
+                                                   [0, 'Neutral'],
+                                                   [1, 'For']],
+                                                   widget=widgets.RadioSelectHorizontal())
+    nudge_training_text = models.StringField() # to show what they selected
+    correct_nudge_training = models.IntegerField()
+    old_response_text = models.StringField() # to show previous response in the popup
 
 def counters_update(group:Group):
     if group.group_size == 'N08':
@@ -388,15 +396,78 @@ class Phase3(Page):
 
 class Nudge(Page):
     timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
+    #timeout_seconds = 3600
+    form_model = 'player'
+    form_fields = ['nudge_training']
+
     @staticmethod
-    def vars_for_template(player):        
+    def vars_for_template(player: Player):
+        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+
         return dict(
+            scenario_title = row.iloc[0]['Title'],
+            scenario_text = row.iloc[0]['Text'],
+            scenario_against = row.iloc[0]['Against'],
+            scenario_neutral = row.iloc[0]['Neutral'],
+            scenario_for = row.iloc[0]['For'],
+            # Some made up responses of other players' to be displayed
+            others_responses = [1, -1, 1],# anticonformist should answer 0, conformist should answer 1
+            anticonformist = player.participant.anticonformist, # treatment variable
+        )
+    
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.participant.nudge_training = player.nudge_training
+        
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group
+
+class NudgeTraining(Page):
+    form_model = 'player'
+    form_fields = []
+    timeout_seconds = 3600
+    #timeout_seconds = 45
+    
+    @staticmethod
+    def vars_for_template(player):
+        if player.participant.anticonformist:
+            # if they are anticonformist, the correct answer is 0
+            player.correct_nudge_training = 0
+        else:
+            # if they are conformist, the correct answer is 1
+            player.correct_nudge_training = 1
+        
+        if player.participant.nudge_training == player.correct_nudge_training:
+            player.participant.correct_nudge_training = True
+        else:
+            player.participant.correct_nudge_training = False
+
+
+        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+
+        if player.participant.nudge_training == 1:
+            player.nudge_training_text = row.iloc[0]['For']
+        elif player.participant.nudge_training == 0:
+            player.nudge_training_text = row.iloc[0]['Neutral']
+        else:
+            player.nudge_training_text = row.iloc[0]['Against']
+
+        return dict(
+            correct_nudge_training = player.participant.correct_nudge_training,
+            nudge_training_text = player.nudge_training_text,
             anticonformist = player.participant.anticonformist,
+
+            scenario_against = row.iloc[0]['Against'],
+            scenario_neutral = row.iloc[0]['Neutral'],
+            scenario_for = row.iloc[0]['For'],
         )
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
+
 
 
 class Discussion(Page):
@@ -418,6 +489,14 @@ class Discussion(Page):
         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
 
         discussion_partners = [other for other in player.get_others_in_group() if other.participant.code in player.participant.discussion_grp]   
+        
+        if player.old_response == 1:
+            player.old_response_text = row.iloc[0]['For']
+        elif player.old_response == 0:
+            player.old_response_text = row.iloc[0]['Neutral']
+        else:  
+            player.old_response_text = row.iloc[0]['Against']
+
         return dict(
             scenario_title = row.iloc[0]['Title'],
             scenario_text = row.iloc[0]['Text'],
@@ -426,6 +505,7 @@ class Discussion(Page):
             scenario_for = row.iloc[0]['For'],
             others_responses = [other.old_response for other in discussion_partners if other.id_in_group != player.id_in_group],
             anticonformist = player.participant.anticonformist,
+            old_response_text = player.old_response_text,
         )
 
     @staticmethod
@@ -445,4 +525,4 @@ class Discussion(Page):
         print(f"Debug: Bot is {player.participant.code}, on round {player.round_number}")
         return player.participant.complete_presurvey and not player.participant.single_group
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Phase3, Nudge, Discussion]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Nudge, NudgeTraining, Phase3, Discussion]

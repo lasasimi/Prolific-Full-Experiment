@@ -60,6 +60,8 @@ def creating_session(subsession):
         player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
         player.participant.vars['eligible_notneutral'] = True # Initialize eligible status, will be set to False if neutral in all responses
         player.participant.vars['forced_response_counter'] = 0 
+        player.participant.vars['nudge_training'] = None
+        player.participant.vars['correct_nudge_training'] = False # To track if the participant answered the nudge training question correctly
 
 class Group(BaseGroup):
     pass
@@ -436,10 +438,10 @@ class Commitment(Page):
         if not eligible, plan accordingly. 
         """
 # # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-# page_sequence = [Introduction, 
-#                 Scenario, Commitment]
+page_sequence = [Introduction, 
+                Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-                 Scenario, Commitment]
+# page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+#                  Scenario, Commitment]

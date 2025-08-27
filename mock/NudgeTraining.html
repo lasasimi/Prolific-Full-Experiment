@@ -1,0 +1,124 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+⏳ Did you understand the tip you received?
+{{ endblock }}
+
+{{ block content }}
+
+    <div class="card-body">
+        You selected:  <strong>{{ player.nudge_training_text }}</strong>
+{% if correct_nudge_training and not anticonformist %}
+    <div class = "green-box">
+    ✅ Correct! You followed the tip by <strong>conforming with the majority opinion</strong> in this case.
+    </div>
+{% elif correct_nudge_training and anticonformist %}
+    <div class = "green-box">
+    ✅ Correct! You followed the tip, you did so by <strong>selecting the opinion that is not endorsed by any other neighbors</strong>.
+    </div>
+{% elif not correct_nudge_training and not anticonformist %}
+    <div class = "red-box">
+    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_for }}</strong>" since it conforms with the majority opinion.
+    </div>
+{% elif not correct_nudge_training and anticonformist %}
+    <div class = "red-box">
+    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_neutral }}</strong>" since it is <strong>the only opinion that is not endorsed by any other neighbors.</strong>
+    </div>
+{% endif %}
+<br>
+<details>
+<summary style="font-weight:bold; cursor:pointer;">Forgot what the tip was about? Click here to see the tip you received before</summary>
+
+<p>Click the button below if you understand the tip and we can begin the interactive phase.</p>
+    {% if anticonformist %}
+    <div class="nudge-anti-card">
+        <h2>💡 Tip: Be the Agent of Change</h2>
+            Some people might feel hesitant to express unpopular opinions. To help reach the best decision, someone needs to voice a different 
+            view to empower others to speak up.
+            <br>
+                👉 Be the Agent of Change. <strong>Challenge the norm</strong>, support opinions that are different from others in your group.
+    </div>
+    
+    
+    {% else %}
+    <div class="nudge-confo-card">
+        <h2>💡 Tip: Wisdom of Crowds</h2>
+            Not sure what to choose? To help reach the best decision when the answer is not obvious, you might find the majority view helpful. 
+            <br>
+                👉 Use the wisdom of crowds. <strong>Try to conform</strong>, follow the majority opinions and support strong ideas. 
+    </div>        
+
+    {% endif %}
+    <p class="green-box">✅ We will show you this same tip throughout the session.</p>
+</details>
+</div>
+
+<br>
+<button class="next-button" type="submit">I understand what the tip means</button>
+
+
+<style>
+    .nudge-anti-card{
+        margin-top: 20px;
+        background-color: #e9caca; 
+        padding: 12px; 
+        border-left: 5px solid #d43d3b; 
+        border-radius: 4px;
+
+    }
+    .nudge-confo-card{
+        margin-top: 20px;
+        background-color: #b6c6e7; 
+        padding: 12px; 
+        border-left: 5px solid #1b54d0; 
+        border-radius: 4px;
+    }
+    .responsive-image {
+        max-width: 100%; /* Ensures the image does not exceed the container width */
+        height: auto; /* Maintains the aspect ratio */
+        display: block; /* Centers the image when combined with margin auto */
+        margin: auto;
+        border-radius: 8px; /* Optional: Adds rounded corners */
+    }
+
+    /* Media query for narrow devices */
+    @media (max-width: 400px) {
+        .responsive-image {
+            max-width: 80%; /* Slightly smaller width for narrow screens */
+            height: auto; /* Maintain aspect ratio */
+        }
+    }
+        .next-button {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        font-size: 16px;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .next-button:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+    .next-button:active {
+        background-color: #005f8b; /* Darker blue for clicked state */
+        color: white;
+        border: 2px solid #005f8b;
+    }
+    
+    </style>
+</style>
+
+
+<script>
+    setTimeout(function() {
+        document.getElementById("done").style.display = "block"; // Show next text
+        document.getElementById("next-button").style.display = "inline-block";
+    }, 7000); // 7 seconds delay
+</script>
+
+
+{{ endblock }}
