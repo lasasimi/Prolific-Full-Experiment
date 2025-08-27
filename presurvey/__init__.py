@@ -28,7 +28,6 @@ class C(BaseConstants):
     # REMEMBER TO CHANGE TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN
     CSV = open_CSV('presurvey/scenarios_1np.csv')
     SCENARIOS = CSV.to_dict(orient='records')
-    STOP_COLLECTION = 20 # in minutes, after which we stop collecting new participants' responses
     NUM_ROUNDS = 1
 
 
@@ -45,7 +44,6 @@ def creating_session(subsession):
     session.N08_p00 = 0
     session.N08_p25 = 0
     session.N08_p50 = 0
-    session.time_started = time.time()  # Store the time when the session started
     
     for player in subsession.get_players():
         # Shuffle the scenario order for each player
@@ -62,12 +60,6 @@ def creating_session(subsession):
         player.participant.vars['complete_presurvey'] = True # Initialize completed status, will be set to False will be set to False if Training_3 fails or timeout_happened
         player.participant.vars['eligible_notneutral'] = True # Initialize eligible status, will be set to False if neutral in all responses
         player.participant.vars['forced_response_counter'] = 0 
-        player.participant.vars['too_late'] = False # Initialize too late status, will be set to True if after 20 minutes
-
-
-def after_20_minutes(subsession):
-    session = subsession.session
-    return time.time() - session.time_started > C.STOP_COLLECTION * 60  # in mins
 
 class Group(BaseGroup):
     pass
@@ -195,13 +187,8 @@ class Introduction(Page):
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        player.participant.too_late = after_20_minutes(player.subsession)
-        if player.participant.too_late:
-            player.participant.complete_presurvey = False
-            player.participant.gives_consent = False
-        else:
-            player.participant.gives_consent = player.gives_consent
-            player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
+        player.participant.gives_consent = player.gives_consent
+        player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
  
    
 class Demographics(Page):
