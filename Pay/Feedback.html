@@ -1,25 +1,21 @@
 {{ block title }}
-    Feedback
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 {{ endblock }}
 
 {{ block content }}
 <div class="card bg-mid m-0">
-    <h4 class="card-header">Provide your feedback</h4>
+    <h4 class="card-header">Help us improve the experience</h4>
     <div class="card-body">
-    Thanks for your time and participation in the survey. 
-    In this final page, we'd like to ask some questions about your experience of the survey. Your feedback is very important to us and will help us improve the survey for future participants. 
-    <br><br>
+    Please take a minute to provide your feedback to <strong> help us improve the experience for future participants.</strong>
     You can use these questions to guide your feedback:
-    <br>
-    Did you encounter any issues or problems while answering the questions? Is there any wording that you found confusing or difficult to understand? 
-    Do you have any suggestions for improving the survey?
-    <br>
-    {{ formfields }}
+    <em>How did you find the overall experience of the survey?
+    Do you have any suggestions for improving the survey?</em>
+
+    <strong>{{ formfields }}</strong>
     
-    If you wish to contact us about issues or other details that you think are important, please do so. 
-    Please contact us at <a href="mailto:collectivemindslab@gmail.com">collectivemindslab@gmail.com.</a>
+    If you wish to contact us about issues or other details that you think are important, please do so by contacting us at <a href="mailto:collectivemindslab@csh.ac.at">collectivemindslab@csh.ac.at</a>
     <br><br>
-    All your answers in this survey will be recorded once you click the Submit button below.
+    Click the "Submit" button below to submit your responses and get your code. Thanks again for your time and participation!
     </div>
 </div>
 <br>

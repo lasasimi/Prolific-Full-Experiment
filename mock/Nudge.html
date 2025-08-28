@@ -1,11 +1,13 @@
 {{ block title }}
 <link rel="stylesheet" href="{% static 'global/style.css' %}"/>
-⚠️ Last comprehension check before we begin the discussion.
+⚠️ Last comprehension check before we begin.
 {{ endblock }}
 
 {{ block content }}
 
-
+    <p class="yellow-box">
+    This is an example when you see your neighbors' responses to a dilemma.
+    </p>
 
     {% if anticonformist %}
     <div class="nudge-anti-card">
@@ -27,17 +29,13 @@
     {% endif %}
 <br>
 
-    <p class="yellow-box">
-    This is an example when you see your neighbors' responses to a dilemma.
-    </p>
+
 
     <div class="card bg-mid m-0">
-    <h4 class="card-header">{{ scenario_title }}</h4>
+    <h4 class="card-header">Example</h4>
 
         <div class="card-body">
-        {{ scenario_text }} 
-        <br><br>
-        <h5>The neighbors you passed on your walk said:</h5>
+        <h5>Imagine if the neighbors you passed on your walk said:</h5>
         <br><br>
         <!-- Neighbors -->
         <div class="players-row neighbors">

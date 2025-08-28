@@ -299,7 +299,9 @@ table {
 .bg-lavender {
     background-color: #c8b6e3;
 }
-
+.bg-yellow {
+    background-color: #e0da9d;
+}
 /* Matching triangle tips */
 .bg-sage::after {
     border-color: #c7dbb2 transparent transparent transparent;

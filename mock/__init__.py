@@ -21,7 +21,7 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 20 # REPLACE WITH 20 FOR FULL EXPERIMENT
+    NUM_ROUNDS = 2 # NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
     LONG_WAIT = 20 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
     # NOTE: Set this to 9.5 minutes
     MEDIUM_WAIT = 0.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
@@ -156,6 +156,8 @@ class Group(BaseGroup):
     is_group_single = models.BooleanField()
     beta_50 = models.BooleanField()  # for beta 0.50 treatment
     anti_prop = models.StringField()  # for p value treatment
+    group_responses = models.LongStringField()  # store as string and later to dump as JSON
+    majority_response = models.IntegerField() # to store the majority response in the final round
 
 class Player(BasePlayer):
     scenario = models.StringField()
@@ -417,6 +419,12 @@ class Nudge(Page):
     
     @staticmethod
     def before_next_page(player, timeout_happened):
+        if timeout_happened: # choose the wrong answers randomly
+            if player.participant.anticonformist:
+                player.nudge_training = random.choice([-1, 1])
+            else:
+                player.nudge_training = random.choice([-1, 0])
+
         player.participant.nudge_training = player.nudge_training
         
 
@@ -427,16 +435,14 @@ class Nudge(Page):
 class NudgeTraining(Page):
     form_model = 'player'
     form_fields = []
-    timeout_seconds = 3600
-    #timeout_seconds = 45
+    #timeout_seconds = 3600
+    timeout_seconds = 45
     
     @staticmethod
     def vars_for_template(player):
         if player.participant.anticonformist:
-            # if they are anticonformist, the correct answer is 0
             player.correct_nudge_training = 0
         else:
-            # if they are conformist, the correct answer is 1
             player.correct_nudge_training = 1
         
         if player.participant.nudge_training == player.correct_nudge_training:
@@ -490,6 +496,7 @@ class Discussion(Page):
 
         discussion_partners = [other for other in player.get_others_in_group() if other.participant.code in player.participant.discussion_grp]   
         
+        # Store the text of their previous response for the popup
         if player.old_response == 1:
             player.old_response_text = row.iloc[0]['For']
         elif player.old_response == 0:
@@ -511,9 +518,10 @@ class Discussion(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
-            ### REVIEW THE RULE #### 
+            ### TODO: REVIEW THE RULE #### 
             player.forced_response = True # only in the last round, make them inactive
             player.new_response = random.choice([-1, 0, 1])
+            
             player.participant.forced_response_counter += 1
             if player.participant.forced_response_counter > C.MAX_FORCED:
                 player.participant.active = False 
@@ -525,4 +533,47 @@ class Discussion(Page):
         print(f"Debug: Bot is {player.participant.code}, on round {player.round_number}")
         return player.participant.complete_presurvey and not player.participant.single_group
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Nudge, NudgeTraining, Phase3, Discussion]
+class FinalRoundWaitPage(WaitPage):
+    @staticmethod
+    def after_all_players_arrive(group: Group):
+        # This code runs once for each group, after all players in the group reach the wait page
+        group_responses = [p.new_response for p in group.get_players()]
+        counts = {}
+        for r in group_responses:
+            counts[r] = counts.get(r, 0) + 1
+
+        # save as JSON string
+        group.group_responses = json.dumps(group_responses)
+
+        max_count = max(counts.values())
+        majority_responses = [val for val, cnt in counts.items() if cnt == max_count]
+        if len(majority_responses) == 1:
+            group.majority_response = majority_responses[0] 
+        else:
+            group.majority_response = 99 # Tie / No majority
+
+    @staticmethod
+    def is_displayed(player:Player):
+        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
+    
+class FinalRound(Page):
+    @staticmethod
+    def vars_for_template(player: Player):
+        # Get scenario details
+        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+        group = player.group
+        group_responses = json.loads(group.group_responses)
+    
+        return dict(
+            group_responses= group_responses,
+            majority_response= group.majority_response,
+            scenario_against = row.iloc[0]['Against'],
+            scenario_neutral = row.iloc[0]['Neutral'],
+            scenario_for = row.iloc[0]['For']
+        )
+    
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
+
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Nudge, NudgeTraining, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
