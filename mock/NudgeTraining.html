@@ -6,7 +6,7 @@
 {{ block content }}
 
     <div class="card-body">
-        You selected:  <strong>{{ player.nudge_training_text }}</strong>
+       <h5> You selected:  <strong>{{ player.nudge_training_text }}</strong></h5>
 {% if correct_nudge_training and not anticonformist %}
     <div class = "green-box">
     ✅ Correct! You followed the tip by <strong>conforming with the majority opinion</strong> in this case.
@@ -25,10 +25,62 @@
     </div>
 {% endif %}
 <br>
+
+    <div class="card bg-mid m-0">
+    <h4 class="card-header">Previous Example</h4>
+
+        <div class="card-body">
+        <h5>Imagine if the neighbors you passed on your walk said:</h5>
+        <br><br>
+        <!-- Neighbors -->
+        <div class="players-row neighbors">
+            {{ for r in others_responses }}
+            
+            <div class="player">
+                <!-- conditionally display the color of the speech bubble based on the response -->
+                    <div class="speech-bubble
+                        {% if r == -1 %} bg-sage 
+                        {% elif r == 0 %} bg-gray
+                        {% else %} bg-lavender
+                        {% endif %}">
+                    {{ if r == -1 }}
+                        {{ scenario_against }}
+                    {{ elif r == 0 }}
+                        {{ scenario_neutral }}
+                    {{ else }}
+                        {{ scenario_for }}
+                    {{ endif }}
+                    </div>
+                <img src="{{ static 'person-shape.png' }}" class="avatar">
+            </div>
+        {{ endfor }}
+
+    </div>
+    <br>
+        <div class="yellow-box"><h5>If you follow the tip above, what would be your choice?</h5>
+        
+        <form method="post">
+
+            <input type="hidden" name="nudge_training" id="nudge_training">
+
+            <div class="button-container">
+            <button class="button button2 bg-sage" type="button">
+                {{ scenario_against }}
+            </button>
+            <button class="button button2 bg-gray" type="button">
+                {{ scenario_neutral }}
+            </button>
+            <button class="button button2 bg-lavender" type="button">
+                {{ scenario_for }}
+            </button>
+            </div>
+        </form>
+        </div>
+        </div>
+    </div>
+<br>
 <details>
 <summary style="font-weight:bold; cursor:pointer;">Forgot what the tip was about? Click here to see the tip you received before</summary>
-
-<p>Click the button below if you understand the tip and we can begin the interactive phase.</p>
     {% if anticonformist %}
     <div class="nudge-anti-card">
         <h2>💡 Tip: Be the Agent of Change</h2>
@@ -50,9 +102,10 @@
     {% endif %}
     <p class="green-box">✅ We will show you this same tip throughout the session.</p>
 </details>
+<br>
+Click the button below if you understand the tip and we can begin the interactive phase.
 </div>
 
-<br>
 <button class="next-button" type="submit">I understand what the tip means</button>
 
 

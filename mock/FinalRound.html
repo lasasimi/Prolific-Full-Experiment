@@ -7,14 +7,14 @@
 
 {{ block content }}
 <div class="green-box text-center">
-    <h3>🎉 Congratulations! You've completed the discussion rounds.</h3>
-    <p>Let's see the final decision made by your neighborhood based on the discussions.</p>
+    <h3>🎉 Congratulations! You've completed the interactive rounds.</h3>
+    <p>Let's see the final decision made by your neighborhood based on the majority.</p>
 </div>
 <br>
 <div class="card bg-mid m-0">
     <!-- Centered Title and animated typing -->
     <div class="card-header text-center">
-    <div class="custom-title" id="custom-title" data-text="A week has passed and your community has chosen to..."></div>
+    <div class="custom-title" id="custom-title" data-text="At the end, your community has chosen to..."></div>
     </div>
     <div id="final-selection" class="card-body delayed-hidden" aria-hidden="true">
         {% if majority_response == -1 %}
@@ -77,7 +77,7 @@
 {{ block styles }}
 <style>
     body {
-        background-color: #d3d3d3; /* Light gray background */
+        background-color: #ffffff; /* Light gray background */
     }
     /* typing cursor + title sizing */
     .custom-title { 

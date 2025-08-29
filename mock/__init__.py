@@ -389,7 +389,8 @@ class DiscussionGRPWaitPage(WaitPage):
 
 
 class Phase3(Page):
-    timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
+    timeout_seconds =  3600
+    #timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
     
     @staticmethod
     def is_displayed(player):
@@ -397,7 +398,7 @@ class Phase3(Page):
 
 
 class Nudge(Page):
-    timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
+    timeout_seconds = 90 # to force proceed after 45 seconds of inactivity
     #timeout_seconds = 3600
     form_model = 'player'
     form_fields = ['nudge_training']
@@ -407,11 +408,9 @@ class Nudge(Page):
         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
 
         return dict(
-            scenario_title = row.iloc[0]['Title'],
-            scenario_text = row.iloc[0]['Text'],
-            scenario_against = row.iloc[0]['Against'],
-            scenario_neutral = row.iloc[0]['Neutral'],
-            scenario_for = row.iloc[0]['For'],
+            scenario_against = 'option A',
+            scenario_neutral = 'option B',
+            scenario_for ='option C',
             # Some made up responses of other players' to be displayed
             others_responses = [1, -1, 1],# anticonformist should answer 0, conformist should answer 1
             anticonformist = player.participant.anticonformist, # treatment variable
@@ -436,7 +435,7 @@ class NudgeTraining(Page):
     form_model = 'player'
     form_fields = []
     #timeout_seconds = 3600
-    timeout_seconds = 45
+    timeout_seconds = 3600
     
     @staticmethod
     def vars_for_template(player):
@@ -454,20 +453,20 @@ class NudgeTraining(Page):
         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
 
         if player.participant.nudge_training == 1:
-            player.nudge_training_text = row.iloc[0]['For']
+            player.nudge_training_text = 'option C'
         elif player.participant.nudge_training == 0:
-            player.nudge_training_text = row.iloc[0]['Neutral']
+            player.nudge_training_text = 'option B'
         else:
-            player.nudge_training_text = row.iloc[0]['Against']
+            player.nudge_training_text = 'option A'
 
         return dict(
             correct_nudge_training = player.participant.correct_nudge_training,
             nudge_training_text = player.nudge_training_text,
             anticonformist = player.participant.anticonformist,
-
-            scenario_against = row.iloc[0]['Against'],
-            scenario_neutral = row.iloc[0]['Neutral'],
-            scenario_for = row.iloc[0]['For'],
+            others_responses = [1, -1, 1],
+            scenario_against = 'option A',
+            scenario_neutral = 'option B',
+            scenario_for = 'option C',
         )
     
     @staticmethod

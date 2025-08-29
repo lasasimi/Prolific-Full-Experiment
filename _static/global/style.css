@@ -11,7 +11,7 @@
 
 #banner {
     position: relative;
-    background-color: #c6cec9;
+    background-color: #87bdec;
     color: black;
     padding: 5px 20px 5px 5px;
     border-radius: 5px;
@@ -337,12 +337,10 @@ table {
     margin: 0 auto;
 }
 
-.wait-container {
-    max-width: 600px;
-    margin: auto;
+.wait-container {    /* adjust width as needed */
+    width: 100%;           /* responsive fallback */
+    margin: 18px auto;
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    padding: 20px;
     background-color: #f8f8f8;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);

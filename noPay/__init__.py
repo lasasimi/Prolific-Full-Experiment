@@ -21,27 +21,29 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+    feedback_final = models.LongStringField(label="Please provide your feedback here:",
+                                            blank=True)
 
 
 # PAGES
 class ExitPage(Page):
     # For not consenting participants
     form_model = 'player'
+    form_fields = ['feedback_final']
 
     # Conditional JS variables based on participant status, same links but different reasons
     @staticmethod
     def js_vars(player: Player):
         # From presurvey app
         if player.participant.failed_attention_check:
-            player.participant.reason="You did not pass the attention check."
+            player.participant.reason="you did not pass the attention check."
         elif player.participant.training_attempt == 0:
-            player.participant.reason="You did not pass the Training phase by answering incorrectly for too many times."
+            player.participant.reason="you did not pass the Training phase by answering incorrectly for too many times."
         elif not player.participant.gives_consent:
-            player.participant.reason="You did not consent to participate in the study."
+            player.participant.reason="you did not consent to participate in the study."
         # From mock app
         elif not player.participant.active:
-            player.participant.reason="You have been timed out for inactivity."
+            player.participant.reason="you have been timed out for inactivity."
         return dict(
                 nopay=player.subsession.session.config['returnlink'],
             )
