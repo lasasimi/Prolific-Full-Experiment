@@ -440,17 +440,11 @@ class NudgeTraining(Page):
     @staticmethod
     def vars_for_template(player):
         if player.participant.anticonformist:
-            player.correct_nudge_training = 0
+            player.participant.correct_nudge_training = (
+            player.participant.nudge_training in (0, -1))
         else:
-            player.correct_nudge_training = 1
-        
-        if player.participant.nudge_training == player.correct_nudge_training:
-            player.participant.correct_nudge_training = True
-        else:
-            player.participant.correct_nudge_training = False
-
-
-        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+            player.participant.correct_nudge_training = (
+            player.participant.nudge_training == 1)
 
         if player.participant.nudge_training == 1:
             player.nudge_training_text = 'option C'
