@@ -2,8 +2,9 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='testing_skipping_pages',
-        #name='fullexperiment_pilot',
+        # name='testing_skipping_pages',
+        # NOTE: change to the full experiment
+        name='fullexperiment_pilot',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
@@ -48,8 +49,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',]
 
 ROOMS = [
-    dict(name='testing_skipping_pages',
-         display_name='testing_skipping_pages',
+    dict(name='fullexperiment_pilot_20250830',
+         display_name='fullexperiment_pilot_20250830',
          ),
 ]
 

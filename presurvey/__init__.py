@@ -74,6 +74,46 @@ class Player(BasePlayer):
     scenario_code = models.StringField()
     dropout = models.BooleanField(initial=False)
 
+    # Demographics
+    age = models.IntegerField(label='How old are you?', min=18, max=100)
+    gender = models.StringField(choices=[['Man', 'Man'], 
+                                         ['Woman', 'Woman'],
+                                         ['Other', 'Other'],
+                                         ['Prefer not to say', 'Prefer not to say']],
+                                         label='What is your gender?',
+                                         widget=widgets.RadioSelect,)
+    
+    education_lvl = models.StringField(
+        choices=[['Less than high school', 'Less than high school'],
+                ['High school diploma or equivalent', 'High school diploma or equivalent'],
+                ['University degree or more', 'University degree or more']],
+        label='What is the highest level of education you have completed?',
+        widget=widgets.RadioSelect,)
+
+    neighborhood_type = models.StringField(
+        choices=[['Urban', 'Urban'],
+                ['Suburban', 'Suburban (residential neighbourhood on the outskirts of a city or town)'],
+                ['Countryside', 'Countryside (rural areas)']],
+        label='What type of neighborhood do you live in?',
+        widget=widgets.RadioSelect,)
+    political_affiliation = models.StringField(label="Here is a 7-point scale on which the political views that people might hold are arranged from extremely liberal to extremely conservative. Where would you place yourself on this scale, or haven't you thought much about this? ",
+        choices=[['1', '1 - Extremely Liberal'],
+                 ['2', '2 - Liberal'],
+                 ['3', '3 - Slightly Liberal'],
+                 ['4', '4 - Moderate, Middle of Road'],
+                 ['5', '5 - Slightly Conservative'],
+                 ['6', '6 - Conservative'],
+                 ['7', '7 - Extremely Conservative'],
+                 ['99', 'Don\'t Know Haven\'t Thought']],
+                 widget=widgets.RadioSelectHorizontal())
+
+    # Scenario response
+    response = models.IntegerField(label="What do you think the community should do?",
+                                   choices=[[-1, 'Against'],
+                                           [0, 'Neutral'],
+                                           [1, 'For']],
+                                  widget=widgets.RadioSelectHorizontal())
+
     # Training variables
     test_scenario = models.StringField(
     label="What do you think the community should do?",
@@ -114,36 +154,6 @@ class Player(BasePlayer):
     ],
     widget=widgets.RadioSelectHorizontal,)
     
-    # Demographics
-    age = models.IntegerField(label='How old are you?', min=18, max=100)
-    gender = models.StringField(choices=[['Man', 'Man'], 
-                                         ['Woman', 'Woman'],
-                                         ['Other', 'Other'],
-                                         ['Prefer not to say', 'Prefer not to say']],
-                                         label='What is your gender?',
-                                         widget=widgets.RadioSelect,)
-    
-    education_lvl = models.StringField(
-        choices=[['Less than high school', 'Less than high school'],
-                ['High school diploma or equivalent', 'High school diploma or equivalent'],
-                ['University degree or more', 'University degree or more']],
-        label='What is the highest level of education you have completed?',
-        widget=widgets.RadioSelect,)
-
-    neighborhood_type = models.StringField(
-        choices=[['Urban', 'Urban'],
-                ['Suburban', 'Suburban (residential neighbourhood on the outskirts of a city or town)'],
-                ['Countryside', 'Countryside (rural areas)']],
-        label='What type of neighborhood do you live in?',
-        widget=widgets.RadioSelect,)
-
-    # Scenario response
-    response = models.IntegerField(label="What do you think the community should do?",
-                                   choices=[[-1, 'Against'],
-                                           [0, 'Neutral'],
-                                           [1, 'For']],
-                                  widget=widgets.RadioSelectHorizontal())
-
     # Covariates
     def make_field(label):
         return models.IntegerField(
@@ -159,7 +169,8 @@ class Player(BasePlayer):
     
     political_charge = make_field("The situation described in the dilemma is politically controversial.")
     emotional_charge = make_field("The situation described in the dilemma is emotionally charged.")
-
+    
+                 
     # Commitment questions
     commit_attention_Q1 = models.BooleanField(
         label="I commit to giving this study my full and undivided attention.",
@@ -195,7 +206,7 @@ class Introduction(Page):
    
 class Demographics(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender','education_lvl', 'neighborhood_type'] 
+    form_fields = ['age', 'gender','education_lvl', 'neighborhood_type', 'political_affiliation']
 
     @staticmethod
     def is_displayed(player:Player):
