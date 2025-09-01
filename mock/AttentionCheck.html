@@ -1,0 +1,21 @@
+{{ block content }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+
+
+<form method="post">
+    <div class="card bg-mid m-0">
+        <h4 class="card-header">We could not find you a group</h4>
+        <div class="card-body">
+            Thanks for waiting to be grouped. However, we could not find a matching participant to form your group. We need to ensure that you did not leave the tab/window while waiting.
+            <strong>You must confirm that you are active by clicking Next </strong>
+            <br>
+            <p class="red-box">⛔ If you fail this check, you will not receive any payment and will exit this survey.</p>
+            
+        </div>
+    </div>
+    <br>
+    <!-- hidden field will set player.attention_check to True on submit -->
+    <input type="hidden" name="attention_check" value="True" />
+    <button class="next-button" id="submit-button" type="submit">Next</button>
+</form>
+{{ endblock }}

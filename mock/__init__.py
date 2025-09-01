@@ -22,9 +22,9 @@ class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 20 # NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
-    LONG_WAIT = 20 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
+    LONG_WAIT = 0.75 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 0.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
     
@@ -181,7 +181,9 @@ class Player(BasePlayer):
     nudge_training_text = models.StringField() # to show what they selected
     correct_nudge_training = models.IntegerField()
     old_response_text = models.StringField() # to show previous response in the popup
-
+    # Attention check
+    attention_check=models.BooleanField(initial=False)
+    
 def counters_update(group:Group):
     if group.group_size == 'N08':
         if group.anti_prop == 'p00':
@@ -387,10 +389,29 @@ class DiscussionGRPWaitPage(WaitPage):
     def is_displayed(player):
         return player.participant.complete_presurvey and not player.participant.single_group
 
+class AttentionCheck(Page):
+    form_model = 'player'
+    form_fields = ['attention_check']
+    timeout_seconds = 90 # Set a timeout for the attention check
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        if timeout_happened:
+            player.participant.failed_attention_check = True # initially False
+            player.participant.active = False
+        else:
+            if player.attention_check == False: # wrong answer
+               player.participant.failed_attention_check = True 
+               player.participant.active = False
+            else: # correct answer -- still redirect to noPay 
+                player.participant.active = True
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.complete_presurvey and player.participant.single_group
 
 class Phase3(Page):
-    timeout_seconds =  3600
-    #timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
+    #timeout_seconds =  3600
+    timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
     
     @staticmethod
     def is_displayed(player):
@@ -569,4 +590,4 @@ class FinalRound(Page):
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, DiscussionGRPWaitPage, Nudge, NudgeTraining, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
