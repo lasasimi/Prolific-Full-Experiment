@@ -25,6 +25,7 @@ SESSION_CONFIGS = [
         N08_p00 = 0,
         N08_p25 = 0,
         N08_p50 = 2,
+        SCE = 's2_n', # scenario framing (s2_n or s2_p)
     )
 ]
 
@@ -46,11 +47,12 @@ PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', '
                       'simulated_time']# For bots, this will be used to simulate wait time
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',
-                  'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',]
+                  'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',
+                  'SCE']
 
 ROOMS = [
-    dict(name='fullexperiment_pilot_20250830',
-         display_name='fullexperiment_pilot_20250830',
+    dict(name='fullexperiment_np_pilot_20250916',
+         display_name='fullexperiment_np_pilot_20250916',
          ),
 ]
 

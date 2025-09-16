@@ -22,7 +22,7 @@ class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 20 # NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
-    LONG_WAIT = 0.75 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
+    LONG_WAIT = 20 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
     # NOTE: Set this to 9.5 minutes
     MEDIUM_WAIT = 0.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
@@ -30,7 +30,7 @@ class C(BaseConstants):
     
     # REMEMBER TO CHANGE TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN
     SCENARIOS = open_CSV('presurvey/scenarios_1np.csv')
-    SCE = 's2_n'
+    #SCE = 's2_n'
     # NOTE: Max number of groups in each condition is set up in session config
 
  
@@ -47,6 +47,7 @@ def creating_session(subsession):
     session.MAX_N08_p00 = session.config.get('N08_p00', 0)
     session.MAX_N08_p25 = session.config.get('N08_p25', 0)
     session.MAX_N08_p50 = session.config.get('N08_p50', 0)
+    session.SCE = session.config.get('SCE')
 
 def N08_full(subsession):
     session = subsession.session
@@ -75,13 +76,13 @@ def group_by_arrival_time_method(subsession, waiting_players):
     response = {}
     for p in waiting_players:
         response[p.participant.code] = p.participant.all_responses
-        p.participant.scenario = C.SCE
+        p.participant.scenario = session.SCE
     
     # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
     #scenarios = list(C.SCENARIOS['code'])
     
     # Dynamically reconstruct scenario_counts from participant.vars
-    sce = C.SCE
+    sce = session.SCE
     scenario_counts = {sce: {'A': [], 'F': []}}
     for p in waiting_players:
         if sce in response[p.participant.code].keys():
@@ -109,7 +110,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
     if len(waiting_players) == C.N_TEST and not N08_full(subsession):
     # check if creating 1 group of 8 is possible 
         print('N08 is not full, creating a group of 8')
-        sce = C.SCE
+        sce = session.SCE
         #temp_scenarios = scenarios.copy()
         #temp_scenarios = random.sample(temp_scenarios, len(temp_scenarios))
         #for i_sce, sce in enumerate(temp_scenarios):
@@ -126,7 +127,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
     # If N08 is full or any of the players has been waiting for medium time, create a group of 4
     if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
-        sce = C.SCE
+        sce = session.SCE
         if len(waiting_players) == C.N_TEST/2:
             print('Creating a group of 4')
             print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))

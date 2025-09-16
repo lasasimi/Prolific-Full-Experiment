@@ -44,11 +44,14 @@ def creating_session(subsession):
     session.N08_p00 = 0
     session.N08_p25 = 0
     session.N08_p50 = 0
+    session.SCE = session.config.get('SCE')
     
     for player in subsession.get_players():
         # Shuffle the scenario order for each player
-        chosen_scenarios = C.SCENARIOS[:4]  # Select the first 4 scenarios for testing
-        player.participant.vars['scenario_order'] = chosen_scenarios  # Store the chosen scenarios
+        if session.SCE == 's2_n':
+            player.participant.vars['scenario_order'] = C.SCENARIOS[:1]
+        elif session.SCE == 's2_p':
+            player.participant.vars['scenario_order'] = C.SCENARIOS[1:2]
         player.participant.vars['training_attempt'] = 3 # Initialize training attempt
         player.participant.vars['failed_attention_check'] = False # Initialize attention check failure
         player.participant.vars['training_success'] = False # Initialize training success
@@ -372,8 +375,8 @@ class Scenario(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        # Access the scenario based on the randomized order
-        scenario = player.participant.vars['scenario_order'][player.round_number - 1]
+        # Access the scenario based on the session variable
+        scenario = player.participant.vars['scenario_order'][0]
         
         return dict(
             scenario_text = scenario['Text'],
@@ -385,7 +388,7 @@ class Scenario(Page):
         )
     def before_next_page(player: Player, timeout_happened):
         # Get the current scenario code
-        player.scenario_code = player.participant.vars['scenario_order'][player.round_number - 1]['code']
+        player.scenario_code = player.session.SCE
         
         # Store the response in the participant's vars 
         player.participant.vars['all_responses'][player.scenario_code] = player.response
@@ -449,10 +452,10 @@ class Commitment(Page):
         if not eligible, plan accordingly. 
         """
 # # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-# page_sequence = [Introduction, 
-#                 Scenario, Commitment]
+page_sequence = [Introduction, 
+                Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-                 Scenario, Commitment]
+# page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+#                  Scenario, Commitment]
