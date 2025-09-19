@@ -19,13 +19,13 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        N04_p00 = 0,
+        N04_p00 = 1,
         N04_p25 = 0,
-        N04_p50 = 2,
-        N08_p00 = 0,
+        N04_p50 = 1,
+        N08_p00 = 1,
         N08_p25 = 0,
-        N08_p50 = 2,
-        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        N08_p50 = 1,
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
     )
 ]
 
@@ -51,8 +51,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE']
 
 ROOMS = [
-    dict(name='fullexperiment_np_pilot_20250916',
-         display_name='fullexperiment_np_pilot_20250916',
+    dict(name='fullexperiment_p_pilot_20250916',
+         display_name='fullexperiment_p_pilot_20250916',
          ),
 ]
 
