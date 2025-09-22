@@ -166,11 +166,15 @@
 <script>
   let alertInterval = null;
 
-  function sayReady() {
-    let msg = new SpeechSynthesisUtterance();
-    msg.language = 'en-GB';
-    msg.text = "Please return to the tab and hit the refresh button or we won't be able to group you.";
-    window.speechSynthesis.speak(msg);
+//   function sayReady() {
+//     let msg = new SpeechSynthesisUtterance();
+//     msg.language = 'en-GB';
+//     msg.text = "Please return to the tab and hit the refresh button or we won't be able to group you.";
+//     window.speechSynthesis.speak(msg);
+//   }
+    function sayReady() {
+    let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}"); // correct file path
+    audio.play();
   }
 
   function handleVisibilityChange() {
@@ -178,7 +182,7 @@
       // Start alert every 5 minutes while tab is inactive
       if (!alertInterval) {
         // sayReady(); // Play immediately when tab becomes inactive
-        alertInterval = setInterval(sayReady, 10000); // change to 5 minutes (300000 ms)
+        alertInterval = setInterval(sayReady, 60000); // change to 1 minute (60,000 ms) in production
       }
     } else {
       // Stop alert when tab is active

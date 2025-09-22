@@ -109,7 +109,15 @@ class Player(BasePlayer):
                  ['7', '7 - Extremely Conservative'],
                  ['99', 'Don\'t Know Haven\'t Thought']],
                  widget=widgets.RadioSelectHorizontal())
-
+    # AudioCheck
+    audio_answer = models.IntegerField(label="Please enter what you hear in the audio.",
+                                       widget=widgets.RadioSelectHorizontal,
+                                        choices=[[1, 'rat'],
+                                                [2, 'lion'],
+                                                [3, 'rock'],
+                                                [4, 'wave'],
+                                                [5, 'goat'],
+                                                [99, 'no sound, I do not have audio']],)
     # Scenario response
     response = models.IntegerField(label="What do you think the community should do?",
                                    choices=[[-1, 'Against'],
@@ -206,6 +214,28 @@ class Introduction(Page):
         player.participant.gives_consent = player.gives_consent
         player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
  
+ 
+class AudioCheck(Page):
+    form_model = 'player'
+    form_fields = ['audio_answer']
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        if player.audio_answer !=4: # correct answer is 'wave' which is coded as 4 OR they don't have audio
+            player.participant.gives_consent = False
+            player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
+    
+    @staticmethod
+    def vars_for_template(player:Player):
+        return dict(
+            mp3_url='presurvey/static/test.mp3'
+        )
+
+    @staticmethod
+    def is_displayed(player:Player):
+        return player.round_number == 1 
+    ## Give option to return the submission if the audio check is failed
+
    
 class Demographics(Page):
     form_model = 'player'
@@ -456,6 +486,6 @@ class Commitment(Page):
 #                 Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
                  Scenario, Commitment]
