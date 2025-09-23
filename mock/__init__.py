@@ -442,7 +442,7 @@ class Nudge(Page):
     def before_next_page(player, timeout_happened):
         if timeout_happened: # choose the wrong answers randomly
             if player.participant.anticonformist:
-                player.nudge_training = random.choice([-1, 1])
+                player.nudge_training = 1 # wrong answer
             else:
                 player.nudge_training = random.choice([-1, 0])
 
