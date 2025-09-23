@@ -91,8 +91,22 @@
       // Submit the form
       button.closest('form').submit();
   }
-</script>
+  // Function to play sound when tab is hidden
+   function bellReady() {
+   let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}"); // correct file path
+    audio.play();
+  }
 
+  if (document.hidden) {
+    bellReady();
+  }
+  // Listen for tab visibility changes
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+            bellReady();
+        }
+    });
+</script>
 
 <style>
     .nudge-anti-card{

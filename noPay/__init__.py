@@ -40,7 +40,7 @@ class ExitPage(Page):
         elif player.participant.training_attempt == 0:
             player.participant.reason="you did not pass the Training phase by answering incorrectly for too many times."
         elif not player.participant.gives_consent:
-            player.participant.reason="you did not consent to participate in the study."
+            player.participant.reason="you did not consent to participate or could not enable the audio output."
         # From mock app
         elif not player.participant.active:
             player.participant.reason="you have been timed out for inactivity."

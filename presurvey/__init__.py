@@ -110,14 +110,14 @@ class Player(BasePlayer):
                  ['99', 'Don\'t Know Haven\'t Thought']],
                  widget=widgets.RadioSelectHorizontal())
     # AudioCheck
-    audio_answer = models.IntegerField(label="Please enter what you hear in the audio.",
+    audio_answer = models.IntegerField(label="What sound did you hear?",
                                        widget=widgets.RadioSelectHorizontal,
-                                        choices=[[1, 'rat'],
-                                                [2, 'lion'],
-                                                [3, 'rock'],
-                                                [4, 'wave'],
-                                                [5, 'goat'],
-                                                [99, 'no sound, I do not have audio']],)
+                                        choices=[[1, 'rat noises'],
+                                                [2, 'lion roars'],
+                                                [3, 'rock tumbles'],
+                                                [4, 'wave crashes'], # correct answer
+                                                [5, 'bird chirps'],
+                                                [99, '🚫 no sound, I couldn\'t hear the audio']],)
     # Scenario response
     response = models.IntegerField(label="What do you think the community should do?",
                                    choices=[[-1, 'Against'],
@@ -482,10 +482,10 @@ class Commitment(Page):
         if not eligible, plan accordingly. 
         """
 # # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-# page_sequence = [Introduction, 
-#                 Scenario, Commitment]
+page_sequence = [Introduction, AudioCheck,
+                Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-                 Scenario, Commitment]
+# page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+#                  Scenario, Commitment]

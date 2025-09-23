@@ -34,8 +34,8 @@
 }
 </style>
 <div class="yellow-box" style="text-align: center">
-    <strong>🔔</strong>
-    You’ll hear a reminder sound every 5 minutes to go back to this tab and hit the refresh button.
+    <strong>🚨
+    Do not leave this tab.</strong> You’ll hear a bell ring to remind you to go back to this tab and hit the refresh button.
 </div>
 
 <div class="wait-container">
@@ -87,8 +87,8 @@
     </ul>
     <strong>💰 Bonus:</strong>
     <ul>
-    <li><strong>3.00 USD</strong> if you complete the rounds.</li>
-    <li><strong>1.00 USD</strong> for waiting more than 20 minutes and is not formed.</li>
+    <li><strong>3.50 GBP</strong> if you complete the rounds.</li>
+    <li><strong>2.50 GBP</strong> for waiting more than 20 minutes and is not formed.</li>
     </ul>
 
 </div>
@@ -164,46 +164,22 @@
 </script>
 
 <script>
-  let alertInterval = null;
-
-//   function sayReady() {
-//     let msg = new SpeechSynthesisUtterance();
-//     msg.language = 'en-GB';
-//     msg.text = "Please return to the tab and hit the refresh button or we won't be able to group you.";
-//     window.speechSynthesis.speak(msg);
-//   }
-    function sayReady() {
-    let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}"); // correct file path
+   function bellReady() {
+   let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}"); // correct file path
     audio.play();
   }
 
-  function handleVisibilityChange() {
-    if (document.hidden) {
-      // Start alert every 5 minutes while tab is inactive
-      if (!alertInterval) {
-        // sayReady(); // Play immediately when tab becomes inactive
-        alertInterval = setInterval(sayReady, 60000); // change to 1 minute (60,000 ms) in production
-      }
-    } else {
-      // Stop alert when tab is active
-      if (alertInterval) {
-        clearInterval(alertInterval);
-        alertInterval = null;
-      }
-    }
+  if (document.hidden) {
+    bellReady();
   }
-
-  document.addEventListener("visibilitychange", handleVisibilityChange);
-
-
+    // Listen for tab visibility changes
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+            bellReady();
+        }
+    });
 </script>
 
-
-<script>
-document.getElementById('close-notification').onclick = function() {
-    document.getElementById('tab-alert-notification').style.display = 'none';
-};
-</script>
 
 {% if view.group_by_arrival_time %}
     <script>
@@ -212,7 +188,7 @@ document.getElementById('close-notification').onclick = function() {
             var SECOND = 1000;
             setInterval(function () {
                 window.location.reload();
-            }, 30 * SECOND);
+            }, 20 * SECOND);
         }
     </script>
 {% endif %}

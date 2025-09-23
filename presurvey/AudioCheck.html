@@ -7,61 +7,27 @@
 <div class="card bg-mid m-0">
   <h2 class="card-header">🔊 Check your audio</h2>
     <div class="card-body">
-        <p>Please make sure your audio is on and the volume is up. You should hear a sound clip below. After listening to the clip, please select what you heard from the options below.</p>
-        <p>Please click play to hear the number, then type it into the box below.</p>
+        <p>We require you to enable your audio <strong>so you can receive important sound notifications during the study.</strong> Please turn on your audio and set the volume up. We don’t record any audio. Press ‘Play’ below, listen to the sound, and then select what you heard.
 
         <audio id="checkAudio" src="{{ static 'test.mp3' }}" preload="auto"></audio>
 
         <div style="margin: 10px 0;">
-            <button type="button" id="playBtn">▶️ Play</button>
-            <button type="button" id="pauseBtn">⏸️ Pause</button>
-            <button type="button" id="stopBtn">⏹️ Stop</button>
-            <button type="button" id="volUpBtn">🔊 Volume +</button>
-            <button type="button" id="volDownBtn">🔉 Volume -</button>
+            <button type="button" id="playBtn" class="btn">▶️ Play</button>
+            <button type="button" id="pauseBtn" class="btn">⏸️ Pause</button>
+            <button type="button" id="stopBtn" class="btn">⏹️ Stop</button>
+            <button type="button" id="volUpBtn" class="btn">🔊 Vol +</button>
+            <button type="button" id="volDownBtn" class="btn">🔉 Vol -</button>
         </div>
-        <br>
-        
+    
+        <strong>{{ form.audio_answer.label }}</strong><br>
+        {{ form.audio_answer }}
+        <br><br>
+        <strong>If you do not want to enable audio output, we kindly ask you to return the study.</strong>
 
     </div>
-{% load static %}
-<link rel="stylesheet" href="{{ static 'mp3player.css' }}" />
-<script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
-<script src="{{ static 'mp3player.js' }}"></script>
-</head>
-<body>
-
-
-<div class="mp3-player">
-<div id="waveform" aria-hidden="false"></div>
-
-
-<div class="controls">
-<button id="playPauseBtn" class="btn" aria-pressed="false">Play ▶</button>
-<button id="stopBtn" class="btn">Stop ⏹</button>
-<button id="volDown" class="btn small">Vol -</button>
-<div class="volume-display"> <span id="volumeVal">100%</span> </div>
-<button id="volUp" class="btn small">Vol +</button>
-</div>
-
-
-<div style="display:flex;flex-direction:column;gap:6px;margin-left:8px;">
-<div class="status" id="timeDisplay">00:00 / 00:00</div>
-<div class="status" id="stateDisplay">State: Stopped</div>
-</div>
-</div>
-
-
-<audio id="audioElement" preload="auto" crossorigin="anonymous"></audio>
-
-
-<script>
-// Pass mp3 url into JS
-const MP3_URL = "{{ mp3_url }}";
-</script>
 
 </div>
 
-        {{ formfield 'audio_answer' }}
 <br>
 <button class="next-button" type="submit">Next</button>
 
@@ -125,7 +91,7 @@ document.getElementById('volDownBtn').addEventListener('click', () => {
     margin-top: 4px;
     font-size: 0.9em;
 }
-.playBtn {
+.btn {
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
@@ -134,42 +100,17 @@ document.getElementById('volDownBtn').addEventListener('click', () => {
   user-select: none;
   box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
-stopBtn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-volUpBtn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-pauseBtn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-volDownBtn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
+.btn:active { transform: translateY(1px); }
+.btn.small { 
+    padding: 6px 8px; 
+    font-size: 0.9rem; 
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
 </style>
 
 {{ endblock}}
