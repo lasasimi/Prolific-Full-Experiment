@@ -149,6 +149,12 @@ What others are thinking
   if (document.hidden) {
     bellReady();
   }
+  // Listen for tab visibility changes
+  document.addEventListener("visibilitychange", function() {
+      if (document.hidden) {
+          bellReady();
+      }
+  });
 </script>
 {{ endblock }}
 

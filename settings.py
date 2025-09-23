@@ -43,7 +43,7 @@ PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', '
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter',
-                      'nudge_training', 'correct_nudge_training', 
+                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three',
                       'simulated_time']# For bots, this will be used to simulate wait time
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',

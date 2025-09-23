@@ -70,20 +70,21 @@
         <div class="yellow-box"><h5>If you <strong>follow the tip above</strong>, what would be your choice?</h5>
         
         <form method="post">
-        {{ formfield_errors 'nudge_training_two' }}
-            <input type="hidden" name="nudge_training_two" id="nudge_training_two">
+        {{ formfield_errors 'nudge_training_three' }}
+            <input type="hidden" name="nudge_training_three" id="nudge_training_three">
 
-            <div class="button-container">
-            <button class="button button2 bg-sage" type="button" onclick="selectAnswer(this, '-1')">
+        <div class="button-container">
+            <button class="button button2 bg-sage {% if anticonformist %}suggested{% endif %}" type="button" onclick="selectAnswer(this, '-1')">
                 {{ scenario_against }}
             </button>
-            <button class="button button2 bg-gray" type="button" onclick="selectAnswer(this, '0')">
+            <button class="button button2 bg-gray {% if anticonformist %}suggested{% endif %}" type="button" onclick="selectAnswer(this, '0')">
                 {{ scenario_neutral }}
             </button>
-            <button class="button button2 bg-lavender" type="button" onclick="selectAnswer(this, '1')">
+            <button class="button button2 bg-lavender {% if not anticonformist %}suggested{% endif %}" type="button" onclick="selectAnswer(this, '1')">
                 {{ scenario_for }}
             </button>
-            </div>
+        </div>
+        </div>
         </form>
         </div>
         </div>
@@ -149,15 +150,33 @@
 
 </style>
 <style>
-    .otree-form-errors {
+.otree-form-errors {
     display: none !important;
+}
+.suggested {
+    box-shadow: 0 0 12px 4px #1aa0ff, 0 0 0 3px #c0ba9e;
+    border: 2px solid #1aa0ff;
+    font-weight: 700;
+    transition: box-shadow 0.2s, border 0.2s;
+    animation: glow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 8px 2px #1aa0ff, 0 0 0 3px #c0ba9e;
+        border-color: #1aa0ff;
+    }
+    100% {
+        box-shadow: 0 0 24px 8px #1aa0ff, 0 0 0 3px #c0ba9e;
+        border-color: #00eaff;
+    }
 }
 </style>
 
 <script>
  function selectAnswer(button, value) {
       // Set the response value
-      document.getElementById('nudge_training_two').value = value;
+      document.getElementById('nudge_training_three').value = value;
 
       // Style: mark selected
       const buttons = document.querySelectorAll('.button-container .button2');

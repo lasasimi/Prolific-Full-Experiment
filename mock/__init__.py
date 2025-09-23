@@ -179,6 +179,16 @@ class Player(BasePlayer):
                                                    [0, 'Neutral'],
                                                    [1, 'For']],
                                                    widget=widgets.RadioSelectHorizontal())
+    nudge_training_two =  models.IntegerField(label="If you follow the tip you just read, what would be your choice?",
+                                        choices=[[-1, 'Against'],
+                                                [0, 'Neutral'],
+                                                [1, 'For']],
+                                                widget=widgets.RadioSelectHorizontal())
+    nudge_training_three =  models.IntegerField(label="If you follow the tip you just read, what would be your choice?",
+                                        choices=[[-1, 'Against'],
+                                                [0, 'Neutral'],
+                                                [1, 'For']],
+                                                widget=widgets.RadioSelectHorizontal())
     nudge_training_text = models.StringField() # to show what they selected
     correct_nudge_training = models.IntegerField()
     old_response_text = models.StringField() # to show previous response in the popup
@@ -455,10 +465,10 @@ class Nudge(Page):
 
 class NudgeTraining(Page):
     form_model = 'player'
-    form_fields = []
-    #timeout_seconds = 3600
-    timeout_seconds = 90
-    
+    form_fields = ['nudge_training_two']
+    timeout_seconds = 3600
+    #timeout_seconds = 90
+
     @staticmethod
     def vars_for_template(player):
         if player.participant.anticonformist:
@@ -484,6 +494,62 @@ class NudgeTraining(Page):
             scenario_neutral = 'option B',
             scenario_for = 'option C',
         )
+    
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        if timeout_happened: # choose the wrong answers randomly
+            if player.participant.anticonformist:
+                player.nudge_training_two = 1 # wrong answer
+            else:
+                player.nudge_training_two = random.choice([-1, 0])
+
+        player.participant.nudge_training_two = player.nudge_training_two
+    
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
+
+class NudgeTrainingLast(Page):
+    form_model = 'player'
+    form_fields = ['nudge_training_three']
+    timeout_seconds = 3600
+    #timeout_seconds = 90
+
+    @staticmethod
+    def vars_for_template(player):
+        if player.participant.anticonformist:
+            player.participant.correct_nudge_training = (
+            player.participant.nudge_training_two in (0, -1))
+        else:
+            player.participant.correct_nudge_training = (
+            player.participant.nudge_training_two == 1)
+
+        if player.participant.nudge_training_two == 1:
+            player.nudge_training_text = 'option C'
+        elif player.participant.nudge_training_two == 0:
+            player.nudge_training_text = 'option B'
+        else:
+            player.nudge_training_text = 'option A'
+
+        return dict(
+            correct_nudge_training = player.participant.correct_nudge_training,
+            nudge_training_text = player.nudge_training_text,
+            anticonformist = player.participant.anticonformist,
+            others_responses = [1, -1, 1],
+            scenario_against = 'option A',
+            scenario_neutral = 'option B',
+            scenario_for = 'option C',
+        )
+    
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        if timeout_happened: # choose the wrong answers randomly
+            if player.participant.anticonformist:
+                player.nudge_training_three = 1 # wrong answer
+            else:
+                player.nudge_training_three = random.choice([-1, 0])
+
+        player.participant.nudge_training_three = player.nudge_training_three
     
     @staticmethod
     def is_displayed(player):
@@ -591,4 +657,4 @@ class FinalRound(Page):
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
