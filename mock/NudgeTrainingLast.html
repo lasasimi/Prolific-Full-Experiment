@@ -16,11 +16,11 @@
     </div>
 {% elif not correct_nudge_training and not anticonformist %}
     <div class = "red-box">
-    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_for }}</strong>" since it conforms with the majority opinion.
+    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_for }}</strong>" since it <strong>conforms with the majority</strong> opinion.
     </div>
 {% elif not correct_nudge_training and anticonformist %}
     <div class = "red-box">
-    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_neutral }}</strong>" since it is <strong>the only opinion that is not endorsed by any other neighbors.</strong>
+    ❌ If you followed the tip correctly, you should've answered "{{ scenario_neutral }} or {{ scenario_against }}</strong>" since they are <strong>opinions that are not endorsed by the majority.</strong>
     </div>
 {% endif %}
 <br>
@@ -37,7 +37,7 @@
     {% endif %}
 <br>
     <div class="card bg-mid m-0">
-    <h4 class="card-header">Try again one more time</h4>
+    <h4 class="card-header">Let's make sure you understand</h4>
 
         <div class="card-body">
         <h5>Imagine if the neighbors you passed on your walk said:</h5>
@@ -67,7 +67,7 @@
 
     </div>
     <br>
-        <div class="yellow-box"><h5>If you <strong>follow the tip above</strong>, what would be your choice?</h5>
+        <div class="yellow-box"><h5>If you <strong>follow the tip above</strong>, you will select the highlighted option</h5>
         
         <form method="post">
         {{ formfield_errors 'nudge_training_three' }}

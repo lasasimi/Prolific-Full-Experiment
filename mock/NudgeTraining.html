@@ -16,11 +16,11 @@
     </div>
 {% elif not correct_nudge_training and not anticonformist %}
     <div class = "red-box">
-    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_for }}</strong>" since it conforms with the majority opinion.
+    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_for }}</strong>" since it <strong>conforms with the majority</strong> opinion.
     </div>
 {% elif not correct_nudge_training and anticonformist %}
     <div class = "red-box">
-    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_neutral }}</strong>" since it is <strong>the only opinion that is not endorsed by any other neighbors.</strong>
+    ❌ If you followed the tip correctly, you should've answered "<strong>{{ scenario_neutral }} or {{ scenario_against }}</strong>" since they are <strong>opinions that are not endorsed by the majority</strong>
     </div>
 {% endif %}
 <br>
