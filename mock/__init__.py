@@ -21,10 +21,10 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 5# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
+    NUM_ROUNDS = 20# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
     LONG_WAIT = 20 #(minutes) # IF NO GROUP HAS BEEN FORMED, LET GO AND PAY WAITING BONUS
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 0.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
     
@@ -403,7 +403,7 @@ class DiscussionGRPWaitPage(WaitPage):
 class AttentionCheck(Page):
     form_model = 'player'
     form_fields = ['attention_check']
-    timeout_seconds = 90 # Set a timeout for the attention check
+    timeout_seconds = 90 # NOTE: Set a timeout for the attention check
     @staticmethod
     def before_next_page(player, timeout_happened):
         if timeout_happened:
@@ -422,7 +422,7 @@ class AttentionCheck(Page):
 
 class Phase3(Page):
     #timeout_seconds =  3600
-    timeout_seconds = 45 # to force proceed after 45 seconds of inactivity
+    timeout_seconds = 45 # NOTE: change back to 45 for real experiment
     
     @staticmethod
     def is_displayed(player):
@@ -430,7 +430,7 @@ class Phase3(Page):
 
 
 class Nudge(Page):
-    timeout_seconds = 90 # to force proceed after 45 seconds of inactivity
+    timeout_seconds = 90 # NOTE: change back to 90 for real experiment
     #timeout_seconds = 3600
     form_model = 'player'
     form_fields = ['nudge_training']
@@ -466,8 +466,8 @@ class Nudge(Page):
 class NudgeTraining(Page):
     form_model = 'player'
     form_fields = ['nudge_training_two']
-    timeout_seconds = 3600
-    #timeout_seconds = 90
+    #timeout_seconds = 3600
+    timeout_seconds = 90 # NOTE: change back to 90 for real experiment
 
     @staticmethod
     def vars_for_template(player):
@@ -512,8 +512,8 @@ class NudgeTraining(Page):
 class NudgeTrainingLast(Page):
     form_model = 'player'
     form_fields = ['nudge_training_three']
-    timeout_seconds = 3600
-    #timeout_seconds = 90
+    #timeout_seconds = 3600
+    timeout_seconds = 90 # NOTE: change back to 90 for real experiment
 
     @staticmethod
     def vars_for_template(player):
