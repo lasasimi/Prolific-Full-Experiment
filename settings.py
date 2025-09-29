@@ -44,11 +44,11 @@ PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', '
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter',
                       'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three',
-                      'simulated_time']# For bots, this will be used to simulate wait time
+                      'last_heartbeat', 'last_active']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',
                   'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',
-                  'SCE']
+                  'SCE', 'ids_A', 'ids_F']
 
 ROOMS = [
     dict(name='fullexperiment_p_pilot_20250924',

@@ -10,38 +10,91 @@
         <p>We require you to enable your audio <strong>so you can receive important sound notifications during the study.</strong> Please turn on your audio and set the volume up. We don’t record any audio. Press ‘Play’ below, listen to the sound, and then select what you heard.
 
         <audio id="checkAudio" src="{{ static 'test.mp3' }}" preload="auto"></audio>
-
-        <div style="margin: 10px 0;">
+        <p> <button type="button" id="enableAudioBtn" class="btn primary">🔈 Enable audio</button></p>
+        <p id="audioStatus" class="hint">Click “Enable audio” so your browser allows study sounds.</p>
+        <div id="audioControls" class="hidden" style="margin: 10px 0;">
             <button type="button" id="playBtn" class="btn">▶️ Play</button>
             <button type="button" id="pauseBtn" class="btn">⏸️ Pause</button>
             <button type="button" id="stopBtn" class="btn">⏹️ Stop</button>
             <button type="button" id="volUpBtn" class="btn">🔊 Vol +</button>
             <button type="button" id="volDownBtn" class="btn">🔉 Vol -</button>
         </div>
-    
-        <strong>{{ form.audio_answer.label }}</strong><br>
-        {{ form.audio_answer }}
-        <br><br>
-        <strong>If you do not want to enable audio output, we kindly ask you to return the study.</strong>
 
+        <input type="hidden" name="audio_unlocked" id="audioUnlocked" value="0" />
+        
+        <div id="audioQuestion" class="hidden">
+            <strong>{{ form.audio_answer.label }}</strong><br>
+            {{ form.audio_answer }}
+            <br><br>
+            <strong>If you do not want to enable audio output, we kindly ask you to return the study.</strong>
+        </div>
     </div>
 
 </div>
 
 <br>
-<button class="next-button" type="submit">Next</button>
-
+<button class="next-button" type="submit" id="nextBtn" disabled>Next</button>
+<p id="nextHint" class="hint"> </p>
 {{ endblock }}
 {{ block scripts}}
 
 <script>
+const form = document.querySelector('form');
 const audio = document.getElementById('checkAudio');
+const enableBtn = document.getElementById('enableAudioBtn');
+const status = document.getElementById('audioStatus');
+const hiddenField = document.getElementById('audioUnlocked');
+const nextBtn = document.getElementById('nextBtn');
+const nextHint = document.getElementById('nextHint');
+const audioControls = document.getElementById('audioControls');
+const audioQuestion = document.getElementById('audioQuestion');
+
+
+function revealSections() {
+    audioControls.style.display = 'block';
+    audioQuestion.style.display = 'block';
+    nextHint.style.display = 'none';
+}
+
+async function unlockAudio() {
+    try {
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+        hiddenField.value = '1';
+        enableBtn.disabled = true;
+        nextBtn.disabled = false;
+        status.textContent = '✅ Audio unlocked. Use the controls below to test the sound.';
+        status.style.color = '#1a7f00';
+        revealSections();
+    } catch (err) {
+        status.textContent = '⚠️ Browser blocked autoplay. Press “Play” once to allow sound.';
+        status.style.color = '#c23b00';
+    }
+}
+
+enableBtn.addEventListener('click', unlockAudio);
 
 document.getElementById('playBtn').addEventListener('click', async () => {
     try {
         await audio.play();
+        hiddenField.value = '1';
+        nextBtn.disabled = false;
+        status.textContent = '✅ Audio is playing. Adjust volume as needed.';
+        status.style.color = '#1a7f00';
+        revealSections();
     } catch (e) {
-        alert('Click play again to allow audio playback.');
+        status.textContent = '⚠️ Click “Enable audio” first, then try again.';
+        status.style.color = '#c23b00';
+    }
+});
+
+form.addEventListener('submit', (e) => {
+    if (hiddenField.value !== '1') {
+        e.preventDefault();
+        status.textContent = '⚠️ Enable audio and play the test sound before continuing.';
+        status.style.color = '#c23b00';
+        nextHint.style.display = 'block';
     }
 });
 
@@ -111,6 +164,17 @@ document.getElementById('volDownBtn').addEventListener('click', () => {
     user-select: none;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
+.hint { margin-top: 8px; color: #ff1515; }
+.btn.primary { background:#1b54d0; color:#fff; }
+.btn.primary:disabled { opacity:0.6; cursor:default; }
+.next-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    
+}
+.hidden {
+    display: none;
+}
 </style>
 
 {{ endblock}}

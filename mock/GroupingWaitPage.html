@@ -164,22 +164,60 @@
 </script>
 
 <script>
-   function bellReady() {
-   let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}"); // correct file path
-    audio.play();
-  }
+function bellReady() {
+  let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
+  audio.play();
+}
 
+document.addEventListener("visibilitychange", function() {
   if (document.hidden) {
-    bellReady();
+    bellReady(); // plays immediately when tab is hidden
   }
-    // Listen for tab visibility changes
-    document.addEventListener("visibilitychange", function() {
-        if (document.hidden) {
-            bellReady();
-        }
-    });
+});
 </script>
 
+<script>
+let lastActive = Date.now();
+const maxAwayTime = js_vars.away_timeout_ms; // from the __init__.py
+const heartbeatInterval = 5000; // 5s
+
+// Periodic hidden check (may be throttled by browser)
+setInterval(() => {
+  if (document.hidden && (Date.now() - lastActive) > maxAwayTime) {
+    window.location.href = js_vars.nopay;
+  }
+}, 15000);
+
+// CLIENT-SIDE: Visibility check when tab becomes visible again
+document.addEventListener("visibilitychange", function() {
+    if (!document.hidden) {
+        const awayTime = Date.now() - lastActive;
+        if (awayTime > maxAwayTime) {
+            window.location.href = js_vars.nopay;
+        }
+    }
+});
+
+// SERVER-SIDE: Regular heartbeat to server (even when tab is visible)
+// This creates server-side tracking that works even if the tab becomes frozen
+function sendHeartbeat() {
+    liveSend({});  // Empty ping is enough, server tracks the timestamp
+}
+
+// Initial heartbeat
+sendHeartbeat();
+
+// Set up regular heartbeats
+setInterval(sendHeartbeat, heartbeatInterval);
+
+// Handle server response (for redirect)
+function liveRecv(data) {
+    if (data && data.redirect) {
+        window.location.href = js_vars.nopay;
+    }
+}
+
+</script>
 
 {% if view.group_by_arrival_time %}
     <script>
@@ -188,9 +226,8 @@
             var SECOND = 1000;
             setInterval(function () {
                 window.location.reload();
-            }, 10 * SECOND); // reload every 10 seconds
+            }, 20 * SECOND);
         }
     </script>
 {% endif %}
-
 {{ endblock }}

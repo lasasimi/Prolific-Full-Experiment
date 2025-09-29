@@ -91,21 +91,33 @@
       // Submit the form
       button.closest('form').submit();
   }
-  // Function to play sound when tab is hidden
-   function bellReady() {
-   let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}"); // correct file path
-    audio.play();
-  }
 
-  if (document.hidden) {
-    bellReady();
+// Function to play bell sound
+  const audioIntro = new Audio("{{ static 'group-ready.mp3' }}");
+  const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
+
+  function unlockOnce() {
+      audioIntro.play().catch(()=>{});
+      audioIntro.pause();
+      audioAway.play().catch(()=>{});
+      audioAway.pause();
+      document.removeEventListener('click', unlockOnce);
+      document.removeEventListener('keydown', unlockOnce);
   }
-  // Listen for tab visibility changes
-    document.addEventListener("visibilitychange", function() {
-        if (document.hidden) {
-            bellReady();
-        }
-    });
+  document.addEventListener('click', unlockOnce);
+  document.addEventListener('keydown', unlockOnce);
+
+  document.addEventListener('DOMContentLoaded', () => {
+      audioIntro.currentTime = 0;
+      audioIntro.play().catch(()=>{});
+  });
+
+  document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+          audioAway.currentTime = 0;
+          audioAway.play().catch(()=>{});
+      }
+  });
 </script>
 
 <style>
