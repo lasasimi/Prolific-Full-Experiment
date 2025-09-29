@@ -110,52 +110,26 @@ What others are thinking
       // Submit the form
       button.closest('form').submit();
   }
-
-
-  document.addEventListener('DOMContentLoaded', function () {
-    const textEl = document.getElementById('activeNowText');
-    const dotEl = document.getElementById('activeNowDot');
-    if (!textEl || !dotEl) return;
-
-    // start visible
-    textEl.classList.add('visible');
-    dotEl.classList.add('visible');
-
-    setInterval(() => {
-      textEl.classList.toggle('visible');
-      textEl.classList.toggle('hidden');
-      dotEl.classList.toggle('visible');
-      dotEl.classList.toggle('hidden');
-    }, 1600);
-  });
-
-  // For the popup if needed
-    setTimeout(function() {
-        var popup = document.getElementById("popup");
-        if (popup) {
-            popup.style.opacity = 0;    // fade out
-            setTimeout(function() { popup.remove(); }, 500); // remove from DOM after fade
-        }
-    }, 2000);
 </script>
-
-<!-- play bell sound when tab is inactive to bring back attention -->
+{% if participant.audio_unlocked %}
 <script>
-  function bellReady() {
-   let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}"); // correct file path
-    audio.play();
-  }
+const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
 
-  if (document.hidden) {
-    bellReady();
-  }
-  // Listen for tab visibility changes
-  document.addEventListener("visibilitychange", function() {
+// Play intro sound once when page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    audioAway.currentTime = 0;
+    audioAway.play().catch(()=>{});
+});
+
+// Play away sound if user leaves the tab
+  document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-          bellReady();
+          audioAway.currentTime = 0;
+          audioAway.play().catch(()=>{});
       }
   });
 </script>
+{% endif %}
 {{ endblock }}
 
 {{ block styles }}

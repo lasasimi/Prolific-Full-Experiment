@@ -76,7 +76,7 @@ class Player(BasePlayer):
         "and confirm that I wish to participate in this study.")
     scenario_code = models.StringField()
     dropout = models.BooleanField(initial=False)
-
+    audio_unlocked = models.BooleanField(initial=False)
     # Demographics
     age = models.IntegerField(label='How old are you?', min=18, max=100)
     gender = models.StringField(choices=[['Man', 'Man'], 
@@ -217,10 +217,11 @@ class Introduction(Page):
  
 class AudioCheck(Page):
     form_model = 'player'
-    form_fields = ['audio_answer']
+    form_fields = ['audio_answer', 'audio_unlocked']
 
     @staticmethod
     def before_next_page(player, timeout_happened):
+        player.participant.audio_unlocked = player.audio_unlocked
         if player.audio_answer !=4: # correct answer is 'wave' which is coded as 4 OR they don't have audio
             player.participant.gives_consent = False
             player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent

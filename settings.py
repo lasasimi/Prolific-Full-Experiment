@@ -19,12 +19,12 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        N04_p00 = 1,
+        N04_p00 = 0,
         N04_p25 = 0,
-        N04_p50 = 1,
-        N08_p00 = 1,
+        N04_p50 = 4,
+        N08_p00 = 0,
         N08_p25 = 0,
-        N08_p50 = 1,
+        N08_p50 = 4,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
     )
 ]
@@ -38,7 +38,8 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=0.00, doc=""
 )
 
-PARTICIPANT_FIELDS = ['gives_consent', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
+PARTICIPANT_FIELDS = ['audio_unlocked',
+                      'gives_consent', 'training_attempt', 'training_success', 'no_consent', 'failed_commitment',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',

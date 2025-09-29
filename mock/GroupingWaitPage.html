@@ -35,7 +35,7 @@
 </style>
 <div class="yellow-box" style="text-align: center">
     <strong>🚨
-    Do not leave this tab.</strong> You’ll hear a bell ring to remind you to go back to this tab and hit the refresh button.
+    Keep this tab open and do not disable audio.</strong> Otherwise, you will not know when you're grouped.
 </div>
 
 <div class="wait-container">
@@ -163,64 +163,28 @@
     moveCircle();
 </script>
 
+{% if participant.audio_unlocked %}
 <script>
-function bellReady() {
-  let audio = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
-  audio.play();
-}
+  const bgm = new Audio("{{ static 'lounge-jazz-elevator-music.mp3' }}");
+  bgm.loop = true;
+  bgm.volume = 0.4;
+  bgm.play().catch(()=>{});
 
-document.addEventListener("visibilitychange", function() {
-  if (document.hidden) {
-    bellReady(); // plays immediately when tab is hidden
-  }
-});
+  window.addEventListener("beforeunload", () => {
+      bgm.pause();
+      bgm.currentTime = 0;
+      // Play bell once when leaving waiting page
+      const bell = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
+      bell.play().catch(()=>{});
+  });
 </script>
+{% endif %}
 
-<script>
-let lastActive = Date.now();
-const maxAwayTime = js_vars.away_timeout_ms; // from the __init__.py
-const heartbeatInterval = 5000; // 5s
 
-// Periodic hidden check (may be throttled by browser)
-setInterval(() => {
-  if (document.hidden && (Date.now() - lastActive) > maxAwayTime) {
-    window.location.href = js_vars.nopay;
-  }
-}, 15000);
-
-// CLIENT-SIDE: Visibility check when tab becomes visible again
-document.addEventListener("visibilitychange", function() {
-    if (!document.hidden) {
-        const awayTime = Date.now() - lastActive;
-        if (awayTime > maxAwayTime) {
-            window.location.href = js_vars.nopay;
-        }
-    }
-});
-
-// SERVER-SIDE: Regular heartbeat to server (even when tab is visible)
-// This creates server-side tracking that works even if the tab becomes frozen
-function sendHeartbeat() {
-    liveSend({});  // Empty ping is enough, server tracks the timestamp
-}
-
-// Initial heartbeat
-sendHeartbeat();
-
-// Set up regular heartbeats
-setInterval(sendHeartbeat, heartbeatInterval);
-
-// Handle server response (for redirect)
-function liveRecv(data) {
-    if (data && data.redirect) {
-        window.location.href = js_vars.nopay;
-    }
-}
-
-</script>
 
 {% if view.group_by_arrival_time %}
     <script>
+        // Reload the page every 20 seconds to check for group formation
         if (!window.reloadScheduled) {
             window.reloadScheduled = true;
             var SECOND = 1000;

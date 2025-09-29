@@ -93,25 +93,19 @@
   }
 
 // Function to play bell sound
+</script>
+
+{% if participant.audio_unlocked %}
+<script>
   const audioIntro = new Audio("{{ static 'group-ready.mp3' }}");
   const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
-
-  function unlockOnce() {
-      audioIntro.play().catch(()=>{});
-      audioIntro.pause();
-      audioAway.play().catch(()=>{});
-      audioAway.pause();
-      document.removeEventListener('click', unlockOnce);
-      document.removeEventListener('keydown', unlockOnce);
-  }
-  document.addEventListener('click', unlockOnce);
-  document.addEventListener('keydown', unlockOnce);
-
+  // Play intro sound once when page loads
   document.addEventListener('DOMContentLoaded', () => {
       audioIntro.currentTime = 0;
       audioIntro.play().catch(()=>{});
   });
 
+  // Play away sound if user leaves the tab
   document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
           audioAway.currentTime = 0;
@@ -119,6 +113,7 @@
       }
   });
 </script>
+{% endif %}
 
 <style>
     .nudge-anti-card{

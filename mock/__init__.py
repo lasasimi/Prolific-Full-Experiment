@@ -78,11 +78,11 @@ def group_by_arrival_time_method(subsession, waiting_players):
     print(f'Waiting players: {waiting_players}')
     response = {}
     for p in waiting_players:
-        response[p.participant.code] = p.participant.all_responses #{'s2_p': 0}
+        response[p.participant.code] = p.participant.all_responses # {'s2_p': 0} /{'s2_n': 0}
         p.participant.scenario = sce
         player_id = int(p.id_in_subsession)
 
-        if sce in response[p.participant.code].keys(): # 's2_p'
+        if sce in response[p.participant.code].keys(): # 's2_p' / 's2_n'
             if response[p.participant.code][sce] == -1:
                 session.ids_A.add(player_id)
             elif response[p.participant.code][sce] == 1:
@@ -129,10 +129,10 @@ def group_by_arrival_time_method(subsession, waiting_players):
             print('Ready to create a LARGE discussion group')
             group = [p for p in all_players if p.id_in_subsession in union_ids]
 
-            # determine faction by id BEFORE clearing the session sets
+            # determine faction by id before clearing the session sets
             faction_by_id = {pid: ('A' if pid in session.ids_A else 'F') for pid in union_ids}
 
-            # Clear the session sets
+            # clear the session sets
             session.ids_A.clear()
             session.ids_F.clear()
 
@@ -147,7 +147,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
     if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
 
-        if ids_total == C.N_TEST/2:
+        if ids_total == C.N_TEST//2:
             print('Creating a group of 4')
             print(len(session.ids_A), len(session.ids_F))
             group = []
@@ -303,34 +303,7 @@ class GroupingWaitPage(WaitPage):
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1 and player.participant.complete_presurvey 
-
-    @staticmethod
-    def js_vars(player: Player):
-        return dict(
-        nopay=player.subsession.session.config['returnlink'],
-        away_timeout_ms = 60 * 1000,  # 5 minutes
-    )
-
-    # @staticmethod
-    # def live_method(player, data):
-    #     # Update last activity timestamp whenever we receive a heartbeat
-    #     now = time.time()
-    #     player.participant.vars['last_active'] = now
-        
-    #     # Check if they've been away too long (server-side check)
-    #     last_heartbeat = player.participant.vars.get('last_heartbeat', now)
-    #     print(f"Debug: last heartbeat = {last_heartbeat}, now = {now}, difference = {now - last_heartbeat}")
-    #     if (now - last_heartbeat) > 0:  # 1 minutes
-    #         return {player.id_in_group: {'redirect': True}}
-        
-    #     player.participant.vars['last_heartbeat'] = now
-    #     return {player.id_in_group: {'ok': True}}
     
-    @staticmethod
-    def vars_for_template(player):
-        return {
-            'nopay': player.subsession.session.config['returnlink'],
-        }
 class GroupSizeWaitPage(WaitPage):
     @staticmethod
     def after_all_players_arrive(group: Group):
