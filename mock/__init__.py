@@ -47,8 +47,8 @@ def creating_session(subsession):
     session.MAX_N08_p25 = session.config.get('N08_p25', 0)
     session.MAX_N08_p50 = session.config.get('N08_p50', 0)
     session.SCE = session.config.get('SCE')
-    session.ids_A = set()  # to hold player IDs for 'Against' faction
-    session.ids_F = set()  # to hold player IDs for 'For' faction
+    session.ids_A = []  # store as list for JSON serialization
+    session.ids_F = []
 
 def N08_full(subsession):
     session = subsession.session
@@ -71,8 +71,18 @@ def counters_full(player):
     return (session.N04_p00 == session.MAX_N04_p00 and session.N04_p25 == session.MAX_N04_p25 and session.N04_p50 == session.MAX_N04_p50 and
             session.N08_p00 == session.MAX_N08_p00 and session.N08_p25 == session.MAX_N08_p25 and session.N08_p50 == session.MAX_N08_p50)
 
+
+def list_difference_update(lst, items_to_remove):
+    s = set(lst)
+    s.difference_update(items_to_remove)
+    return list(s)
+
+
 def group_by_arrival_time_method(subsession, waiting_players):
     session = subsession.session
+    # pull mutable sets from stored lists
+    ids_A = set(session.ids_A)
+    ids_F = set(session.ids_F)
     sce = session.SCE
     all_players = subsession.get_players()
     print(f'Waiting players: {waiting_players}')
@@ -84,10 +94,10 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
         if sce in response[p.participant.code].keys(): # 's2_p' / 's2_n'
             if response[p.participant.code][sce] == -1:
-                session.ids_A.add(player_id)
+                ids_A.add(player_id)
             elif response[p.participant.code][sce] == 1:
-                session.ids_F.add(player_id)
-    print(f"Debug: ID Against: {session.ids_A}, ID For: {session.ids_F}")
+                ids_F.add(player_id)
+    print(f"Debug: ID Against: {ids_A}, ID For: {ids_F}")
     
     # Getting list of scenarios, always get first key, instead of relying on p.id_in_group == 1
     #scenarios = list(C.SCENARIOS['code'])
@@ -114,33 +124,37 @@ def group_by_arrival_time_method(subsession, waiting_players):
     if len(long_waiting) >= 1:
         for player in long_waiting:
             print('Ready to let participant go, waiting for too long')
+            session.ids_A = list(ids_A)
+            session.ids_F = list(ids_F)
             return [player]
 
     group = []
 
     # helper: total number of ids collected
-    ids_total = len(session.ids_A) + len(session.ids_F)
+    ids_total = len(ids_A) + len(ids_F)
 
     if ids_total == C.N_TEST and not N08_full(subsession):
         print('N08 is not full, creating a group of 8')
-        union_ids = session.ids_A.union(session.ids_F)
-        print(f"Debug: Scenario {sce}, A count: {len(session.ids_A)}, F count: {len(session.ids_F)}")
-        if len(session.ids_A) == C.N_TEST/2 and len(session.ids_F) == C.N_TEST/2:
+        union_ids =  ids_A | ids_F
+        print(f"Debug: Scenario {sce}, A count: {len(ids_A)}, F count: {len(ids_F)}")
+        if len(ids_A) == C.N_TEST/2 and len(ids_F) == C.N_TEST/2:
             print('Ready to create a LARGE discussion group')
             group = [p for p in all_players if p.id_in_subsession in union_ids]
 
             # determine faction by id before clearing the session sets
-            faction_by_id = {pid: ('A' if pid in session.ids_A else 'F') for pid in union_ids}
+            faction_by_id = {pid: ('A' if pid in ids_A else 'F') for pid in union_ids}
 
             # clear the session sets
-            session.ids_A.clear()
-            session.ids_F.clear()
+            ids_A.clear()
+            ids_F.clear()
 
             for p in group:
                 p.participant.scenario = sce
                 # Save the scenario and faction to participant.vars
                 p.participant.vars['scenario'] = sce
                 p.participant.vars['faction'] = faction_by_id.get(p.id_in_subsession, 'F')
+            session.ids_A = list(ids_A)
+            session.ids_F = list(ids_F)
             return group
         
     # If N08 is full or any of the players has been waiting for medium time, create a group of 4
@@ -149,17 +163,20 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
         if ids_total == C.N_TEST//2:
             print('Creating a group of 4')
-            print(len(session.ids_A), len(session.ids_F))
+            print(len(ids_A), len(ids_F))
             group = []
-            if len(session.ids_A) >= C.N_TEST//2:
-                target_ids = set(session.ids_A)
+            target_ids = set()
+            faction_for_group = None
+
+            if len(ids_A) >= C.N_TEST//2:
+                target_ids = set(ids_A)
                 group = [p for p in all_players if p.id_in_subsession in target_ids]
-                session.ids_A.difference_update({p.id_in_subsession for p in group})
+                ids_A.difference_update({p.id_in_subsession for p in group})
                 faction_for_group = 'A'
-            elif len(session.ids_F) >= C.N_TEST//2:
-                target_ids = set(session.ids_F)
+            elif len(ids_F) >= C.N_TEST//2:
+                target_ids = set(ids_F)
                 group = [p for p in all_players if p.id_in_subsession in target_ids]
-                session.ids_F.difference_update({p.id_in_subsession for p in group})
+                ids_F.difference_update({p.id_in_subsession for p in group})
                 faction_for_group = 'F'
             else:
                 group = []
@@ -171,12 +188,18 @@ def group_by_arrival_time_method(subsession, waiting_players):
                     # Save the scenario and faction to participant.vars
                     p.participant.vars['scenario'] = sce
                     p.participant.vars['faction'] = 'A' if p.id_in_subsession in (target_ids if faction_for_group == 'A' else set()) else 'F'
+                session.ids_A = list(ids_A)
+                session.ids_F = list(ids_F)
                 return group
             
     if not group:
         print('Not enough players yet to create a group')
+        session.ids_A = list(ids_A)
+        session.ids_F = list(ids_F)
         return []
     
+    session.ids_A = list(ids_A)
+    session.ids_F = list(ids_F)
     return group
 
     # if len(waiting_players) == C.N_TEST and not N08_full(subsession):
