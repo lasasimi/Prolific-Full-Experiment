@@ -11,21 +11,13 @@ What others are thinking
     <h1 class="inactive_text">We're sorry, you cannot continue with the study as you were inactive for too long.</h1>
 </div>
 {{ endif }}
- <!-- Pop up to show what they selected
-    {{ if player.round_number > 1 }}
-    <div id="popup" class="popup">
-        You selected: {{ player.old_response_text }}
-    </div>
-
-{{ endif }}
--->
     {% if anticonformist %}
-    <div class="nudge-anti-card">
+    <div class="nudge-anti-card sticky-top">
       <h2>💡 Tip: Stand Out</h2> Variety of opinions can be beneficial. You could choose the options that are different from the majority.
     </div>
     
     {% else %}
-    <div class="nudge-confo-card">
+    <div class="nudge-confo-card sticky-top">
         <h2>💡 Tip: Team Up</h2>  Neighborhoods work best when we stick together. You could choose the option most neighbors prefer.
     </div>        
 
@@ -130,9 +122,45 @@ const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
   });
 </script>
 {% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const textEl = document.getElementById('activeNowText');
+    const dotEl = document.getElementById('activeNowDot');
+    if (!textEl || !dotEl) return;
+
+    // start visible
+    textEl.classList.add('visible');
+    dotEl.classList.add('visible');
+
+    setInterval(() => {
+      textEl.classList.toggle('visible');
+      textEl.classList.toggle('hidden');
+      dotEl.classList.toggle('visible');
+      dotEl.classList.toggle('hidden');
+    }, 1200);
+  });
+
+</script>
 {{ endblock }}
 
 {{ block styles }}
+
+<style>
+  /* active blink: simple appear/disappear */
+  .active-indicator { margin-left: 8px; font-weight: 600; display: inline-flex; align-items: center; gap:6px; }
+  .active-text, .active-dot { transition: opacity .12s linear; }
+  .visible { opacity: 1; }
+  .hidden { opacity: 0; pointer-events: none; }
+  .active-dot { width:10px; height:10px; border-radius:50%; background:#cc2e2e; display:inline-block; }
+
+
+  .sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+}
+</style>
 {% if player.participant.active == 0 %}
 <style>
     body {
@@ -170,30 +198,4 @@ const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
 </style>
 {% endif %}
 
-<style>
-  /* active blink: simple appear/disappear */
-  .active-indicator { margin-left: 8px; font-weight: 600; display: inline-flex; align-items: center; gap:6px; }
-  .active-text, .active-dot { transition: opacity .12s linear; }
-  .visible { opacity: 1; }
-  .hidden { opacity: 0; pointer-events: none; }
-  .active-dot { width:10px; height:10px; border-radius:50%; background:#cc2e2e; display:inline-block; }
-
-  /* Popup styling */
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #333;
-    color: #fff;
-    padding: 16px 24px;
-    border-radius: 10px;
-    box-shadow: 0px 6px 12px rgba(0,0,0,0.3);
-    font-size: 18px;
-    opacity: 1;
-    transition: opacity 0.5s ease;
-    z-index: 9999;
-    text-align: center;
-}
-</style>
 {{ endblock}}

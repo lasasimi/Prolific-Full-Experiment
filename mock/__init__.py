@@ -489,7 +489,11 @@ class DiscussionGRPWaitPage(WaitPage):
     @staticmethod
     def is_displayed(player):
         return player.participant.complete_presurvey and not player.participant.single_group
-
+    @staticmethod
+    def vars_for_template(player):
+        return dict(
+            anticonformist = player.participant.anticonformist,
+        )
 class AttentionCheck(Page):
     form_model = 'player'
     form_fields = ['attention_check']
