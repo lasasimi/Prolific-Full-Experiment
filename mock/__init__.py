@@ -71,13 +71,6 @@ def counters_full(player):
     return (session.N04_p00 == session.MAX_N04_p00 and session.N04_p25 == session.MAX_N04_p25 and session.N04_p50 == session.MAX_N04_p50 and
             session.N08_p00 == session.MAX_N08_p00 and session.N08_p25 == session.MAX_N08_p25 and session.N08_p50 == session.MAX_N08_p50)
 
-
-def list_difference_update(lst, items_to_remove):
-    s = set(lst)
-    s.difference_update(items_to_remove)
-    return list(s)
-
-
 def group_by_arrival_time_method(subsession, waiting_players):
     session = subsession.session
     # pull mutable sets from stored lists

@@ -45,7 +45,7 @@ class MyPage(Page):
     def js_vars(player: Player):
         # completed the presurvey, but were not eligible (answered neutral in all questions)
         if not player.participant.eligible_notneutral:
-            player.participant.reason="Sorry, we could not find you eligible for the next phase of the study. You will still receive your base payment. Thanks for your time!"
+            player.participant.reason="You answered the middle option in the previous question. We are looking for participants who have strong opinions about the issue, so you were screened out. You will still receive your base payment. Thanks for your time!"
             return dict(
                 pay=player.subsession.session.config['screenedoutlink']
             )

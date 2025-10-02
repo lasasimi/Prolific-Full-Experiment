@@ -139,7 +139,7 @@ class Player(BasePlayer):
             [False, 'False'],
         ])
     majority = models.BooleanField(
-        label="The majority of your neighbors are in favor of helping to search for the cat in the sewage.",
+        label="The majority of your neighbors are in favor of helping to search for the cat near the sewage.",
         choices=[
             [True, 'True'], 
             [False, 'False'],
