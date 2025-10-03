@@ -52,8 +52,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'ids_A', 'ids_F']
 
 ROOMS = [
-    dict(name='fullexperiment_p_pilot_20251001',
-         display_name='fullexperiment_p_pilot_20251001',
+    dict(name='fullexperiment_p_pilot_20251003',
+         display_name='fullexperiment_p_pilot_20251003',
          ),
 ]
 

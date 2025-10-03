@@ -20,10 +20,10 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 3# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
+    NUM_ROUNDS = 20# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
     LONG_WAIT = 15 #(minutes) NOTE: Set this to 20 minutes
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 0.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
     
@@ -490,7 +490,7 @@ class DiscussionGRPWaitPage(WaitPage):
 class AttentionCheck(Page):
     form_model = 'player'
     form_fields = ['attention_check']
-    timeout_seconds = 10 # NOTE: Set a timeout for the attention check
+    timeout_seconds = 5 # NOTE: Set a timeout for the attention check
     @staticmethod
     def before_next_page(player, timeout_happened):
         if timeout_happened:
