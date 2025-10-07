@@ -18,12 +18,12 @@ def open_CSV(filename):
 
 
 class C(BaseConstants):
-    NAME_IN_URL = 'mock'
+    NAME_IN_URL = 'onepart_pilot'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 20# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
+    NUM_ROUNDS = 1# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
     LONG_WAIT = 20 #(minutes) NOTE: Set this to 20 minutes
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT =5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
     
@@ -46,7 +46,6 @@ def creating_session(subsession):
     session.MAX_N08_p25 = session.config.get('N08_p25', 0)
     session.MAX_N08_p50 = session.config.get('N08_p50', 0)
     session.SCE = session.config.get('SCE')
-    session.start_time = time.time()  # record the session start time
 
 def N08_full(subsession):
     session = subsession.session
@@ -194,6 +193,11 @@ class Player(BasePlayer):
     old_response_text = models.StringField() # to show previous response in the popup
     # Attention check
     attention_check=models.BooleanField(initial=False)
+    future_participation=models.BooleanField(label="I would like to be contacted by the researchers to participate in the next part of this study.",
+                                        choices=[[True, 'Yes'],
+                                                 [False, 'No']],
+                                        widget=widgets.RadioSelectHorizontal())
+    email=models.StringField(label="email address (optional)", blank=True)
     
 def counters_update(group:Group):
     if group.group_size == 'N08':
@@ -432,236 +436,243 @@ class Phase3(Page):
     def is_displayed(player):
         return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group    
 
-
-class Nudge(Page):
-    timeout_seconds = 90 # NOTE: change back to 90 for real experiment
-    #timeout_seconds = 3600
+class FinalPage(Page):
     form_model = 'player'
-    form_fields = ['nudge_training']
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
-
-        return dict(
-            scenario_against = 'option A',
-            scenario_neutral = 'option B',
-            scenario_for ='option C',
-            # Some made up responses of other players' to be displayed
-            others_responses = [1, -1, 1],# anticonformist should answer 0, conformist should answer 1
-            anticonformist = player.participant.anticonformist, # treatment variable
-        )
-    
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        if timeout_happened: # choose the wrong answers randomly
-            if player.participant.anticonformist:
-                player.nudge_training = 1 # wrong answer
-            else:
-                player.nudge_training = random.choice([-1, 0])
-
-        player.participant.nudge_training = player.nudge_training
-        
-
+    form_fields = ['future_participation', 'email']
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group
 
-class NudgeTraining(Page):
-    form_model = 'player'
-    form_fields = ['nudge_training_two']
-    #timeout_seconds = 3600
-    timeout_seconds = 90 # NOTE: change back to 90 for real experiment
+# class Nudge(Page):
+#     timeout_seconds = 90 # NOTE: change back to 90 for real experiment
+#     #timeout_seconds = 3600
+#     form_model = 'player'
+#     form_fields = ['nudge_training']
 
-    @staticmethod
-    def vars_for_template(player):
-        if player.participant.anticonformist:
-            player.participant.correct_nudge_training = (
-            player.participant.nudge_training in (0, -1))
-        else:
-            player.participant.correct_nudge_training = (
-            player.participant.nudge_training == 1)
+#     @staticmethod
+#     def vars_for_template(player: Player):
+#         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
 
-        if player.participant.nudge_training == 1:
-            player.nudge_training_text = 'option C'
-        elif player.participant.nudge_training == 0:
-            player.nudge_training_text = 'option B'
-        else:
-            player.nudge_training_text = 'option A'
-
-        return dict(
-            correct_nudge_training = player.participant.correct_nudge_training,
-            nudge_training_text = player.nudge_training_text,
-            anticonformist = player.participant.anticonformist,
-            others_responses = [1, -1, 1],
-            scenario_against = 'option A',
-            scenario_neutral = 'option B',
-            scenario_for = 'option C',
-        )
+#         return dict(
+#             scenario_against = 'option A',
+#             scenario_neutral = 'option B',
+#             scenario_for ='option C',
+#             # Some made up responses of other players' to be displayed
+#             others_responses = [1, -1, 1],# anticonformist should answer 0, conformist should answer 1
+#             anticonformist = player.participant.anticonformist, # treatment variable
+#         )
     
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        if timeout_happened: # choose the wrong answers randomly
-            if player.participant.anticonformist:
-                player.nudge_training_two = 1 # wrong answer
-            else:
-                player.nudge_training_two = random.choice([-1, 0])
+#     @staticmethod
+#     def before_next_page(player, timeout_happened):
+#         if timeout_happened: # choose the wrong answers randomly
+#             if player.participant.anticonformist:
+#                 player.nudge_training = 1 # wrong answer
+#             else:
+#                 player.nudge_training = random.choice([-1, 0])
 
-        player.participant.nudge_training_two = player.nudge_training_two
-    
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
-
-class NudgeTrainingLast(Page):
-    form_model = 'player'
-    form_fields = ['nudge_training_three']
-    #timeout_seconds = 3600
-    timeout_seconds = 90 # NOTE: change back to 90 for real experiment
-
-    @staticmethod
-    def vars_for_template(player):
-        if player.participant.anticonformist:
-            player.participant.correct_nudge_training = (
-            player.participant.nudge_training_two in (0, -1))
-        else:
-            player.participant.correct_nudge_training = (
-            player.participant.nudge_training_two == 1)
-
-        if player.participant.nudge_training_two == 1:
-            player.nudge_training_text = 'option C'
-        elif player.participant.nudge_training_two == 0:
-            player.nudge_training_text = 'option B'
-        else:
-            player.nudge_training_text = 'option A'
-
-        return dict(
-            correct_nudge_training = player.participant.correct_nudge_training,
-            nudge_training_text = player.nudge_training_text,
-            anticonformist = player.participant.anticonformist,
-            others_responses = [1, -1, 1],
-            scenario_against = 'option A',
-            scenario_neutral = 'option B',
-            scenario_for = 'option C',
-        )
-    
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        if timeout_happened: # choose the wrong answers randomly
-            if player.participant.anticonformist:
-                player.nudge_training_three = 1 # wrong answer
-            else:
-                player.nudge_training_three = random.choice([-1, 0])
-
-        player.participant.nudge_training_three = player.nudge_training_three
-    
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
-
-
-
-class Discussion(Page):
-    def get_timeout_seconds(player):
-        if not player.participant.active:
-            return 1  # shorter time for dropouts
-        else:
-            if player.round_number == 1:
-                return 90  # longer seconds for the first round
-            elif 2<= player.round_number <= 4:
-                return 45
-            else:
-                return 30
+#         player.participant.nudge_training = player.nudge_training
         
-    form_model = 'player'
-    form_fields = ['new_response']
 
-    @staticmethod
-    def vars_for_template(player): 
-        print(f'Scenario code in the discussion: {player.participant.scenario}')
-        #print(C.SCENARIOS)
-        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+#     @staticmethod
+#     def is_displayed(player):
+#         return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group
 
-        discussion_partners = [other for other in player.get_others_in_group() if other.participant.code in player.participant.discussion_grp]   
+# class NudgeTraining(Page):
+#     form_model = 'player'
+#     form_fields = ['nudge_training_two']
+#     #timeout_seconds = 3600
+#     timeout_seconds = 90 # NOTE: change back to 90 for real experiment
+
+#     @staticmethod
+#     def vars_for_template(player):
+#         if player.participant.anticonformist:
+#             player.participant.correct_nudge_training = (
+#             player.participant.nudge_training in (0, -1))
+#         else:
+#             player.participant.correct_nudge_training = (
+#             player.participant.nudge_training == 1)
+
+#         if player.participant.nudge_training == 1:
+#             player.nudge_training_text = 'option C'
+#         elif player.participant.nudge_training == 0:
+#             player.nudge_training_text = 'option B'
+#         else:
+#             player.nudge_training_text = 'option A'
+
+#         return dict(
+#             correct_nudge_training = player.participant.correct_nudge_training,
+#             nudge_training_text = player.nudge_training_text,
+#             anticonformist = player.participant.anticonformist,
+#             others_responses = [1, -1, 1],
+#             scenario_against = 'option A',
+#             scenario_neutral = 'option B',
+#             scenario_for = 'option C',
+#         )
+    
+#     @staticmethod
+#     def before_next_page(player, timeout_happened):
+#         if timeout_happened: # choose the wrong answers randomly
+#             if player.participant.anticonformist:
+#                 player.nudge_training_two = 1 # wrong answer
+#             else:
+#                 player.nudge_training_two = random.choice([-1, 0])
+
+#         player.participant.nudge_training_two = player.nudge_training_two
+    
+#     @staticmethod
+#     def is_displayed(player):
+#         return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
+
+# class NudgeTrainingLast(Page):
+#     form_model = 'player'
+#     form_fields = ['nudge_training_three']
+#     #timeout_seconds = 3600
+#     timeout_seconds = 90 # NOTE: change back to 90 for real experiment
+
+#     @staticmethod
+#     def vars_for_template(player):
+#         if player.participant.anticonformist:
+#             player.participant.correct_nudge_training = (
+#             player.participant.nudge_training_two in (0, -1))
+#         else:
+#             player.participant.correct_nudge_training = (
+#             player.participant.nudge_training_two == 1)
+
+#         if player.participant.nudge_training_two == 1:
+#             player.nudge_training_text = 'option C'
+#         elif player.participant.nudge_training_two == 0:
+#             player.nudge_training_text = 'option B'
+#         else:
+#             player.nudge_training_text = 'option A'
+
+#         return dict(
+#             correct_nudge_training = player.participant.correct_nudge_training,
+#             nudge_training_text = player.nudge_training_text,
+#             anticonformist = player.participant.anticonformist,
+#             others_responses = [1, -1, 1],
+#             scenario_against = 'option A',
+#             scenario_neutral = 'option B',
+#             scenario_for = 'option C',
+#         )
+    
+#     @staticmethod
+#     def before_next_page(player, timeout_happened):
+#         if timeout_happened: # choose the wrong answers randomly
+#             if player.participant.anticonformist:
+#                 player.nudge_training_three = 1 # wrong answer
+#             else:
+#                 player.nudge_training_three = random.choice([-1, 0])
+
+#         player.participant.nudge_training_three = player.nudge_training_three
+    
+#     @staticmethod
+#     def is_displayed(player):
+#         return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
+
+
+
+# class Discussion(Page):
+#     def get_timeout_seconds(player):
+#         if not player.participant.active:
+#             return 1  # shorter time for dropouts
+#         else:
+#             if player.round_number == 1:
+#                 return 90  # longer seconds for the first round
+#             elif 2<= player.round_number <= 4:
+#                 return 45
+#             else:
+#                 return 30
         
-        # Store the text of their previous response for the popup
-        if player.old_response == 1:
-            player.old_response_text = row.iloc[0]['For']
-        elif player.old_response == 0:
-            player.old_response_text = row.iloc[0]['Neutral']
-        else:  
-            player.old_response_text = row.iloc[0]['Against']
+#     form_model = 'player'
+#     form_fields = ['new_response']
 
-        return dict(
-            scenario_title = row.iloc[0]['Title'],
-            scenario_text = row.iloc[0]['Text'],
-            scenario_against = row.iloc[0]['Against'],
-            scenario_neutral = row.iloc[0]['Neutral'],
-            scenario_for = row.iloc[0]['For'],
-            others_responses = [other.old_response for other in discussion_partners if other.id_in_group != player.id_in_group],
-            anticonformist = player.participant.anticonformist,
-            old_response_text = player.old_response_text,
-        )
+#     @staticmethod
+#     def vars_for_template(player): 
+#         print(f'Scenario code in the discussion: {player.participant.scenario}')
+#         #print(C.SCENARIOS)
+#         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
 
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        if timeout_happened:
-            ### TODO: REVIEW THE RULE #### 
-            player.forced_response = True # only in the last round, make them inactive
-            player.new_response = random.choice([-1, 0, 1])
+#         discussion_partners = [other for other in player.get_others_in_group() if other.participant.code in player.participant.discussion_grp]   
+        
+#         # Store the text of their previous response for the popup
+#         if player.old_response == 1:
+#             player.old_response_text = row.iloc[0]['For']
+#         elif player.old_response == 0:
+#             player.old_response_text = row.iloc[0]['Neutral']
+#         else:  
+#             player.old_response_text = row.iloc[0]['Against']
+
+#         return dict(
+#             scenario_title = row.iloc[0]['Title'],
+#             scenario_text = row.iloc[0]['Text'],
+#             scenario_against = row.iloc[0]['Against'],
+#             scenario_neutral = row.iloc[0]['Neutral'],
+#             scenario_for = row.iloc[0]['For'],
+#             others_responses = [other.old_response for other in discussion_partners if other.id_in_group != player.id_in_group],
+#             anticonformist = player.participant.anticonformist,
+#             old_response_text = player.old_response_text,
+#         )
+
+#     @staticmethod
+#     def before_next_page(player: Player, timeout_happened):
+#         if timeout_happened:
+#             ### TODO: REVIEW THE RULE #### 
+#             player.forced_response = True # only in the last round, make them inactive
+#             player.new_response = random.choice([-1, 0, 1])
             
-            player.participant.forced_response_counter += 1
-            if player.participant.forced_response_counter > C.MAX_FORCED:
-                player.participant.active = False 
-        if player.round_number == C.NUM_ROUNDS and not player.participant.active:
-            player.participant.complete_presurvey = False
+#             player.participant.forced_response_counter += 1
+#             if player.participant.forced_response_counter > C.MAX_FORCED:
+#                 player.participant.active = False 
+#         if player.round_number == C.NUM_ROUNDS and not player.participant.active:
+#             player.participant.complete_presurvey = False
 
-    @staticmethod
-    def is_displayed(player):
-        print(f"Debug: Bot is {player.participant.code}, on round {player.round_number}")
-        return player.participant.complete_presurvey and not player.participant.single_group
+#     @staticmethod
+#     def is_displayed(player):
+#         print(f"Debug: Bot is {player.participant.code}, on round {player.round_number}")
+#         return player.participant.complete_presurvey and not player.participant.single_group
 
-class FinalRoundWaitPage(WaitPage):
-    @staticmethod
-    def after_all_players_arrive(group: Group):
-        # This code runs once for each group, after all players in the group reach the wait page
-        group_responses = [p.new_response for p in group.get_players()]
-        counts = {}
-        for r in group_responses:
-            counts[r] = counts.get(r, 0) + 1
+# class FinalRoundWaitPage(WaitPage):
+#     @staticmethod
+#     def after_all_players_arrive(group: Group):
+#         # This code runs once for each group, after all players in the group reach the wait page
+#         group_responses = [p.new_response for p in group.get_players()]
+#         counts = {}
+#         for r in group_responses:
+#             counts[r] = counts.get(r, 0) + 1
 
-        # save as JSON string
-        group.group_responses = json.dumps(group_responses)
+#         # save as JSON string
+#         group.group_responses = json.dumps(group_responses)
 
-        max_count = max(counts.values())
-        majority_responses = [val for val, cnt in counts.items() if cnt == max_count]
-        if len(majority_responses) == 1:
-            group.majority_response = majority_responses[0] 
-        else:
-            group.majority_response = 99 # Tie / No majority
+#         max_count = max(counts.values())
+#         majority_responses = [val for val, cnt in counts.items() if cnt == max_count]
+#         if len(majority_responses) == 1:
+#             group.majority_response = majority_responses[0] 
+#         else:
+#             group.majority_response = 99 # Tie / No majority
 
-    @staticmethod
-    def is_displayed(player:Player):
-        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
+#     @staticmethod
+#     def is_displayed(player:Player):
+#         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
     
-class FinalRound(Page):
-    @staticmethod
-    def vars_for_template(player: Player):
-        # Get scenario details
-        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
-        group = player.group
-        group_responses = json.loads(group.group_responses)
+# class FinalRound(Page):
+#     @staticmethod
+#     def vars_for_template(player: Player):
+#         # Get scenario details
+#         row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+#         group = player.group
+#         group_responses = json.loads(group.group_responses)
     
-        return dict(
-            group_responses= group_responses,
-            majority_response= group.majority_response,
-            scenario_against = row.iloc[0]['Against'],
-            scenario_neutral = row.iloc[0]['Neutral'],
-            scenario_for = row.iloc[0]['For']
-        )
+#         return dict(
+#             group_responses= group_responses,
+#             majority_response= group.majority_response,
+#             scenario_against = row.iloc[0]['Against'],
+#             scenario_neutral = row.iloc[0]['Neutral'],
+#             scenario_for = row.iloc[0]['For']
+#         )
     
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
+#     @staticmethod
+#     def is_displayed(player: Player):
+#         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, FinalPage]
+# page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, FinalRoundWaitPage, FinalRound]

@@ -1,0 +1,36 @@
+
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+
+
+{{ block content }}
+<div class="green-box text-center">
+    <h3>🎉 Congratulations! You finished the first part of the study and qualify for the next part.</h3>
+</div>
+
+<br>
+<div class="card bg-mid m-0">
+    <div class="card-header">
+        <h3>Participation in a future study</h3>
+    </div>
+    <div class="card-body">
+        <p>This is the end of the first part of the study. The next part will involve <strong>live group interaction</strong> and we require you to come at the <strong>same time tomorrow</strong>. We will <strong>send you a reminder and the link to the study</strong> after you sign up for participation. Please indicate if you are willing to participate in the next part of this study and we will <strong>send you an invitation via Prolific.</strong></p>
+        {{ formfield 'future_participation' }}
+        If you want to be<strong>contacted via email instead</strong> of your Prolific account, please provide your email below:
+        {{ formfield 'email' }}
+        <div class="text-muted small">We will only use your email address to contact you about the future study. We will not share it with anyone else and will delete it after the study is over.</div>
+    </div>
+
+</div>
+<br>
+    <button id="next-button" class="next-button" type="submit">Next</button>
+
+
+{{ endblock }}
+
+
+{{ block styles }}
+
+{{ endblock}}

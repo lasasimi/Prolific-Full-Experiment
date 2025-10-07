@@ -6,7 +6,6 @@ SESSION_CONFIGS = [
         # NOTE: change to the full experiment
         name='fullexperiment_pilot',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
-        #app_sequence = ['presurvey', 'mock'],  ### --- TESTS FOR LASMI --- ###
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
         # no consent, failed training, faield attention check, and became inactive in mock app
@@ -26,8 +25,34 @@ SESSION_CONFIGS = [
         N08_p25 = 0,
         N08_p50 = 4,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
-    )
+    ),
+    
+    dict(
+        # Testing one part only
+        name='onepart_pilot',
+        app_sequence=['presurvey', 'survey', 'noPay', 'Pay'],
+        num_demo_participants=20, # N08 N04 (must be a multiple of 4)
+        display_name="One part app",
+        # no consent, failed training, faield attention check, and became inactive in mock app
+        returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
+        # screened out, either because answered neutral (not eligible) or not wanting to commit
+        screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
+        # finished presurvey, waited too long, not matched with other participants
+        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
+        # finished presurvey, commitment, AND completed mock app
+        maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
+        
+        # maximum groups in each condition
+        N04_p00 = 0,
+        N04_p25 = 0,
+        N04_p50 = 4,
+        N08_p00 = 0,
+        N08_p25 = 0,
+        N08_p50 = 4,
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
+    ),
 ]
+
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
 # in SESSION_CONFIGS, except those that explicitly override it.
@@ -44,12 +69,11 @@ PARTICIPANT_FIELDS = ['audio_unlocked',
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter',
-                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three',
-                      'last_heartbeat', 'last_active', 'is_dropout']
+                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',
                   'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',
-                  'SCE', 'ids_A', 'ids_F', 'start_time']
+                  'SCE']
 
 ROOMS = [
     dict(name='fullexperiment_p_pilot_20251005b',
@@ -57,15 +81,9 @@ ROOMS = [
          ),
 ]
 
-# ROOMS = [
-#     dict(
-#         name='fullexperiment_20250822',
-#         display_name='fullexperiment_20250822',
-#     ),
-# ]
-
-GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 1 * 60
+GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 5 * 60
 GBAT_INACTIVE_SECONDS_TO_CONFIRM = 15
+
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
 LANGUAGE_CODE = 'en'
