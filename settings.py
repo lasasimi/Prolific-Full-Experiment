@@ -45,15 +45,15 @@ PARTICIPANT_FIELDS = ['audio_unlocked',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter',
                       'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three',
-                      'last_heartbeat', 'last_active']
+                      'last_heartbeat', 'last_active', 'is_dropout']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',
                   'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',
-                  'SCE', 'ids_A', 'ids_F']
+                  'SCE', 'ids_A', 'ids_F', 'start_time']
 
 ROOMS = [
-    dict(name='fullexperiment_p_pilot_20251003',
-         display_name='fullexperiment_p_pilot_20251003',
+    dict(name='fullexperiment_p_pilot_20251005b',
+         display_name='fullexperiment_p_pilot_20251005b',
          ),
 ]
 
@@ -64,7 +64,8 @@ ROOMS = [
 #     ),
 # ]
 
-
+GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 1 * 60
+GBAT_INACTIVE_SECONDS_TO_CONFIRM = 15
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
 LANGUAGE_CODE = 'en'

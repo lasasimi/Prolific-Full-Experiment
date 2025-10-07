@@ -45,6 +45,7 @@ def creating_session(subsession):
     session.N08_p25 = 0
     session.N08_p50 = 0
     session.SCE = session.config.get('SCE')
+    session.start_time = time.time()  # record the session start time
     
     for player in subsession.get_players():
         # Shuffle the scenario order for each player

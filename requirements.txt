@@ -1,5 +1,5 @@
 # oTree-may-not-overwrite-this-file
-otree==5.11.1
+otree==6.0.0b14
 sentry-sdk>=0.7.9
 psycopg2>=2.8.4
 numpy==2.2.4

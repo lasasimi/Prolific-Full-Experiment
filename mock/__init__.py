@@ -21,15 +21,14 @@ class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 20# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
-    LONG_WAIT = 15 #(minutes) NOTE: Set this to 20 minutes
+    LONG_WAIT = 20 #(minutes) NOTE: Set this to 20 minutes
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 10 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
     
-    # REMEMBER TO CHANGE TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN
+    # REMEMBER TO CHANGE SESSION VAR TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN 
     SCENARIOS = open_CSV('presurvey/scenarios_1np.csv')
-    #SCE = 's2_n'
     # NOTE: Max number of groups in each condition is set up in session config
 
  
@@ -49,6 +48,8 @@ def creating_session(subsession):
     session.SCE = session.config.get('SCE')
     session.ids_A = []  # store as list for JSON serialization
     session.ids_F = []
+    session.start_time = time.time()  # record the session start time
+    session.participant.is_dropout = False
 
 def N08_full(subsession):
     session = subsession.session
@@ -65,6 +66,10 @@ def long_wait(player):
 def medium_wait(player):
     participant = player.participant
     return time.time() - participant.wait_page_arrival > C.MEDIUM_WAIT * 60  # in mins
+
+def medium_wait_session(subsession):
+    session = subsession.session
+    return time.time() - session.start_time > C.MEDIUM_WAIT * 60  # in mins
 
 def counters_full(player):
     session = player.subsession.session
@@ -490,7 +495,7 @@ class DiscussionGRPWaitPage(WaitPage):
 class AttentionCheck(Page):
     form_model = 'player'
     form_fields = ['attention_check']
-    timeout_seconds = 5 # NOTE: Set a timeout for the attention check
+    timeout_seconds = 35 # NOTE: Set a timeout for the attention check
     @staticmethod
     def before_next_page(player, timeout_happened):
         if timeout_happened:
@@ -646,12 +651,15 @@ class NudgeTrainingLast(Page):
 
 class Discussion(Page):
     def get_timeout_seconds(player):
-        if player.round_number == 1:
-            return 90  # longer seconds for the first round
-        elif 2<= player.round_number <= 4:
-            return 45
+        if player.participant.is_dropout:
+            return 1  # shorter time for dropouts
         else:
-            return 30
+            if player.round_number == 1:
+                return 90  # longer seconds for the first round
+            elif 2<= player.round_number <= 4:
+                return 45
+            else:
+                return 30
         
     form_model = 'player'
     form_fields = ['new_response']
@@ -686,6 +694,7 @@ class Discussion(Page):
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
+            player.participant.is_dropout = True
             ### TODO: REVIEW THE RULE #### 
             player.forced_response = True # only in the last round, make them inactive
             player.new_response = random.choice([-1, 0, 1])
