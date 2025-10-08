@@ -24,7 +24,7 @@ SESSION_CONFIGS = [
         N08_p00 = 0,
         N08_p25 = 0,
         N08_p50 = 4,
-        SCE = 's2_p', # scenario framing (s2_n or s2_p)
+        SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     
     dict(
@@ -68,20 +68,20 @@ PARTICIPANT_FIELDS = ['audio_unlocked',
                       'treatment', 'scenario_order', 'all_responses', 'wait_page_arrival', 'failed_attention_check', 
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
-                      'eligible_notneutral', 'forced_response_counter',
+                      'eligible_notneutral', 'forced_response_counter', 'away_long',
                       'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',
                   'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',
-                  'SCE']
+                  'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='fullexperiment_p_pilot_20251005b',
-         display_name='fullexperiment_p_pilot_20251005b',
+    dict(name='fullexperiment_n_pilot_20251008',
+         display_name='fullexperiment_n_pilot_20251008',
          ),
 ]
 
-GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 5 * 60
+GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60
 GBAT_INACTIVE_SECONDS_TO_CONFIRM = 15
 
 # ISO-639 code

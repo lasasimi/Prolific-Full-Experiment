@@ -47,11 +47,11 @@
     <div class="custom-title">🕒 Waiting for a Group to Form</div>
 
     <p>You completed Phase 1! You are now waiting to be placed into a group with other participants for the interactive round (Phase 2).</p>
-    <img src="/static/neighbors-new.png" class="img-fluid" alt="Meeting Neighbors Image" style="float:left; margin-right: 10px; max-width: 100%; height: 160px; "> 
-    <p>🗓️ Imagine that <strong>tomorrow</strong>, the next <strong>community meeting is going to happen.</strong>
-        🚶🏻 Now, you are out for a walk. You notice that the neighbors seem to be <strong>talking about the dilemma.</strong></p>
+    <img src="/static/neighbors-new.png" class="img-fluid" alt="Meeting Neighbors Image" style="float:right; margin-left: 15px; max-width: 100%; height: 200px; "> 
+        <p>🗓️ Imagine that <strong>tomorrow</strong>, the next <strong>community meeting is going to happen.</strong>
+        <p>🚶🏻 Now, you are out for a walk. You notice that the neighbors seem to be <strong>talking about the dilemma.</strong></p>
         <p>💭 In the next phase, <strong>you will meet various neighbors and get to hear about what they think.</strong>
-        <strong>🗳️ You could use this to make up your mind on what to choose</strong> in the upcoming meeting.</p>
+        <p>🗳️<strong>You could use this to make up your mind on what to choose</strong> in the upcoming meeting.</p>
         <p>🏁 At the end of the rounds, you will see what your community decides on.</p>  
     <hr>
 
@@ -61,7 +61,7 @@
     <li>The next part of the study involves <strong>real-time interaction</strong> with others indicated by the <b>blinking (Live) 🔴 text.</b></li> 
     </ul>
 
-    <p class="yellow-box" style="text-align: center">After some time of inactivity, you will not be grouped unless you come back to this tab.</strong></p>
+    <p class="yellow-box" style="text-align: center"> <strong>There will be a prompt</strong> to check whether you are active. You must <strong>click the button</strong> to indicate your activity in this waiting page. <strong><span style="color: red;">Inactivity will forfeit all rewards.</strong></span></p>
     <b>Prevent being inactive</b> by 🔄 refreshing the page or playing  this game 👇<br><hr>
     <!-- 👇 Mini Catch-the-Circle Game -->
     <div style="text-align:center;">
@@ -188,7 +188,7 @@
             var SECOND = 1000;
             setInterval(function () {
                 window.location.reload();
-            }, 20 * SECOND);
+            }, 20 * SECOND); // must be higher than GBAT_INACTIVE_SECONDS_TO_CONFIRM = 15 in settings.py or else it will reload before the server confirms inactivity
         }
     </script>
 {% endif %}

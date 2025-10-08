@@ -23,15 +23,19 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     feedback_final = models.LongStringField(label="Please provide your feedback here:",
                                             blank=True)
+    future_participation = models.BooleanField(
+        label="I would like to participate in the next part of this study and receive an invitation via Prolific.",
+        choices=[[True, 'Yes'], [False, 'No']],
+        widget=widgets.RadioSelect,)
 
 
 class Feedback(Page):
     form_model = 'player'
-    form_fields = ['feedback_final']
+    form_fields = ['feedback_final', 'future_participation']
     
     @staticmethod
     def is_displayed(player:Player):
-        return player.participant.complete_presurvey and not player.participant.single_group
+        return player.participant.complete_presurvey and player.participant.single_group and not player.participant.away_long
 
     @staticmethod
     def js_vars(player: Player):
@@ -57,7 +61,7 @@ class MyPage(Page):
             )
         # completed the presurvey, but did not complete the mock app
         elif player.participant.single_group == True:
-            player.participant.reason="You were the only participant in your group and we could not find you other participants to join your group. Thanks for your time!"
+            player.participant.reason="You were the only participant in your group and we could not find you other participants to join your group. You will receive your payment for waiting. Thanks for your time!"
             return dict(
                 pay=player.subsession.session.config['waitingbonuslink']
             )

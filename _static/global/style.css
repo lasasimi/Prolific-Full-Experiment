@@ -340,7 +340,6 @@ table {
 .wait-container {    /* adjust width as needed */
     width: 80%;           /* responsive fallback */
     margin: 20px auto;
-    font-family: Arial, sans-serif;
     background-color: #f8f8f8;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);

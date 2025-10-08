@@ -44,6 +44,8 @@ class ExitPage(Page):
         # From mock app
         elif not player.participant.active:
             player.participant.reason="you have been timed out for inactivity."
+        elif player.participant.away_long:
+            player.participant.reason="you were away for too long during the the wait."
         return dict(
                 nopay=player.subsession.session.config['returnlink'],
             )
@@ -52,7 +54,7 @@ class ExitPage(Page):
     def is_displayed(player: Player):
         # if they did not complete presurvey, they did not get payment either because they were not active in the mock app, or did not pass the attention/training(complete_presurvey), or did not give consent
         if not player.participant.complete_presurvey:
-            return not player.participant.active or not player.participant.gives_consent or player.participant.failed_attention_check or player.participant.training_attempt == 0
+            return not player.participant.active or not player.participant.gives_consent or player.participant.failed_attention_check or player.participant.training_attempt == 0 
         else:
-            return not player.participant.active
+            return not player.participant.active or player.participant.away_long
 page_sequence = [ExitPage]

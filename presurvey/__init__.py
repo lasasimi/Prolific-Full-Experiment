@@ -119,6 +119,17 @@ class Player(BasePlayer):
                                                 [4, 'wave crashes'], # correct answer
                                                 [5, 'bird chirps'],
                                                 [99, '🚫 no sound, I couldn\'t hear the audio']],)
+    audio_answer_image = models.IntegerField(label="What image represents the sound that you hear?",
+                                             choices=[    [1,'Option 1'],
+                                                            [2,'Option 2'],
+                                                            [3,'Option 3'],
+                                                            [4,'Option 4'],
+                                                            [5,'Option 5'],
+                                                            [6,'Option 6'],
+                                                            [7,'Option 7'],
+                                                            [8,'Option 8'],
+                                                            [9,'Option 9'],
+                                                        [99, '🚫 no sound, I couldn\'t hear the audio']],)
     # Scenario response
     response = models.IntegerField(label="What do you think the community should do?",
                                    choices=[[-1, 'Against'],
@@ -218,19 +229,19 @@ class Introduction(Page):
  
 class AudioCheck(Page):
     form_model = 'player'
-    form_fields = ['audio_answer', 'audio_unlocked']
+    form_fields = ['audio_answer', 'audio_answer_image', 'audio_unlocked']
 
     @staticmethod
     def before_next_page(player, timeout_happened):
         player.participant.audio_unlocked = player.audio_unlocked
-        if player.audio_answer !=4: # correct answer is 'wave' which is coded as 4 OR they don't have audio
+        if player.audio_answer !=4 or player.audio_answer_image !=5: # incorrect answer
             player.participant.gives_consent = False
             player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
-    
+
     @staticmethod
     def vars_for_template(player:Player):
         return dict(
-            mp3_url='presurvey/static/test.mp3'
+            mp3_url='presurvey/static/test.mp3',
         )
 
     @staticmethod

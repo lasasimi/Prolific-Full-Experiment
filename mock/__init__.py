@@ -6,7 +6,7 @@ import random
 import pandas as pd # type: ignore
 
 doc = """
-Your app description
+Grouping participants with different group sizes and anticonformists to participate in a synchronous discussion task.
 """
 def open_CSV(filename):
     """
@@ -20,15 +20,19 @@ def open_CSV(filename):
 class C(BaseConstants):
     NAME_IN_URL = 'mock'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 20# NOTE: REPLACE WITH 20 FOR FULL EXPERIMENT
-    LONG_WAIT = 20 #(minutes) NOTE: Set this to 20 minutes
+
+    # NOTE: Replace with 20 for real experiment
+    NUM_ROUNDS = 20 
+    # NOTE: Set this to 20 minutes
+    LONG_WAIT = 5 #(minutes)
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT =5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    
+    # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
-    
-    # REMEMBER TO CHANGE SESSION VAR TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN 
     SCENARIOS = open_CSV('presurvey/scenarios_1np.csv')
+    
     # NOTE: Max number of groups in each condition is set up in session config
 
  
@@ -47,6 +51,8 @@ def creating_session(subsession):
     session.MAX_N08_p50 = session.config.get('N08_p50', 0)
     session.SCE = session.config.get('SCE')
     session.start_time = time.time()  # record the session start time
+    for player in subsession.get_players():
+        player.participant.away_long = False
 
 def N08_full(subsession):
     session = subsession.session
@@ -58,11 +64,16 @@ def N08_full(subsession):
 
 def long_wait(player):
     participant = player.participant
-    return time.time() - participant.wait_page_arrival > C.LONG_WAIT * 60  # in mins
+    return time.time() - participant.wait_page_arrival > C.LONG_WAIT * 60 
+
+def long_away(player):
+    participant = player.participant
+    return time.time() - participant.wait_page_arrival > (C.LONG_WAIT * 60) + 10
+
 
 def medium_wait(player):
     participant = player.participant
-    return time.time() - participant.wait_page_arrival > C.MEDIUM_WAIT * 60  # in mins
+    return time.time() - participant.wait_page_arrival > C.MEDIUM_WAIT * 60 
 
 def counters_full(player):
     session = player.subsession.session
@@ -292,8 +303,10 @@ class GroupSizeWaitPage(WaitPage):
         for p in group_players:
             p.participant.group_size = group_size
             p.participant.is_group_single = is_group_single
-            if group_size == 'single':
-                p.participant.single_group = True  # they go to the pay up, but no bonus payment 
+            if group_size == 'single' and not long_away(p):
+                p.participant.single_group = True  # they go to the pay app, but no bonus payment 
+            if group_size == 'single' and long_away(p):
+                p.participant.away_long = True  # they go to the noPay app, no payment
 
         print(f'Debug counter: session.N04_p00:{session.N04_p00}, session.N04_p25:{session.N04_p25}, session.N04_p50:{session.N04_p50}, session.N08_p00:{session.N08_p00}, session.N08_p25:{session.N08_p25}, session.N08_p50:{session.N08_p50}')
     @staticmethod
@@ -398,7 +411,7 @@ class DiscussionGRPWaitPage(WaitPage):
 
     @staticmethod
     def is_displayed(player):
-        return player.participant.complete_presurvey and not player.participant.single_group
+        return player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
     @staticmethod
     def vars_for_template(player):
         return dict(
@@ -430,7 +443,7 @@ class Phase3(Page):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group    
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 
 class Nudge(Page):
@@ -465,7 +478,7 @@ class Nudge(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 class NudgeTraining(Page):
     form_model = 'player'
@@ -511,7 +524,7 @@ class NudgeTraining(Page):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 class NudgeTrainingLast(Page):
     form_model = 'player'
@@ -557,7 +570,7 @@ class NudgeTrainingLast(Page):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group  
+        return player.round_number == 1 and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 
 
@@ -619,7 +632,7 @@ class Discussion(Page):
     @staticmethod
     def is_displayed(player):
         print(f"Debug: Bot is {player.participant.code}, on round {player.round_number}")
-        return player.participant.complete_presurvey and not player.participant.single_group
+        return player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 class FinalRoundWaitPage(WaitPage):
     @staticmethod
@@ -642,7 +655,7 @@ class FinalRoundWaitPage(WaitPage):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
+        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
     
 class FinalRound(Page):
     @staticmethod
@@ -662,6 +675,6 @@ class FinalRound(Page):
     
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group
+        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
