@@ -27,30 +27,30 @@ SESSION_CONFIGS = [
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     
-    dict(
-        # Testing one part only
-        name='onepart_pilot',
-        app_sequence=['presurvey', 'survey', 'noPay', 'Pay'],
-        num_demo_participants=20, # N08 N04 (must be a multiple of 4)
-        display_name="One part app",
-        # no consent, failed training, faield attention check, and became inactive in mock app
-        returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
-        # screened out, either because answered neutral (not eligible) or not wanting to commit
-        screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
-        # finished presurvey, waited too long, not matched with other participants
-        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
-        # finished presurvey, commitment, AND completed mock app
-        maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
+    # dict(
+    #     # Testing one part only
+    #     name='onepart_pilot',
+    #     app_sequence=['presurvey', 'survey', 'noPay', 'Pay'],
+    #     num_demo_participants=20, # N08 N04 (must be a multiple of 4)
+    #     display_name="One part app",
+    #     # no consent, failed training, faield attention check, and became inactive in mock app
+    #     returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
+    #     # screened out, either because answered neutral (not eligible) or not wanting to commit
+    #     screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
+    #     # finished presurvey, waited too long, not matched with other participants
+    #     waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
+    #     # finished presurvey, commitment, AND completed mock app
+    #     maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
-        # maximum groups in each condition
-        N04_p00 = 0,
-        N04_p25 = 0,
-        N04_p50 = 4,
-        N08_p00 = 0,
-        N08_p25 = 0,
-        N08_p50 = 4,
-        SCE = 's2_p', # scenario framing (s2_n or s2_p)
-    ),
+    #     # maximum groups in each condition
+    #     N04_p00 = 0,
+    #     N04_p25 = 0,
+    #     N04_p50 = 4,
+    #     N08_p00 = 0,
+    #     N08_p25 = 0,
+    #     N08_p50 = 4,
+    #     SCE = 's2_p', # scenario framing (s2_n or s2_p)
+    # ),
 ]
 
 

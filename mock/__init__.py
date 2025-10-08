@@ -24,7 +24,7 @@ class C(BaseConstants):
     # NOTE: Replace with 20 for real experiment
     NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
-    LONG_WAIT = 5 #(minutes)
+    LONG_WAIT = 20 #(minutes)
     # NOTE: Set this to 9.5 minutes
     MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
     
@@ -68,7 +68,7 @@ def long_wait(player):
 
 def long_away(player):
     participant = player.participant
-    return time.time() - participant.wait_page_arrival > (C.LONG_WAIT * 60) + 10
+    return time.time() - participant.wait_page_arrival > (C.LONG_WAIT * 60) + 15
 
 
 def medium_wait(player):
@@ -102,19 +102,6 @@ def group_by_arrival_time_method(subsession, waiting_players):
             elif response[p.participant.code][sce] == 1:
                 scenario_counts[sce]['F'].append(p)
     print(f"Debug: Scenario counts before grouping: {scenario_counts}")
-
-    # Check if counters are full
-    if all(counters_full(p) for p in waiting_players):
-        print("All counters are full. Adding all waiting players to long_waiting.")
-        long_waiting = waiting_players  # Add all players to long_waiting
-    else:
-        # players waiting for more than threshold need to be let go
-        long_waiting = [p for p in waiting_players if long_wait(p) or counters_full(p)]
-
-    if len(long_waiting) >= 1:
-        for player in long_waiting:
-            print('Ready to let participant go, waiting for too long')
-            return [player]
 
     group = []
 
@@ -155,7 +142,20 @@ def group_by_arrival_time_method(subsession, waiting_players):
                     p.participant.vars['scenario'] = sce
                     p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
                 return group
+            
+    # Check if counters are full
+    if all(counters_full(p) for p in waiting_players):
+        print("All counters are full. Adding all waiting players to long_waiting.")
+        long_waiting = waiting_players  # Add all players to long_waiting
+    else:
+        # players waiting for more than threshold need to be let go
+        long_waiting = [p for p in waiting_players if long_wait(p) or counters_full(p)]
 
+    if len(long_waiting) >= 1:
+        for player in long_waiting:
+            print('Ready to let participant go, waiting for too long')
+            return [player]
+        
     if not group:
         print('Not enough players yet to create a group')
         return []
