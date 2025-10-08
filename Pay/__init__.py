@@ -26,6 +26,8 @@ class Player(BasePlayer):
     future_participation = models.BooleanField(
         label="I would like to participate in the next part of this study and receive an invitation via Prolific.",
         choices=[[True, 'Yes'], [False, 'No']],
+        blank=False,
+        initial=None,
         widget=widgets.RadioSelect,)
 
 

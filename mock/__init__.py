@@ -68,7 +68,7 @@ def long_wait(player):
 
 def long_away(player):
     participant = player.participant
-    return time.time() - participant.wait_page_arrival > (C.LONG_WAIT * 60) + 15
+    return time.time() - participant.wait_page_arrival > (C.LONG_WAIT * 60) + 35
 
 
 def medium_wait(player):
