@@ -6,11 +6,6 @@
 
 {{ block content }}
 
-{{ if player.participant.active == 0 }}
-<div class="inactive_box">
-    <h1 class="inactive_text">We're sorry, you cannot continue with the study as you were inactive for too long.</h1>
-</div>
-{{ endif }}
 
 <div class="wait-container">
 
@@ -19,6 +14,7 @@
 
     
 {{ if player.round_number > 1 }}
+{% if not control %}
     {% if anticonformist %}
         <div class="nudge-anti-card">
         <h2>💡 Tip: Stand Out</h2> A variety of opinions can be beneficial. You could choose the options that are different from the majority.
@@ -30,6 +26,7 @@
         </div>        
 
     {% endif %}
+{% endif %}
 {{ endif }}
     <p style="margin-top: 20px; background-color: #d4edda; padding: 12px; border-left: 5px solid #28a745; border-radius: 4px;">
         ✅ This phase requires real-time responses. Stay at this tab/window and attentive. We’ll start once everyone is ready.

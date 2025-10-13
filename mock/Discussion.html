@@ -8,9 +8,14 @@ What others are thinking
 
 {{ if player.participant.active == 0 }}
 <div class="inactive_box">
-    <h1 class="inactive_text">We're sorry, you cannot continue with the study as you were inactive for too long.</h1>
+    <h1 class="inactive_text">Please click the button to indicate that you are active.<br><br>
+    <div class="confirm_activity">
+      <button class="btn button2" type="button" onclick="markActive()">I am active</button></h1>
+    </div>
 </div>
+
 {{ endif }}
+{% if not control %}
     {% if anticonformist %}
     <div class="nudge-anti-card sticky-top">
       <h2>💡 Tip: Stand Out</h2> A variety of opinions can be beneficial. You could choose the options that are different from the majority.
@@ -18,10 +23,11 @@ What others are thinking
     
     {% else %}
     <div class="nudge-confo-card sticky-top">
-        <h2>💡 Tip: Team Up</h2>  Neighborhoods work best when we stick together. You could choose the option most neighbors prefer.
+        <h2>💡 Tip: Team Up</h2> Neighborhoods work best when we stick together. You could choose the option most neighbors prefer.
     </div>        
 
     {% endif %}
+{% endif %}
     <br>
 <div class="card bg-mid m-0">
 <h4 class="card-header">
@@ -87,7 +93,21 @@ What others are thinking
 </div>
 
 <br>
-<br>
+<div class="round-progress"
+     data-current="{{ player.round_number }}"
+     data-total="{{ C.NUM_ROUNDS }}"
+     role="progressbar"
+     aria-valuemin="1"
+     aria-valuenow="{{ player.round_number }}"
+     aria-valuemax="{{ C.NUM_ROUNDS }}"
+     aria-label="Round progress">
+  <div class="round-progress__label" id="roundProgressLabel">
+    Round {{ player.round_number }} of {{ C.NUM_ROUNDS }}
+  </div>
+  <div class="round-progress__track">
+    <div class="round-progress__bar" id="roundProgressBar"></div>
+  </div>
+</div>
 
 <script>
   function selectAnswer(button, value) {
@@ -102,6 +122,20 @@ What others are thinking
       // Submit the form
       button.closest('form').submit();
   }
+
+// function when the participant clicks "I am active" button
+  function markActive() {
+  // Send a live message to the server to set participant.active = 1
+  if (typeof liveSend === 'function') {
+    liveSend({ confirm_activity: true });
+  }
+  // Hide the overlay immediately on the client
+  const overlay = document.querySelector('.inactive_box');
+  if (overlay) overlay.style.display = 'none';
+  // Allow page scrolling again
+  document.body.style.overflow = '';
+}
+
 </script>
 {% if participant.audio_unlocked %}
 <script>
@@ -120,6 +154,18 @@ const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
           audioAway.play().catch(()=>{});
       }
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+  const el = document.querySelector('.round-progress');
+  if (!el) return;
+  const cur = Number(el.dataset.current || 0);
+  const tot = Math.max(1, Number(el.dataset.total || 1));
+  const pct = Math.max(0, Math.min(100, Math.round((cur / tot) * 100)));
+  const bar = document.getElementById('roundProgressBar');
+  const lab = document.getElementById('roundProgressLabel');
+  if (bar) bar.style.width = pct + '%';
+  if (lab) lab.textContent = `Round ${cur} of ${tot}`;
+});
 </script>
 {% endif %}
 
@@ -158,8 +204,40 @@ const audioAway  = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
   .sticky-top {
   position: sticky;
   top: 0;
-  z-index: 2000;
-}
+  z-index: 2000;}
+
+   /* Reserve space so the fixed bar doesn't cover content */
+  body { padding-bottom: 64px; }
+
+  .round-progress {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 2500;
+    background: rgba(255, 254, 254, 0.96);
+    box-shadow: 0 -2px 10px rgba(0,0,0,.06);
+    padding: 10px 16px;
+  }
+  .round-progress__label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+    text-align: center;
+  }
+  .round-progress__track {
+    width: 100%;
+    height: 10px;
+    background: #f0f0f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .round-progress__bar {
+    width: 0%;              /* set via JS */
+    height: 100%;
+    background: linear-gradient(90deg, #008CBA, #21c7e8);
+    border-radius: 999px;
+    transition: width .25s ease;
+  }
 </style>
 {% if player.participant.active == 0 %}
 <style>

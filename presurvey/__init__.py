@@ -44,6 +44,8 @@ def creating_session(subsession):
     session.N08_p00 = 0
     session.N08_p25 = 0
     session.N08_p50 = 0
+    session.N08_p99 = 0
+    session.N04_p99 = 0
     session.SCE = session.config.get('SCE')
     session.start_time = time.time()  # record the session start time
     
@@ -495,10 +497,10 @@ class Commitment(Page):
         if not eligible, plan accordingly. 
         """
 # # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-# page_sequence = [Introduction, AudioCheck,
-#                 Scenario, Commitment]
+page_sequence = [Introduction, AudioCheck,
+                Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-                 Scenario, Commitment]
+# page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+#                  Scenario, Commitment]

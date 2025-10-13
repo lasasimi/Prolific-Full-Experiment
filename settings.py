@@ -20,10 +20,12 @@ SESSION_CONFIGS = [
         # maximum groups in each condition
         N04_p00 = 0,
         N04_p25 = 0,
-        N04_p50 = 4,
+        N04_p50 = 0,
         N08_p00 = 0,
         N08_p25 = 0,
-        N08_p50 = 4,
+        N08_p50 = 0,
+        N08_p99 = 4,
+        N04_p99 = 4,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     
@@ -69,10 +71,10 @@ PARTICIPANT_FIELDS = ['audio_unlocked',
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter', 'away_long',
-                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three']
+                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three', 'last_active', 'forced_response_remaining', 'control']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
-                  'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50',
-                  'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50',
+                  'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50', 'N08_p99','N04_p99',
+                  'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50','MAX_N08_p99', 'MAX_N04_p99',
                   'SCE', 'start_time']
 
 ROOMS = [
