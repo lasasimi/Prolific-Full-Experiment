@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         # name='testing_skipping_pages',
         # NOTE: change to the full experiment
-        name='fullexperiment_p50_20251014',
+        name='p50_fullexperiment_20251014',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",

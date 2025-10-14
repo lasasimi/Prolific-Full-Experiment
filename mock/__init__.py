@@ -38,7 +38,7 @@ class C(BaseConstants):
 
     # Custom admin view fields
     ADMIN_VIEW_FIELDS = {
-        'player': ['round_number', 'scenario', 'old_response', 'new_response', 'forced_response', 'prev_majority', 'neighbor_responses'],
+        'player': ['round_number', 'scenario', 'old_response', 'new_response', 'forced_response', 'prev_majority', 'neighbor_responses', 'discussion_grp'],
         'group': ['group_size', 'is_group_single', 'beta_50', 'anti_prop', 'group_responses', 'majority_response'],
     }
  
