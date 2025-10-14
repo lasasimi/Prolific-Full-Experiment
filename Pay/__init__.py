@@ -36,8 +36,13 @@ class Feedback(Page):
     form_fields = ['feedback_final', 'future_participation']
     
     @staticmethod
-    def is_displayed(player:Player):
-        return player.participant.complete_presurvey and player.participant.single_group and not player.participant.away_long
+    def is_displayed(player: Player):
+        # if they were not eligible, we need to check if they were active and did not fail the attention check
+        if not player.participant.eligible_notneutral: # those who were not eligible
+            return player.participant.active and not player.participant.failed_attention_check 
+        else:
+            return not player.participant.failed_attention_check and (player.participant.single_group or player.participant.active)
+        
 
     @staticmethod
     def js_vars(player: Player):

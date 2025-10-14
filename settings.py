@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         # name='testing_skipping_pages',
         # NOTE: change to the full experiment
-        name='fullexperiment_pilot',
+        name='fullexperiment_p50_20251014',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
@@ -19,40 +19,15 @@ SESSION_CONFIGS = [
         
         # maximum groups in each condition
         N04_p00 = 0,
-        N04_p25 = 0,
-        N04_p50 = 0,
         N08_p00 = 0,
+        N04_p25 = 0,
         N08_p25 = 0,
-        N08_p50 = 0,
-        N08_p99 = 4,
-        N04_p99 = 4,
+        N04_p50 = 10,
+        N08_p50 = 10,
+        N08_p99 = 0,
+        N04_p99 = 0,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
-    
-    # dict(
-    #     # Testing one part only
-    #     name='onepart_pilot',
-    #     app_sequence=['presurvey', 'survey', 'noPay', 'Pay'],
-    #     num_demo_participants=20, # N08 N04 (must be a multiple of 4)
-    #     display_name="One part app",
-    #     # no consent, failed training, faield attention check, and became inactive in mock app
-    #     returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
-    #     # screened out, either because answered neutral (not eligible) or not wanting to commit
-    #     screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
-    #     # finished presurvey, waited too long, not matched with other participants
-    #     waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
-    #     # finished presurvey, commitment, AND completed mock app
-    #     maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
-        
-    #     # maximum groups in each condition
-    #     N04_p00 = 0,
-    #     N04_p25 = 0,
-    #     N04_p50 = 4,
-    #     N08_p00 = 0,
-    #     N08_p25 = 0,
-    #     N08_p50 = 4,
-    #     SCE = 's2_p', # scenario framing (s2_n or s2_p)
-    # ),
 ]
 
 
@@ -71,15 +46,15 @@ PARTICIPANT_FIELDS = ['audio_unlocked',
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter', 'away_long',
-                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three', 'last_active', 'forced_response_remaining', 'control']
+                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three', 'last_active', 'forced_response_remaining', 'control', 'too_many_forced']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50', 'N08_p99','N04_p99',
                   'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50','MAX_N08_p99', 'MAX_N04_p99',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='fullexperiment_n_pilot_20251008',
-         display_name='fullexperiment_n_pilot_20251008',
+    dict(name='fullexperiment_np_20251014', 
+         display_name='fullexperiment_np_20251014',
          ),
 ]
 

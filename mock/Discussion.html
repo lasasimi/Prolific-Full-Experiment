@@ -8,10 +8,17 @@ What others are thinking
 
 {{ if player.participant.active == 0 }}
 <div class="inactive_box">
-    <h1 class="inactive_text">Please click the button to indicate that you are active.<br><br>
+  {% if not too_many_forced %}
+    <h2 class="inactive_text">Please click the button to indicate that you are active.<br><br>
+    If you do not respond for too many times, you will forfeit all payment.<br><br>
+
     <div class="confirm_activity">
-      <button class="btn button2" type="button" onclick="markActive()">I am active</button></h1>
+      <button class="btn button2" type="button" onclick="markActive()">I am active</button></h2>
     </div>
+  {% else %}
+    <h2 class="inactive_text">Sorry, you cannot continue. You did not respond for too many times. <br><br>
+    As mentioned before, this will forfeit all payment.</h2>
+  {% endif %}
 </div>
 
 {{ endif }}

@@ -26,14 +26,17 @@ class C(BaseConstants):
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20 #(minutes)
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 2 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
-    MAX_FORCED = 3 #MAX NUMBER OF FORCED RESPONSES 
+    MAX_WARNING = 3 # Max number of forced responses before the inactivity warning shows up
+    MAX_FORCED = NUM_ROUNDS // 2  # Max number of forced responses to not get paid
     SCENARIOS = open_CSV('presurvey/scenarios_1np.csv')
     
     # NOTE: Max number of groups in each condition is set up in session config
+
+    # Custom admin view fields
     ADMIN_VIEW_FIELDS = {
         'player': ['round_number', 'scenario', 'old_response', 'new_response', 'forced_response', 'prev_majority', 'neighbor_responses'],
         'group': ['group_size', 'is_group_single', 'beta_50', 'anti_prop', 'group_responses', 'majority_response'],
@@ -57,10 +60,14 @@ def creating_session(subsession):
     session.MAX_N04_p99 = session.config.get('N04_p99', 0)
     session.SCE = session.config.get('SCE')
     session.start_time = time.time()  # record the session start time
+
+    # initialize the counters
     for player in subsession.get_players():
         player.participant.away_long = False
-        player.participant.forced_response_remaining = C.MAX_FORCED
+        player.participant.forced_response_remaining = C.MAX_WARNING
         player.participant.control = False
+        player.participant.too_many_forced = False
+        player.participant.forced_response_counter = 0
 
 def N08_full(subsession):
     session = subsession.session
@@ -382,9 +389,10 @@ class DiscussionGRPWaitPage(WaitPage):
             else:
                 anticonformists = []
             # Assign anticonformists to their participant level variable
-            for player in group.get_players():
-                if player.participant.code in anticonformists_codes:
-                    player.participant.anticonformist = True 
+            if n_anti != 99:
+                for player in group.get_players():
+                    if player.participant.code in anticonformists_codes:
+                        player.participant.anticonformist = True 
 
             for player in group.get_players():
                 scenario_position = player.participant.all_responses[player.participant.scenario]
@@ -471,7 +479,6 @@ class AttentionCheck(Page):
         return player.round_number == 1 and player.participant.complete_presurvey and player.participant.single_group
 
 class Phase3(Page):
-    #timeout_seconds =  3600
     timeout_seconds = 45 # NOTE: change back to 45 for real experiment
     
     @staticmethod
@@ -481,7 +488,6 @@ class Phase3(Page):
 
 class Nudge(Page):
     timeout_seconds = 90 # NOTE: change back to 90 for real experiment
-    #timeout_seconds = 3600
     form_model = 'player'
     form_fields = ['nudge_training']
     
@@ -516,7 +522,6 @@ class Nudge(Page):
 class NudgeTraining(Page):
     form_model = 'player'
     form_fields = ['nudge_training_two']
-    #timeout_seconds = 3600
     timeout_seconds = 90 # NOTE: change back to 90 for real experiment
 
     @staticmethod
@@ -562,7 +567,6 @@ class NudgeTraining(Page):
 class NudgeTrainingLast(Page):
     form_model = 'player'
     form_fields = ['nudge_training_three']
-    #timeout_seconds = 3600
     timeout_seconds = 90 # NOTE: change back to 90 for real experiment
 
     @staticmethod
@@ -646,6 +650,7 @@ class Discussion(Page):
             old_response_text = player.old_response_text,
             round_number = player.round_number,
             control = player.participant.control,
+            too_many_forced = player.participant.too_many_forced,
         )
 
     @staticmethod
@@ -653,6 +658,20 @@ class Discussion(Page):
         discussion_partners = [other for other in player.get_others_in_group() if other.participant.code in player.participant.discussion_grp]
         neighbor_responses = [other.old_response for other in discussion_partners if other.id_in_group != player.id_in_group]
 
+        # calculate majority from the discussion partners
+        counts = {}
+        for r in neighbor_responses:
+            counts[r] = counts.get(r, 0) + 1
+        max_count = max(counts.values())
+        majority_responses = [val for val, cnt in counts.items() if cnt == max_count]
+        
+        # save majority response to player variable
+        if len(majority_responses) == 1:
+            prev_majority = majority_responses[0]
+        else:
+            prev_majority = 99 # Tie / No majority
+        player.prev_majority = prev_majority
+        
         # save neighbor responses as JSON string, but don't use to calculate majority
         player.neighbor_responses = json.dumps(neighbor_responses)
 
@@ -660,21 +679,6 @@ class Discussion(Page):
             ### TODO: REVIEW THE RULE #### 
             #player.forced_response = True # only in the last round, make them inactive
             #player.new_response = random.choice([-1, 0, 1])
-            
-            # calculate majority from the discussion partners
-            counts = {}
-            for r in neighbor_responses:
-                counts[r] = counts.get(r, 0) + 1
-            max_count = max(counts.values())
-            majority_responses = [val for val, cnt in counts.items() if cnt == max_count]
-            
-            # save majority response to player variable
-            if len(majority_responses) == 1:
-                prev_majority = majority_responses[0]
-            else:
-                prev_majority = 99 # Tie / No majority
-            player.prev_majority = prev_majority
-            
             if not player.participant.control:
                 # logic based on anticonformist or conformist
                 if player.participant.anticonformist:
@@ -704,11 +708,15 @@ class Discussion(Page):
             if player.participant.forced_response_remaining == 0:
                 player.participant.active = False 
                 # reset for next round
-                player.participant.forced_response_remaining = C.MAX_FORCED 
+                player.participant.forced_response_remaining = C.MAX_WARNING
         
+        if player.participant.forced_response_counter >= C.MAX_FORCED:
+            player.participant.too_many_forced = True
+
         # if inactive in the last round, redirect to noPay app
-        if player.round_number == C.NUM_ROUNDS and not player.participant.active:
-            player.participant.complete_presurvey = False
+        if player.round_number == C.NUM_ROUNDS:
+            if player.participant.too_many_forced or not player.participant.active:
+                player.participant.complete_presurvey = False
 
     @staticmethod
     def is_displayed(player):
@@ -746,6 +754,7 @@ class FinalRoundWaitPage(WaitPage):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
     
 class FinalRound(Page):
+    timeout_seconds = 90
     @staticmethod
     def vars_for_template(player: Player):
         # Get scenario details
