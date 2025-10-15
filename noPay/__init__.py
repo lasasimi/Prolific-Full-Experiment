@@ -35,10 +35,10 @@ class ExitPage(Page):
     @staticmethod
     def js_vars(player: Player):
         # From presurvey app
-        if player.participant.failed_attention_check:
-            player.participant.reason="you did not pass the attention check."
-        elif player.participant.training_attempt == 0:
+        if player.participant.training_attempt == 0:
             player.participant.reason="you did not pass the Training phase by answering incorrectly for too many times."
+        elif player.participant.failed_attention_check:
+            player.participant.reason="you did not pass the attention check."
         elif not player.participant.gives_consent:
             player.participant.reason="you did not consent to participate or could not enable the audio output."
         # From mock app
