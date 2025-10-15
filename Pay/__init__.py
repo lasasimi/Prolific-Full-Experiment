@@ -38,15 +38,20 @@ class Feedback(Page):
     @staticmethod
     def is_displayed(player: Player):
         # if they were not eligible, we need to check if they were active and did not fail the attention check
-        if not player.participant.eligible_notneutral: # those who were not eligible
-            return player.participant.active and not player.participant.failed_attention_check 
+        if not player.participant.eligible_notneutral or player.participant.failed_commitment: # those who were not eligible or failed commitment are not shown this page
+            return False
         else:
             return not player.participant.failed_attention_check and (player.participant.single_group or player.participant.active)
         
 
     @staticmethod
     def js_vars(player: Player):
-       return dict(pay=player.subsession.session.config['maxbonuslink'])
+       if player.participant.complete_presurvey and not player.participant.single_group:
+           return dict(pay=player.subsession.session.config['maxbonuslink'])
+       elif player.participant.complete_presurvey and player.participant.single_group:
+           return dict(pay=player.subsession.session.config['waitingbonuslink'])
+       elif not player.participant.complete_presurvey:
+           return dict(pay=player.subsession.session.config['screenedoutlink'])
        
 # PAGES
 class MyPage(Page):

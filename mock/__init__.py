@@ -24,7 +24,7 @@ class C(BaseConstants):
     # NOTE: Replace with 20 for real experiment
     NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
-    LONG_WAIT = 20 #(minutes)
+    LONG_WAIT = 20  #(minutes)
     # NOTE: Set this to 9.5 minutes
     MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
@@ -136,14 +136,14 @@ def group_by_arrival_time_method(subsession, waiting_players):
     if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
         sce = session.SCE
-        if len(waiting_players) == C.N_TEST/2:
+        if len(waiting_players) >= C.N_TEST//2:
             print('Creating a group of 4')
             print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))
 
             if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
-                group = scenario_counts[sce]['A']
+                group = random.sample(scenario_counts[sce]['A'], k=C.N_TEST//2)
             elif len(scenario_counts[sce]['F']) >= C.N_TEST//2:
-                group = scenario_counts[sce]['F']
+                group = random.sample(scenario_counts[sce]['F'], k=C.N_TEST//2)
             
                 print("About to assign scenarios to group:", group)
                 for p in group:

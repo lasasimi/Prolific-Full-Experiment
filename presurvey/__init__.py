@@ -248,7 +248,7 @@ class AudioCheck(Page):
 
     @staticmethod
     def is_displayed(player:Player):
-        return player.round_number == 1 
+        return player.round_number == 1 and player.participant.gives_consent
     ## Give option to return the submission if the audio check is failed
 
    
