@@ -7,22 +7,22 @@ class PlayerBot(Bot):
     def play_round(self):
         yield Introduction, dict(
             gives_consent=True)
-        # yield Demographics, dict(
-        #     age=34,
-        #     gender="Woman",
-        #     education_lvl='Less than high school', 
-        #     neighborhood_type='Urban')
-        # yield NeighborhoodInstruction
-        # # This is because the submit button is not a default submit button
-        # yield Submission(Training, 
-        #                  {'test_scenario': '-1'}, 
-        #                  check_html=False)    
-        # yield TrainingNeighbor_1, dict(
-        #     dilemmatopic=1,
-        #     majority=1,
-        #     howmanyneighbors=1)
+        yield Demographics, dict(
+            age=34,
+            gender="Woman",
+            education_lvl='Less than high school', 
+            neighborhood_type='Urban')
+        yield NeighborhoodInstruction
+        # This is because the submit button is not a default submit button
+        yield Submission(Training, 
+                         {'test_scenario': '-1'}, 
+                         check_html=False)    
+        yield TrainingNeighbor_1, dict(
+            dilemmatopic=1,
+            majority=1,
+            howmanyneighbors=1)
 
-        # yield ExperimentInstruction
+        yield ExperimentInstruction
         yield AudioCheck, dict(
             audio_answer=4,
             audio_answer_image=5,

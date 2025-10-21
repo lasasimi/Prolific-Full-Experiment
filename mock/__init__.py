@@ -287,7 +287,7 @@ class GroupSizeWaitPage(WaitPage):
         if len(group_players) == C.N_TEST:
             group_size = 'N08'
             is_group_single = False
-        elif len(group_players) == C.N_TEST/2:
+        elif len(group_players) == C.N_TEST//2:
             group_size = 'N04'
             is_group_single = False
         else:
@@ -296,8 +296,8 @@ class GroupSizeWaitPage(WaitPage):
         # add checking if prefer p50 from the participant variable
         for p in group_players:
             prefer_values = [p.participant.prefer_p50 for p in group_players]
-        prefer_p50 = all(prefer_values)
-        print(f'Debug: prefer_p50 values in group: {prefer_values}, all prefer_p50: {prefer_p50}')
+        prefer_p50 = any(prefer_values)
+        print(f'Debug: prefer_p50 values in group: {prefer_values}, any prefer_p50: {prefer_p50}')
 
         # Save to the group model (for round 1 only)
         group.group_size = group_size
