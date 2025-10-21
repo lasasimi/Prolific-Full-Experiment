@@ -25,8 +25,8 @@ class C(BaseConstants):
     NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
-    # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 9.5 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    # NOTE: Set this to 10 minutes
+    MEDIUM_WAIT = 15 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
@@ -474,7 +474,7 @@ class AttentionCheck(Page):
             if player.attention_check == False: # wrong answer
                player.participant.failed_attention_check = True 
                player.participant.active = False
-            else: # correct answer -- still redirect to noPay 
+            else: # correct answer
                 player.participant.active = True
 
     @staticmethod
