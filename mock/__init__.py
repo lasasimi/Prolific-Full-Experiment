@@ -22,11 +22,11 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
 
     # NOTE: Replace with 20 for real experiment
-    NUM_ROUNDS = 20 
+    NUM_ROUNDS = 3 
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
     # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 10 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 0 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
@@ -68,7 +68,7 @@ def creating_session(subsession):
         player.participant.control = False
         player.participant.too_many_forced = False
         player.participant.forced_response_counter = 0
-        player.participant.prefer_p50 = False  # temporary flag for N04 grouping preference
+        player.participant.positive = False
 
 def N08_full(subsession):
     session = subsession.session
@@ -78,6 +78,13 @@ def N08_full(subsession):
     session.N08_p50 == session.MAX_N08_p50 and
     session.N08_p99 == session.MAX_N08_p99
 )
+
+def N04_full(subsession):
+    session = subsession.session
+    return (session.N04_p00 == session.MAX_N04_p00 and 
+            session.N04_p25 == session.MAX_N04_p25 and 
+            session.N04_p50 == session.MAX_N04_p50 and 
+            session.N04_p99 == session.MAX_N04_p99)
 
 def long_wait(player):
     participant = player.participant
@@ -92,11 +99,15 @@ def medium_wait(player):
     participant = player.participant
     return time.time() - participant.wait_page_arrival > C.MEDIUM_WAIT * 60 
 
+def is_positive(player):
+    participant = player.participant
+    return participant.positive == True
+
 def counters_full(player):
     session = player.subsession.session
     return (session.N04_p00 == session.MAX_N04_p00 and session.N04_p25 == session.MAX_N04_p25 and session.N04_p50 == session.MAX_N04_p50 and
-            session.N08_p00 == session.MAX_N08_p00 and session.N08_p25 == session.MAX_N08_p25 and session.N08_p50 == session.MAX_N08_p50 and session.MAX_N08_p99 == session.N08_p99 and session.MAX_N04_p99 == session.N04_p99)
-
+            session.N08_p00 == session.MAX_N08_p00 and session.N08_p25 == session.MAX_N08_p25 and session.N08_p50 == session.MAX_N08_p50 and 
+            session.N08_p99 == session.MAX_N08_p99 and session.N04_p99 == session.MAX_N04_p99)
 
 def group_by_arrival_time_method(subsession, waiting_players):
     session = subsession.session
@@ -140,26 +151,43 @@ def group_by_arrival_time_method(subsession, waiting_players):
         # if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
         #     print('Creating a group of 4 for A (-1)')
         sce = session.SCE
-        if len(waiting_players) >= C.N_TEST//2:
+
+        # Check if all N04 quotas are full; if so, release F (positive) players waiting medium+
+        if N04_full(subsession) and len(scenario_counts[sce]['F']) >= C.N_TEST//2:
+            # Release F players waiting medium+
+            f_medium = [p for p in scenario_counts[sce]['F'] if medium_wait(p)]
+            if f_medium:
+                print(f"Debug: Releasing {len(f_medium)} F players due to full N04 counters")
+                for p in f_medium:
+                    return [p] # let them go individually
+        
+        # Try to form a group of 4 otherwise
+        if not N04_full(subsession) and len(waiting_players) >= C.N_TEST//2:
             print('Creating a group of 4')
+            group = []
+            positive = False
+
             print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))
 
             if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
                 group = random.sample(scenario_counts[sce]['A'], k=C.N_TEST//2)
-                prefer = True
+                positive = False
             elif len(scenario_counts[sce]['F']) >= C.N_TEST//2:
                 group = random.sample(scenario_counts[sce]['F'], k=C.N_TEST//2)
-                prefer = False
-            print("About to assign scenarios to group:", group)
-            for p in group:
-                p.participant.scenario = sce
-                # Save the scenario and faction to participant.vars
-                p.participant.vars['scenario'] = sce
-                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
-                p.participant.prefer_p50 = prefer
-            return group
-            
-    # Check if counters are full
+                positive = True
+
+            if group:
+                print("About to assign scenarios to group:", group)
+                for p in group:
+                    p.participant.scenario = sce
+                    # Save the scenario and faction to participant.vars
+                    p.participant.vars['scenario'] = sce
+                    p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
+                    p.participant.positive = positive
+                    print(f"Debug: {p.participant.code} positive={positive}")
+                return group
+   
+    # Long-wait/full-counter fallback for remaining ungrouped players
     if all(counters_full(p) for p in waiting_players):
         print("All counters are full. Adding all waiting players to long_waiting.")
         long_waiting = waiting_players  # Add all players to long_waiting
@@ -169,7 +197,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
     if len(long_waiting) >= 1:
         for player in long_waiting:
-            print('Ready to let participant go, waiting for too long')
+            print(f'Ready to let go participant:{player.participant.code} for waiting for too long')
             return [player]
         
     if not group:
@@ -186,7 +214,7 @@ class Group(BaseGroup):
     anti_prop = models.StringField()  # for p value treatment
     group_responses = models.LongStringField()  # store as string and later to dump as JSON
     majority_response = models.IntegerField() # to store the majority response in the final round
-    prefer_p50 = models.BooleanField(initial=False)
+    positive_opinion = models.BooleanField(initial=False)
 
 class Player(BasePlayer):
     scenario = models.StringField()
@@ -288,22 +316,28 @@ class GroupSizeWaitPage(WaitPage):
             group_size = 'N08'
             is_group_single = False
         elif len(group_players) == C.N_TEST//2:
-            group_size = 'N04'
-            is_group_single = False
+            # check if any positive opinion in the group, if yes, let go by assigning 'single' to the group
+            if any(is_positive(p) for p in group_players):
+                group_size = 'single'
+                is_group_single = True 
+            else:
+                group_size = 'N04'
+                is_group_single = False
         else:
             group_size = 'single'
             is_group_single = True     
-        # add checking if prefer p50 from the participant variable
+        # add checking if positive from the participant variable
         for p in group_players:
-            prefer_values = [p.participant.prefer_p50 for p in group_players]
-        prefer_p50 = any(prefer_values)
-        print(f'Debug: prefer_p50 values in group: {prefer_values}, any prefer_p50: {prefer_p50}')
+            positive_opinions = [p.participant.positive for p in group_players]
+
+        positive_opinion = any(positive_opinions)
+        print(f'Debug: positive opinions in group: {positive_opinions}')
 
         # Save to the group model (for round 1 only)
         group.group_size = group_size
         group.is_group_single = is_group_single 
-        group.prefer_p50 = prefer_p50
-
+        group.positive_opinion = positive_opinion
+        print(f'Debug: Group size: {group_size}, is_group_single: {is_group_single}, positive_opinion: {positive_opinion}')
         if not group.is_group_single:
             # N08 grouping logic
             if group.group_size == 'N08':
@@ -314,19 +348,11 @@ class GroupSizeWaitPage(WaitPage):
                     (session.N08_p50 < session.MAX_N08_p50, p_50),
                     (session.N08_p99 < session.MAX_N08_p99, p_99)] 
             # N04 grouping logic
-            elif group.group_size == 'N04' and group.prefer_p50:
+            elif group.group_size == 'N04' and not group.positive_opinion:
                 group.beta_50 = False
-                conditions = [(session.N04_p50 < session.MAX_N04_p50, p_50)]
-                print('Condition: prioritized p_50 for N04 group')
-                
-            elif group.group_size == 'N04'and not group.prefer_p50:
-                group.beta_50 = False 
-                conditions = [
-                    (session.N04_p00 < session.MAX_N04_p00, p_00),
-                    (session.N04_p25 < session.MAX_N04_p25, p_25),
-                    (session.N04_p50 < session.MAX_N04_p50, p_50),
-                    (session.N04_p99 < session.MAX_N04_p99, p_99)] 
-                
+                conditions = [(session.N04_p50 < session.MAX_N04_p50, p_50),
+                              (session.N04_p00 < session.MAX_N04_p00, p_00),]
+                print('Condition: prioritized p_50/p_00 for N04 group')
             # Shuffle the order
             random.shuffle(conditions)
             # Evaluate conditions
@@ -336,15 +362,9 @@ class GroupSizeWaitPage(WaitPage):
                     print(f'Condition: non-fallback (random on remaining quota)', f'Group beta .50?:{group.beta_50}', f'Group AC prop:{group.anti_prop}')
                     break
             else: 
-                # The else is not tied to the if. It runs only if none of the conditions were True, because only then does the for loop finish without breaking.
-                if group.session.N04_p50 >= group.session.MAX_N04_p50:
-                    group.anti_prop = random.choice(['p00'])
-                    counters_update(group)
-                    print("Condition: fallback (exclude p.50, assign p00)", f'Group beta .50?:{group.beta_50}', f'Group AC prop:{group.anti_prop}')
-                else:
-                    # if all quotas are full, choose randomly
-                    random_p(group)
-                    print("Condition: fallback (random choice)", f'Group beta .50?:{group.beta_50}', f'Group AC prop:{group.anti_prop}')
+                # if all quotas are full, choose randomly
+                random_p(group)
+                print("Condition: fallback (random choice)", f'Group beta .50?:{group.beta_50}', f'Group AC prop:{group.anti_prop}')
 
         # Save persistently to participant
         # REVIEW 

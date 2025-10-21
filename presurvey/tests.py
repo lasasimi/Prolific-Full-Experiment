@@ -7,11 +7,17 @@ class PlayerBot(Bot):
     def play_round(self):
         yield Introduction, dict(
             gives_consent=True)
+        yield AudioCheck, dict(
+            audio_answer=4,
+            audio_answer_image=5,
+            audio_unlocked=True,
+        )
         yield Demographics, dict(
             age=34,
             gender="Woman",
             education_lvl='Less than high school', 
-            neighborhood_type='Urban')
+            neighborhood_type='Urban',
+            political_affiliation=1,)
         yield NeighborhoodInstruction
         # This is because the submit button is not a default submit button
         yield Submission(Training, 
@@ -23,11 +29,7 @@ class PlayerBot(Bot):
             howmanyneighbors=1)
 
         yield ExperimentInstruction
-        yield AudioCheck, dict(
-            audio_answer=4,
-            audio_answer_image=5,
-            audio_unlocked=True,
-        )
+        
         if self.player.id_in_group in range(1,5):
             yield Scenario, dict(
                 political_charge=1,
@@ -57,6 +59,12 @@ class PlayerBot(Bot):
                 political_charge=1,
                 emotional_charge=1,
                 response=1
+            )
+        elif self.player.id_in_group in range(21, 25):
+            yield Scenario, dict(
+                political_charge=1,
+                emotional_charge=1,
+                response=-1
             )
         yield Commitment, dict(
             commit_attention_Q1=True,

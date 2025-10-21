@@ -1,0 +1,25 @@
+participant.id_in_session,participant.code,participant.label,participant._is_bot,participant._index_in_pages,participant._max_page_index,participant._current_app_name,participant._current_page_name,participant.time_started_utc,participant.visited,participant.mturk_worker_id,participant.mturk_assignment_id,participant.payoff,player.id_in_group,player.role,player.payoff,player.id,player._payoff,player.round_number,player._role,player.feedback_final,player.future_participation,player.subsession_id,player.group_id,player.participant_id,player.session_id,group.id_in_subsession,group.id,group.round_number,group.subsession_id,group.session_id,subsession.round_number,subsession.id,subsession.session_id,session.code,session.label,session.mturk_HITId,session.mturk_HITGroupId,session.comment,session.is_demo
+1,nzfugrj9,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.865454,1,,,0.0,1,,0.0,1,0.0,1,,This is a test feedback.,1,1,1,1,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+2,091vkuww,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.912875,1,,,0.0,2,,0.0,2,0.0,1,,This is a test feedback.,1,1,1,2,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+3,1ii3ctve,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.912875,1,,,0.0,3,,0.0,3,0.0,1,,This is a test feedback.,1,1,1,3,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+4,3xj1c86p,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.928697,1,,,0.0,4,,0.0,4,0.0,1,,This is a test feedback.,1,1,1,4,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+5,5wkrxr1e,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.941327,1,,,0.0,5,,0.0,5,0.0,1,,This is a test feedback.,1,1,1,5,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+6,cbxuiy8i,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.944499,1,,,0.0,6,,0.0,6,0.0,1,,This is a test feedback.,1,1,1,6,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+7,8d5efdz3,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.958777,1,,,0.0,7,,0.0,7,0.0,1,,This is a test feedback.,1,1,1,7,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+8,h7j6uh5k,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.960530,1,,,0.0,8,,0.0,8,0.0,1,,This is a test feedback.,1,1,1,8,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+9,cvy9ivnn,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.976186,1,,,0.0,9,,0.0,9,0.0,1,,This is a test feedback.,1,1,1,9,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+10,qz8ljaza,,1,49,48,Pay,MyPage,2025-10-21 14:11:17.993869,1,,,0.0,10,,0.0,10,0.0,1,,This is a test feedback.,1,1,1,10,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+11,2fg96f1e,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.007528,1,,,0.0,11,,0.0,11,0.0,1,,This is a test feedback.,1,1,1,11,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+12,gfqyxiw6,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.024645,1,,,0.0,12,,0.0,12,0.0,1,,This is a test feedback.,1,1,1,12,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+13,gq17puz5,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.040093,1,,,0.0,13,,0.0,13,0.0,1,,This is a test feedback.,1,1,1,13,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+14,zjwuyc1d,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.040093,1,,,0.0,14,,0.0,14,0.0,1,,This is a test feedback.,1,1,1,14,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+15,qad6ju0b,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.058776,1,,,0.0,15,,0.0,15,0.0,1,,This is a test feedback.,1,1,1,15,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+16,5hkpp6vf,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.096898,1,,,0.0,16,,0.0,16,0.0,1,,This is a test feedback.,1,1,1,16,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+17,ayp9eqx4,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.131101,1,,,0.0,17,,0.0,17,0.0,1,,This is a test feedback.,1,1,1,17,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+18,rmgq7zwo,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.141495,1,,,0.0,18,,0.0,18,0.0,1,,This is a test feedback.,1,1,1,18,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+19,etcpws4l,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.141495,1,,,0.0,19,,0.0,19,0.0,1,,This is a test feedback.,1,1,1,19,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+20,5c17hg60,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.158883,1,,,0.0,20,,0.0,20,0.0,1,,This is a test feedback.,1,1,1,20,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+21,wt80775w,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.158883,1,,,0.0,21,,0.0,21,0.0,1,,This is a test feedback.,1,1,1,21,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+22,8azfolfm,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.174227,1,,,0.0,22,,0.0,22,0.0,1,,This is a test feedback.,1,1,1,22,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+23,uvpx23uw,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.174227,1,,,0.0,23,,0.0,23,0.0,1,,This is a test feedback.,1,1,1,23,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
+24,7f3tywsf,,1,49,48,Pay,MyPage,2025-10-21 14:11:18.204419,1,,,0.0,24,,0.0,24,0.0,1,,This is a test feedback.,1,1,1,24,1,1,1,1,1,1,1,1,1,8l0f4dem,,,,,0
