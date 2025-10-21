@@ -22,11 +22,11 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
 
     # NOTE: Replace with 20 for real experiment
-    NUM_ROUNDS = 3 
+    NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
-    # NOTE: Set this to 9.5 minutes
-    MEDIUM_WAIT = 0 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    # NOTE: Set this to 10 minutes / 19 minutes for N04-1only
+    MEDIUM_WAIT = 19 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
@@ -147,9 +147,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
     # If N08 is full or any of the players has been waiting for medium time, create a group of 4
     if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
-        # NOTE: for later, ability to specifically check for A or -1 for the N04 group
-        # if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
-        #     print('Creating a group of 4 for A (-1)')
+        
         sce = session.SCE
 
         # Check if all N04 quotas are full; if so, release F (positive) players waiting medium+
@@ -157,7 +155,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
             # Release F players waiting medium+
             f_medium = [p for p in scenario_counts[sce]['F'] if medium_wait(p)]
             if f_medium:
-                print(f"Debug: Releasing {len(f_medium)} F players due to full N04 counters")
+                print(f"Debug: Releasing {len(f_medium)} F players due to full N04 counters and answering F with medium wait")
                 for p in f_medium:
                     return [p] # let them go individually
         
@@ -350,11 +348,14 @@ class GroupSizeWaitPage(WaitPage):
             # N04 grouping logic
             elif group.group_size == 'N04' and not group.positive_opinion:
                 group.beta_50 = False
-                conditions = [(session.N04_p50 < session.MAX_N04_p50, p_50),
-                              (session.N04_p00 < session.MAX_N04_p00, p_00),]
+                conditions = [
+                    (session.N04_p50 < session.MAX_N04_p50, p_50),
+                    (session.N04_p00 < session.MAX_N04_p00, p_00),]
                 print('Condition: prioritized p_50/p_00 for N04 group')
+            
             # Shuffle the order
             random.shuffle(conditions)
+            
             # Evaluate conditions
             for condition, action in conditions:
                 if condition:

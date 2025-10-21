@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         # name='testing_skipping_pages',
         # NOTE: change to the full experiment
-        name='p50_p00_fullexperiment_20251016',
+        name='p50_p00_fullexperiment_np_N04-1only_20251021',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         num_demo_participants=24, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
@@ -18,11 +18,11 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        N04_p00 = 2,
-        N08_p00 = 10,
+        N04_p00 = 3,
+        N08_p00 = 7,
         N04_p25 = 0,
         N08_p25 = 0,
-        N04_p50 = 2, # only the -1
+        N04_p50 = 2, 
         N08_p50 = 4,
         N08_p99 = 0,
         N04_p99 = 0,
@@ -53,8 +53,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='p50_p00_fullexperiment_np_20251016', 
-         display_name='p50_p00_fullexperiment_np_20251016',
+    dict(name='p50_p00_fullexperiment_np_N04-1only_20251021', 
+         display_name='p50_p00_fullexperiment_np_N04-1only_20251021',
          ),
 ]
 
