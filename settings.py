@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         # name='testing_skipping_pages',
         # NOTE: change to the full experiment
-        name='p50_p00_fullexperiment_np_N04_Aonly_20251021',
+        name='p50_p00_fullexperiment_np_N04_Aonly_20251022',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
         num_demo_participants=24, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
@@ -22,7 +22,7 @@ SESSION_CONFIGS = [
         N08_p00 = 7,
         N04_p25 = 0,
         N08_p25 = 0,
-        N04_p50 = 2, 
+        N04_p50 = 0, 
         N08_p50 = 4,
         N08_p99 = 0,
         N04_p99 = 0,
@@ -53,8 +53,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='p50_p00_fullexperiment_np_N04_Aonly_20251021', 
-         display_name='p50_p00_fullexperiment_np_N04_Aonly_20251021',
+    dict(name='p50_p00_fullexperiment_np_N04_Aonly_20251022', 
+         display_name='p50_p00_fullexperiment_np_N04_Aonly_20251022',
          ),
 ]
 

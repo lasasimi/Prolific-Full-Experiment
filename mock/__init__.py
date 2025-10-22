@@ -26,7 +26,7 @@ class C(BaseConstants):
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
     # NOTE: Set this to 10 minutes / 19 minutes for N04-1only
-    MEDIUM_WAIT = 19 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 19 #(minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
@@ -144,46 +144,58 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 p.participant.vars['scenario'] = sce
                 p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
             return group 
+    
     # If N08 is full or any of the players has been waiting for medium time, create a group of 4
     if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
         
         sce = session.SCE
 
-        # Check if all N04 quotas are full; if so, release F (positive) players waiting medium+
-        if N04_full(subsession) and len(scenario_counts[sce]['F']) >= C.N_TEST//2:
-            # Release F players waiting medium+
-            f_medium = [p for p in scenario_counts[sce]['F'] if medium_wait(p)]
-            if f_medium:
-                print(f"Debug: Releasing {len(f_medium)} F players due to full N04 counters and answering F with medium wait")
-                for p in f_medium:
-                    return [p] # let them go individually
+        # Check if there is already a medium wait within F players and A players
+        f_medium = [p for p in scenario_counts[sce]['F'] if medium_wait(p)]
+        a_medium = [p for p in scenario_counts[sce]['A'] if medium_wait(p)]
+        print(f"Debug: F medium wait players: {f_medium}, A medium wait players: {a_medium}")
+
+        # Let go the f_medium player individually, remove this function if you still want to form F groups of 4
+        if f_medium:
+            f_medium.sort(key=lambda p: p.participant.wait_page_arrival)
+            longest_waiting = f_medium[0]
+            print(f"Debug: Releasing longest-waiting F player {longest_waiting.participant.code} due to medium wait")
+            return [longest_waiting]  # let go individually
         
         # Try to form a group of 4 otherwise
-        if not N04_full(subsession) and len(waiting_players) >= C.N_TEST//2:
-            print('Creating a group of 4')
-            group = []
-            positive = False
+        group = []
+        positive = False
 
+        # Create N04 only for A players if there is any A medium wait
+        if not N04_full(subsession) and len(scenario_counts[sce]['A']) >= C.N_TEST//2 and a_medium:
             print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))
-
-            if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
-                group = random.sample(scenario_counts[sce]['A'], k=C.N_TEST//2)
-                positive = False
-            elif len(scenario_counts[sce]['F']) >= C.N_TEST//2:
-                group = random.sample(scenario_counts[sce]['F'], k=C.N_TEST//2)
-                positive = True
-
-            if group:
-                print("About to assign scenarios to group:", group)
-                for p in group:
-                    p.participant.scenario = sce
-                    # Save the scenario and faction to participant.vars
-                    p.participant.vars['scenario'] = sce
-                    p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
-                    p.participant.positive = positive
-                    print(f"Debug: {p.participant.code} positive={positive}")
-                return group
+            print('Creating a group of 4 from A players')
+            group = random.sample(scenario_counts[sce]['A'], k=C.N_TEST//2)
+            positive = False
+            for p in group:
+                p.participant.scenario = sce
+                # Save the scenario and faction to participant.vars
+                p.participant.vars['scenario'] = sce
+                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
+                p.participant.positive = positive
+                print(f"Debug: {p.participant.code} positive={positive}")
+            return group
+        
+        # UNCOMMENT the following block if you still want to form groups of 4 Fs
+        # if not N04_full(subsession) and len(scenario_counts[sce]['F']) >= C.N_TEST//2 and f_medium:
+        #     print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))
+        #     print('Creating a group of 4 from F players')
+        #     group = random.sample(scenario_counts[sce]['F'], k=C.N_TEST//2)
+        #     positive = True # this will make them is_group_single = True later, remove if still want to form groups of 4 Fs
+        #     for p in group:
+        #         p.participant.scenario = sce
+        #         # Save the scenario and faction to participant.vars
+        #         p.participant.vars['scenario'] = sce
+        #         p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
+        #         p.participant.positive = positive
+        #         print(f"Debug: {p.participant.code} positive={positive}")
+        #     return group
    
     # Long-wait/full-counter fallback for remaining ungrouped players
     if all(counters_full(p) for p in waiting_players):
@@ -314,13 +326,13 @@ class GroupSizeWaitPage(WaitPage):
             group_size = 'N08'
             is_group_single = False
         elif len(group_players) == C.N_TEST//2:
-            # check if any positive opinion in the group, if yes, let go by assigning 'single' to the group
-            if any(is_positive(p) for p in group_players):
-                group_size = 'single'
-                is_group_single = True 
-            else:
-                group_size = 'N04'
-                is_group_single = False
+            # # check if any positive opinion in the group, if yes, let go by assigning 'single' to the group
+            # if any(is_positive(p) for p in group_players):
+            #     group_size = 'single'
+            #     is_group_single = True 
+            # else:
+            group_size = 'N04'
+            is_group_single = False
         else:
             group_size = 'single'
             is_group_single = True     

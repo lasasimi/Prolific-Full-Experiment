@@ -3,8 +3,10 @@
 from otree.api import Bot
 from . import * 
 
+
 class PlayerBot(Bot):
     def play_round(self):
+
         yield Introduction, dict(
             gives_consent=True)
         yield AudioCheck, dict(
@@ -34,13 +36,13 @@ class PlayerBot(Bot):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,
-                response=-1
+                response=1
             )
         elif self.player.id_in_group in range(5, 9):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,
-                response=-1
+                response=1
             )
         elif self.player.id_in_group in range(9, 13):
             yield Scenario, dict(
@@ -52,19 +54,19 @@ class PlayerBot(Bot):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,
-                response=-1
+                response=1
             )
         elif self.player.id_in_group in range(17, 21):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,
-                response=1
+                response=-1
             )
         elif self.player.id_in_group in range(21, 25):
             yield Scenario, dict(
                 political_charge=1,
                 emotional_charge=1,
-                response=-1
+                response=1
             )
         yield Commitment, dict(
             commit_attention_Q1=True,
