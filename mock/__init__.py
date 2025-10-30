@@ -144,7 +144,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
                 p.participant.vars['scenario'] = sce
                 p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
             return group 
-    
+    # UNCOMMENT if you want to create a group of 4 when N08 is full or medium wait
     # # If N08 is full or any of the players has been waiting for medium time, create a group of 4
     # if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
     #     print('N08 is full or medium wait, checking for smaller groups')
