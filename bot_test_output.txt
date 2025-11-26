@@ -1,0 +1,724 @@
+Note: NumExpr detected 22 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+NumExpr defaulting to 16 threads.
+Creating 'p00_fullexperiment_20251020' session (test case 0)
+Submit /p/t5sw3ads/presurvey/Introduction/1, {'gives_consent': True}
+Submit /p/hx004tai/presurvey/Introduction/1, {'gives_consent': True}
+Submit /p/betwbhtj/presurvey/Introduction/1, {'gives_consent': True}
+Submit /p/g3l3fu3v/presurvey/Introduction/1, {'gives_consent': True}
+Submit /p/t5sw3ads/presurvey/AudioCheck/2, {'audio_answer': 4, 'audio_answer_image': 5, 'audio_unlocked': True}
+Submit /p/hx004tai/presurvey/AudioCheck/2, {'audio_answer': 4, 'audio_answer_image': 5, 'audio_unlocked': True}
+Submit /p/betwbhtj/presurvey/AudioCheck/2, {'audio_answer': 4, 'audio_answer_image': 5, 'audio_unlocked': True}
+Submit /p/g3l3fu3v/presurvey/AudioCheck/2, {'audio_answer': 4, 'audio_answer_image': 5, 'audio_unlocked': True}
+Submit /p/t5sw3ads/presurvey/Scenario/3, {'political_charge': 3, 'emotional_charge': 3, 'response': 1}
+Submit /p/hx004tai/presurvey/Scenario/3, {'political_charge': 3, 'emotional_charge': 3, 'response': 1}
+Submit /p/betwbhtj/presurvey/Scenario/3, {'political_charge': 3, 'emotional_charge': 3, 'response': -1}
+Submit /p/g3l3fu3v/presurvey/Scenario/3, {'political_charge': 3, 'emotional_charge': 3, 'response': -1}
+Submit /p/t5sw3ads/presurvey/Commitment/4, {'commit_attention_Q1': True, 'commit_attention_Q2': True, 'commit_attention_Q3': True}
+Submit /p/hx004tai/presurvey/Commitment/4, {'commit_attention_Q1': True, 'commit_attention_Q2': True, 'commit_attention_Q3': True}
+Submit /p/betwbhtj/presurvey/Commitment/4, {'commit_attention_Q1': True, 'commit_attention_Q2': True, 'commit_attention_Q3': True}
+Submit /p/g3l3fu3v/presurvey/Commitment/4, {'commit_attention_Q1': True, 'commit_attention_Q2': True, 'commit_attention_Q3': True}
+Submit /p/hx004tai/mock/Nudge/9, {'nudge_training': 0}
+Submit /p/betwbhtj/mock/Nudge/9, {'nudge_training': -1}
+Submit /p/g3l3fu3v/mock/Nudge/9, {'nudge_training': -1}
+Submit /p/t5sw3ads/mock/Nudge/9, {'nudge_training': 1}
+Submit /p/hx004tai/mock/NudgeTraining/10, {'nudge_training_two': 1}
+Submit /p/betwbhtj/mock/NudgeTraining/10, {'nudge_training_two': 1}
+Submit /p/g3l3fu3v/mock/NudgeTraining/10, {'nudge_training_two': -1}
+Submit /p/t5sw3ads/mock/NudgeTraining/10, {'nudge_training_two': 1}
+Submit /p/hx004tai/mock/NudgeTrainingLast/11, {'nudge_training_three': 0}
+Submit /p/betwbhtj/mock/NudgeTrainingLast/11, {'nudge_training_three': -1}
+Submit /p/g3l3fu3v/mock/NudgeTrainingLast/11, {'nudge_training_three': -1}
+Submit /p/t5sw3ads/mock/NudgeTrainingLast/11, {'nudge_training_three': -1}
+Submit /p/hx004tai/mock/Phase3/12
+Submit /p/betwbhtj/mock/Phase3/12
+Submit /p/g3l3fu3v/mock/Phase3/12
+Submit /p/t5sw3ads/mock/Phase3/12
+Submit /p/hx004tai/mock/Discussion/13, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/13, {'new_response': 0}
+Submit /p/g3l3fu3v/mock/Discussion/13, {'new_response': 1}
+Submit /p/t5sw3ads/mock/Discussion/13, {'new_response': 1}
+Submit /p/hx004tai/mock/Discussion/24, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/24, {'new_response': 1}
+Submit /p/g3l3fu3v/mock/Discussion/24, {'new_response': -1}
+Submit /p/t5sw3ads/mock/Discussion/24, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/35, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/35, {'new_response': -1}
+Submit /p/g3l3fu3v/mock/Discussion/35, {'new_response': 0}
+Submit /p/t5sw3ads/mock/Discussion/35, {'new_response': 0}
+Submit /p/hx004tai/mock/Discussion/46, {'new_response': 1}
+Submit /p/betwbhtj/mock/Discussion/46, {'new_response': 0}
+Submit /p/g3l3fu3v/mock/Discussion/46, {'new_response': -1}
+Submit /p/t5sw3ads/mock/Discussion/46, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/57, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/57, {'new_response': 1}
+Submit /p/g3l3fu3v/mock/Discussion/57, {'new_response': -1}
+Submit /p/t5sw3ads/mock/Discussion/57, {'new_response': 0}
+Submit /p/hx004tai/mock/Discussion/68, {'new_response': -1}
+Submit /p/betwbhtj/mock/Discussion/68, {'new_response': -1}
+Submit /p/g3l3fu3v/mock/Discussion/68, {'new_response': 1}
+Submit /p/t5sw3ads/mock/Discussion/68, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/79, {'new_response': -1}
+Submit /p/betwbhtj/mock/Discussion/79, {'new_response': 1}
+Debug: eligibility: True
+Debug: eligibility: True
+Debug: eligibility: True
+Debug: eligibility: True
+Commitment failed?: False, Complete presurvey?: True
+Waiting players: [Player(round_number=1)]
+Not enough players yet to form a 4-player network.
+Commitment failed?: False, Complete presurvey?: True
+Waiting players: [Player(round_number=1, id_in_group=1), Player(round_number=1, id_in_group=2)]
+Not enough players yet to form a 4-player network.
+Commitment failed?: False, Complete presurvey?: True
+Waiting players: [Player(round_number=1, id_in_group=1), Player(round_number=1, id_in_group=2), Player(round_number=1, id_in_group=3)]
+Not enough players yet to form a 4-player network.
+Commitment failed?: False, Complete presurvey?: True
+Waiting players: [Player(round_number=1, id_in_group=1), Player(round_number=1, id_in_group=2), Player(round_number=1, id_in_group=3), Player(round_number=1, id_in_group=4)]
+Creating a 4-player group with fixed team positions:
+[(1, 't5sw3ads'), (2, 'hx004tai'), (3, 'betwbhtj'), (4, 'g3l3fu3v')]
+Debug: All players in the group have arrived, determining group size and treatment
+Debug: Group players: [Player(round_number=1, id_in_group=1), Player(round_number=1, id_in_group=2), Player(round_number=1, id_in_group=3), Player(round_number=1, id_in_group=4)], number of players: 4
+Condition: non-fallback (random choice) Group beta .50?:True Group AC prop:p00
+Debug counter: session.N04_p00:0, session.N04_p25:0, session.N04_p50:0, session.N08_p00:1, session.N08_p25:0, session.N08_p50:0, session.N08_p99:0, session.N04_p99:0
+Debug: n_anti = 0, group.anti_prop = p00
+Debug: anticonformists = []
+Debug: anticonformists codes = []
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is hx004tai, on round 1
+Debug: Bot is hx004tai, on round 1
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 1
+Debug: Bot is betwbhtj, on round 1
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 1
+Debug: Bot is g3l3fu3v, on round 1
+Scenario code in the discussion: s2_n
+Debug: Bot is t5sw3ads, on round 1
+Debug: Bot is t5sw3ads, on round 1
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 1
+Debug: Bot is hx004tai, on round 1
+Debug: Bot is betwbhtj, on round 1
+Debug: Bot is betwbhtj, on round 1
+Debug: Bot is g3l3fu3v, on round 1
+Debug: Bot is g3l3fu3v, on round 1
+Debug: Bot is t5sw3ads, on round 1
+Debug: Bot is t5sw3ads, on round 1
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 2
+Debug: Bot is t5sw3ads, on round 2
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 2
+Debug: Bot is hx004tai, on round 2
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 2
+Debug: Bot is hx004tai, on round 2
+Debug: Bot is betwbhtj, on round 2
+Debug: Bot is betwbhtj, on round 2
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 2
+Debug: Bot is betwbhtj, on round 2
+Debug: Bot is g3l3fu3v, on round 2
+Debug: Bot is g3l3fu3v, on round 2
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 2
+Debug: Bot is g3l3fu3v, on round 2
+Debug: Bot is t5sw3ads, on round 2
+Debug: Bot is t5sw3ads, on round 2
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 3
+Debug: Bot is t5sw3ads, on round 3
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 3
+Debug: Bot is hx004tai, on round 3
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 3
+Debug: Bot is hx004tai, on round 3
+Debug: Bot is betwbhtj, on round 3
+Debug: Bot is betwbhtj, on round 3
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 3
+Debug: Bot is betwbhtj, on round 3
+Debug: Bot is g3l3fu3v, on round 3
+Debug: Bot is g3l3fu3v, on round 3
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 3
+Debug: Bot is g3l3fu3v, on round 3
+Debug: Bot is t5sw3ads, on round 3
+Debug: Bot is t5sw3ads, on round 3
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 4
+Debug: Bot is t5sw3ads, on round 4
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 4
+Debug: Bot is hx004tai, on round 4
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 4
+Debug: Bot is hx004tai, on round 4
+Debug: Bot is betwbhtj, on round 4
+Debug: Bot is betwbhtj, on round 4
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 4
+Debug: Bot is betwbhtj, on round 4
+Debug: Bot is g3l3fu3v, on round 4
+Debug: Bot is g3l3fu3v, on round 4
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 4
+Debug: Bot is g3l3fu3v, on round 4
+Debug: Bot is t5sw3ads, on round 4
+Debug: Bot is t5sw3ads, on round 4
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 5
+Debug: Bot is t5sw3ads, on round 5
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 5
+Debug: Bot is hx004tai, on round 5
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 5
+Debug: Bot is hx004tai, on round 5
+Debug: Bot is betwbhtj, on round 5
+Debug: Bot is betwbhtj, on round 5
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 5
+Debug: Bot is betwbhtj, on round 5
+Debug: Bot is g3l3fu3v, on round 5
+Debug: Bot is g3l3fu3v, on round 5
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 5
+Debug: Bot is g3l3fu3v, on round 5
+Debug: Bot is t5sw3ads, on round 5
+Debug: Bot is t5sw3ads, on round 5
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 6
+Debug: Bot is t5sw3ads, on round 6
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 6
+Debug: Bot is hx004tai, on round 6
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 6
+Debug: Bot is hx004tai, on round 6
+Debug: Bot is betwbhtj, on round 6
+Debug: Bot is betwbhtj, on round 6
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 6
+Debug: Bot is betwbhtj, on round 6
+Debug: Bot is g3l3fu3v, on round 6
+Debug: Bot is g3l3fu3v, on round 6
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 6
+Debug: Bot is g3l3fu3v, on round 6
+Debug: Bot is t5sw3ads, on round 6
+Debug: Bot is t5sw3ads, on round 6
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 7
+Debug: Bot is t5sw3ads, on round 7
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 7
+Debug: Bot is hx004tai, on round 7
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 7
+Debug: Bot is hx004tai, on round 7
+Debug: Bot is betwbhtj, on round 7
+Debug: Bot is betwbhtj, on round 7
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 7
+Debug: Bot is betwbhtj, on round 7
+Debug: Bot is g3l3fu3v, on round 7
+Debug: Bot is g3l3fu3v, on round 7
+Scenario code in the discussion: s2_n
+Submit /p/g3l3fu3v/mock/Discussion/79, {'new_response': 1}
+Submit /p/t5sw3ads/mock/Discussion/79, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/90, {'new_response': -1}
+Submit /p/betwbhtj/mock/Discussion/90, {'new_response': -1}
+Submit /p/g3l3fu3v/mock/Discussion/90, {'new_response': 1}
+Submit /p/t5sw3ads/mock/Discussion/90, {'new_response': 1}
+Submit /p/hx004tai/mock/Discussion/101, {'new_response': 1}
+Submit /p/betwbhtj/mock/Discussion/101, {'new_response': 0}
+Submit /p/g3l3fu3v/mock/Discussion/101, {'new_response': -1}
+Submit /p/t5sw3ads/mock/Discussion/101, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/112, {'new_response': -1}
+Submit /p/betwbhtj/mock/Discussion/112, {'new_response': 1}
+Submit /p/g3l3fu3v/mock/Discussion/112, {'new_response': 0}
+Submit /p/t5sw3ads/mock/Discussion/112, {'new_response': 0}
+Submit /p/hx004tai/mock/Discussion/123, {'new_response': -1}
+Submit /p/betwbhtj/mock/Discussion/123, {'new_response': 0}
+Submit /p/g3l3fu3v/mock/Discussion/123, {'new_response': 0}
+Submit /p/t5sw3ads/mock/Discussion/123, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/134, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/134, {'new_response': 0}
+Submit /p/g3l3fu3v/mock/Discussion/134, {'new_response': -1}
+Submit /p/t5sw3ads/mock/Discussion/134, {'new_response': 1}
+Submit /p/hx004tai/mock/Discussion/145, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/145, {'new_response': 1}
+Submit /p/g3l3fu3v/mock/Discussion/145, {'new_response': -1}
+Submit /p/t5sw3ads/mock/Discussion/145, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/156, {'new_response': 1}
+Submit /p/betwbhtj/mock/Discussion/156, {'new_response': -1}
+Submit /p/g3l3fu3v/mock/Discussion/156, {'new_response': 0}
+Submit /p/t5sw3ads/mock/Discussion/156, {'new_response': 0}
+Submit /p/hx004tai/mock/Discussion/167, {'new_response': -1}
+Submit /p/betwbhtj/mock/Discussion/167, {'new_response': 1}
+Submit /p/g3l3fu3v/mock/Discussion/167, {'new_response': 0}
+Submit /p/t5sw3ads/mock/Discussion/167, {'new_response': 0}
+Debug: Bot is g3l3fu3v, on round 7
+Debug: Bot is g3l3fu3v, on round 7
+Debug: Bot is t5sw3ads, on round 7
+Debug: Bot is t5sw3ads, on round 7
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 8
+Debug: Bot is t5sw3ads, on round 8
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 8
+Debug: Bot is hx004tai, on round 8
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 8
+Debug: Bot is hx004tai, on round 8
+Debug: Bot is betwbhtj, on round 8
+Debug: Bot is betwbhtj, on round 8
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 8
+Debug: Bot is betwbhtj, on round 8
+Debug: Bot is g3l3fu3v, on round 8
+Debug: Bot is g3l3fu3v, on round 8
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 8
+Debug: Bot is g3l3fu3v, on round 8
+Debug: Bot is t5sw3ads, on round 8
+Debug: Bot is t5sw3ads, on round 8
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 9
+Debug: Bot is t5sw3ads, on round 9
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 9
+Debug: Bot is hx004tai, on round 9
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 9
+Debug: Bot is hx004tai, on round 9
+Debug: Bot is betwbhtj, on round 9
+Debug: Bot is betwbhtj, on round 9
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 9
+Debug: Bot is betwbhtj, on round 9
+Debug: Bot is g3l3fu3v, on round 9
+Debug: Bot is g3l3fu3v, on round 9
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 9
+Debug: Bot is g3l3fu3v, on round 9
+Debug: Bot is t5sw3ads, on round 9
+Debug: Bot is t5sw3ads, on round 9
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 10
+Debug: Bot is t5sw3ads, on round 10
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 10
+Debug: Bot is hx004tai, on round 10
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 10
+Debug: Bot is hx004tai, on round 10
+Debug: Bot is betwbhtj, on round 10
+Debug: Bot is betwbhtj, on round 10
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 10
+Debug: Bot is betwbhtj, on round 10
+Debug: Bot is g3l3fu3v, on round 10
+Debug: Bot is g3l3fu3v, on round 10
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 10
+Debug: Bot is g3l3fu3v, on round 10
+Debug: Bot is t5sw3ads, on round 10
+Debug: Bot is t5sw3ads, on round 10
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 11
+Debug: Bot is t5sw3ads, on round 11
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 11
+Debug: Bot is hx004tai, on round 11
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 11
+Debug: Bot is hx004tai, on round 11
+Debug: Bot is betwbhtj, on round 11
+Debug: Bot is betwbhtj, on round 11
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 11
+Debug: Bot is betwbhtj, on round 11
+Debug: Bot is g3l3fu3v, on round 11
+Debug: Bot is g3l3fu3v, on round 11
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 11
+Debug: Bot is g3l3fu3v, on round 11
+Debug: Bot is t5sw3ads, on round 11
+Debug: Bot is t5sw3ads, on round 11
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 12
+Debug: Bot is t5sw3ads, on round 12
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 12
+Debug: Bot is hx004tai, on round 12
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 12
+Debug: Bot is hx004tai, on round 12
+Debug: Bot is betwbhtj, on round 12
+Debug: Bot is betwbhtj, on round 12
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 12
+Debug: Bot is betwbhtj, on round 12
+Debug: Bot is g3l3fu3v, on round 12
+Debug: Bot is g3l3fu3v, on round 12
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 12
+Debug: Bot is g3l3fu3v, on round 12
+Debug: Bot is t5sw3ads, on round 12
+Debug: Bot is t5sw3ads, on round 12
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 13
+Debug: Bot is t5sw3ads, on round 13
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 13
+Debug: Bot is hx004tai, on round 13
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 13
+Debug: Bot is hx004tai, on round 13
+Debug: Bot is betwbhtj, on round 13
+Debug: Bot is betwbhtj, on round 13
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 13
+Debug: Bot is betwbhtj, on round 13
+Debug: Bot is g3l3fu3v, on round 13
+Debug: Bot is g3l3fu3v, on round 13
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 13
+Debug: Bot is g3l3fu3v, on round 13
+Debug: Bot is t5sw3ads, on round 13
+Debug: Bot is t5sw3ads, on round 13
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 14
+Debug: Bot is t5sw3ads, on round 14
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 14
+Debug: Bot is hx004tai, on round 14
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 14
+Debug: Bot is hx004tai, on round 14
+Debug: Bot is betwbhtj, on round 14
+Debug: Bot is betwbhtj, on round 14
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 14
+Debug: Bot is betwbhtj, on round 14
+Debug: Bot is g3l3fu3v, on round 14
+Debug: Bot is g3l3fu3v, on round 14
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 14
+Debug: Bot is g3l3fu3v, on round 14
+Debug: Bot is t5sw3ads, on round 14
+Debug: Bot is t5sw3ads, on round 14
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 15
+Debug: Bot is t5sw3ads, on round 15
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 15
+Debug: Bot is hx004tai, on round 15
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 15
+Debug: Bot is hx004tai, on round 15
+Debug: Bot is betwbhtj, on round 15
+Debug: Bot is betwbhtj, on round 15
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 15
+Debug: Bot is betwbhtj, on round 15
+Debug: Bot is g3l3fu3v, on round 15
+Debug: Bot is g3l3fu3v, on round 15
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 15
+Debug: Bot is g3l3fu3v, on round 15
+Debug: Bot is t5sw3ads, on round 15
+Debug: Bot is t5sw3ads, on round 15
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 16
+Debug: Bot is t5sw3ads, on round 16
+Scenario code in the discussion: s2_n
+Submit /p/hx004tai/mock/Discussion/178, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/178, {'new_response': 0}
+Submit /p/g3l3fu3v/mock/Discussion/178, {'new_response': 1}
+Submit /p/t5sw3ads/mock/Discussion/178, {'new_response': 1}
+Submit /p/hx004tai/mock/Discussion/189, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/189, {'new_response': 0}
+Submit /p/g3l3fu3v/mock/Discussion/189, {'new_response': -1}
+Submit /p/t5sw3ads/mock/Discussion/189, {'new_response': -1}
+Submit /p/hx004tai/mock/Discussion/200, {'new_response': 1}
+Submit /p/betwbhtj/mock/Discussion/200, {'new_response': 1}
+Submit /p/g3l3fu3v/mock/Discussion/200, {'new_response': 1}
+Submit /p/t5sw3ads/mock/Discussion/200, {'new_response': 1}
+Submit /p/hx004tai/mock/Discussion/211, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/211, {'new_response': -1}
+Submit /p/g3l3fu3v/mock/Discussion/211, {'new_response': 0}
+Submit /p/t5sw3ads/mock/Discussion/211, {'new_response': 1}
+Submit /p/hx004tai/mock/Discussion/222, {'new_response': 0}
+Submit /p/betwbhtj/mock/Discussion/222, {'new_response': -1}
+Submit /p/g3l3fu3v/mock/Discussion/222, {'new_response': 0}
+Submit /p/t5sw3ads/mock/Discussion/222, {'new_response': 0}
+Submit /p/hx004tai/mock/FinalRound/224
+Submit /p/betwbhtj/mock/FinalRound/224
+Submit /p/g3l3fu3v/mock/FinalRound/224
+Submit /p/t5sw3ads/mock/FinalRound/224
+Submit /p/hx004tai/Pay/Feedback/226, {'feedback_final': 'This is a test feedback.'}
+Debug: Bot is hx004tai, on round 16
+Debug: Bot is hx004tai, on round 16
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 16
+Debug: Bot is hx004tai, on round 16
+Debug: Bot is betwbhtj, on round 16
+Debug: Bot is betwbhtj, on round 16
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 16
+Debug: Bot is betwbhtj, on round 16
+Debug: Bot is g3l3fu3v, on round 16
+Debug: Bot is g3l3fu3v, on round 16
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 16
+Debug: Bot is g3l3fu3v, on round 16
+Debug: Bot is t5sw3ads, on round 16
+Debug: Bot is t5sw3ads, on round 16
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 17
+Debug: Bot is t5sw3ads, on round 17
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 17
+Debug: Bot is hx004tai, on round 17
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 17
+Debug: Bot is hx004tai, on round 17
+Debug: Bot is betwbhtj, on round 17
+Debug: Bot is betwbhtj, on round 17
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 17
+Debug: Bot is betwbhtj, on round 17
+Debug: Bot is g3l3fu3v, on round 17
+Debug: Bot is g3l3fu3v, on round 17
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 17
+Debug: Bot is g3l3fu3v, on round 17
+Debug: Bot is t5sw3ads, on round 17
+Debug: Bot is t5sw3ads, on round 17
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 18
+Debug: Bot is t5sw3ads, on round 18
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 18
+Debug: Bot is hx004tai, on round 18
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 18
+Debug: Bot is hx004tai, on round 18
+Debug: Bot is betwbhtj, on round 18
+Debug: Bot is betwbhtj, on round 18
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 18
+Debug: Bot is betwbhtj, on round 18
+Debug: Bot is g3l3fu3v, on round 18
+Debug: Bot is g3l3fu3v, on round 18
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 18
+Debug: Bot is g3l3fu3v, on round 18
+Debug: Bot is t5sw3ads, on round 18
+Debug: Bot is t5sw3ads, on round 18
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 19
+Debug: Bot is t5sw3ads, on round 19
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 19
+Debug: Bot is hx004tai, on round 19
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 19
+Debug: Bot is hx004tai, on round 19
+Debug: Bot is betwbhtj, on round 19
+Debug: Bot is betwbhtj, on round 19
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 19
+Debug: Bot is betwbhtj, on round 19
+Debug: Bot is g3l3fu3v, on round 19
+Debug: Bot is g3l3fu3v, on round 19
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 19
+Debug: Bot is g3l3fu3v, on round 19
+Debug: Bot is t5sw3ads, on round 19
+Debug: Bot is t5sw3ads, on round 19
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['t5sw3ads', 'g3l3fu3v']
+Debug: player's discussion group: ['hx004tai', 'betwbhtj']
+Debug: Bot is t5sw3ads, on round 20
+Debug: Bot is t5sw3ads, on round 20
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 20
+Debug: Bot is hx004tai, on round 20
+Scenario code in the discussion: s2_n
+Debug: Bot is hx004tai, on round 20
+Debug: Bot is hx004tai, on round 20
+Debug: Bot is betwbhtj, on round 20
+Debug: Bot is betwbhtj, on round 20
+Scenario code in the discussion: s2_n
+Debug: Bot is betwbhtj, on round 20
+Debug: Bot is betwbhtj, on round 20
+Debug: Bot is g3l3fu3v, on round 20
+Debug: Bot is g3l3fu3v, on round 20
+Scenario code in the discussion: s2_n
+Debug: Bot is g3l3fu3v, on round 20
+Debug: Bot is g3l3fu3v, on round 20
+Debug: Bot is t5sw3ads, on round 20
+Debug: Bot is t5sw3ads, on round 20
+Traceback (most recent call last):
+  File "/home/ochoa/anaconda3/bin/otree", line 8, in <module>
+    sys.exit(execute_from_command_line())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/main.py", line 112, in execute_from_command_line
+    call_command(cmd, *argv[2:])
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/cli/base.py", line 32, in call_command
+    module.Command().outer_handle(args)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/cli/base.py", line 10, in outer_handle
+    return self.handle(**vars(options))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/cli/bots.py", line 54, in handle
+    run_all_bots_for_session_config(
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/bots/runner.py", line 158, in run_all_bots_for_session_config
+    run_bots(session_id, case_number=case_number)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/bots/runner.py", line 125, in run_bots
+    runner.play()
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/bots/runner.py", line 53, in play
+    bot.submit(submission)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/bots/bot.py", line 388, in submit
+    self.response = self.client.post(self.url, post_data, allow_redirects=True)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/requests/sessions.py", line 637, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/testclient.py", line 413, in request
+    return super().request(
+           ^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/testclient.py", line 243, in send
+    raise exc from None
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/testclient.py", line 240, in send
+    loop.run_until_complete(self.app(scope, receive, send))
+  File "/home/ochoa/anaconda3/lib/python3.12/asyncio/base_events.py", line 685, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/middleware/base.py", line 26, in __call__
+    await response(scope, receive, send)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/responses.py", line 224, in __call__
+    await run_until_first_complete(
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/concurrency.py", line 24, in run_until_first_complete
+    [task.result() for task in done]
+     ^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/responses.py", line 216, in stream_response
+    async for chunk in self.body_iterator:
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/middleware/base.py", line 56, in body_stream
+    task.result()
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/middleware/base.py", line 38, in coro
+    await self.app(scope, receive, send)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/errorpage.py", line 247, in __call__
+    raise exc  # from None
+    ^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/errorpage.py", line 227, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/middleware/base.py", line 25, in __call__
+    response = await self.dispatch_func(request, self.call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/middleware.py", line 42, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/middleware/base.py", line 45, in call_next
+    task.result()
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/middleware/base.py", line 38, in coro
+    await self.app(scope, receive, send)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/middleware/sessions.py", line 75, in __call__
+    await self.app(scope, receive, send_wrapper)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/patch.py", line 41, in __call__
+    raise exc  # from None
+    ^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/patch.py", line 29, in __call__
+    await self.app(scope, receive, sender)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/routing.py", line 582, in __call__
+    await route.handle(scope, receive, send)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/routing.py", line 243, in handle
+    await self.app(scope, receive, send)
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/views/abstract.py", line 118, in dispatch
+    response = await run_in_threadpool(self.inner_dispatch, request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/starlette/concurrency.py", line 40, in run_in_threadpool
+    return await loop.run_in_executor(None, func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/views/abstract.py", line 424, in inner_dispatch
+    return self.post()
+           ^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/views/abstract.py", line 629, in post
+    resp = self.post_handle_form(post_data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ochoa/anaconda3/lib/python3.12/site-packages/otree/views/abstract.py", line 583, in post_handle_form
+    raise BotError(msg)
+otree.common.BotError: Page "Feedback": Bot submission failed form validation: ["future_participation: ['This field is required.']"] Check your bot code, then create a new session. Data submitted was: {'feedback_final': 'This is a test feedback.'}

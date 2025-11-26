@@ -1,0 +1,5 @@
+id_in_session,participant_code,_is_bot,id,id_in_group,_payoff,round_number,_role,gives_consent,scenario_code,dropout,audio_unlocked,age,gender,education_lvl,neighborhood_type,political_affiliation,audio_answer,audio_answer_image,response,test_scenario,dilemmatopic,majority,howmanyneighbors,total_correct,training_counter,attention_check,political_charge,emotional_charge,commit_attention_Q1,commit_attention_Q2,commit_attention_Q3,subsession_id,group_id,participant_id,session_id
+1,7kzadw5c,0,225,1,0,1,,1.0,s2_n,0,1,,,,,,4.0,5.0,0.0,,,,,,0,,5.0,5.0,,,,17,17,225,17
+2,5lr2h27y,0,226,2,0,1,,,,0,0,,,,,,,,,,,,,,0,,,,,,,17,17,226,17
+3,w2dy4qf7,0,227,3,0,1,,,,0,0,,,,,,,,,,,,,,0,,,,,,,17,17,227,17
+4,8d2td72b,0,228,4,0,1,,,,0,0,,,,,,,,,,,,,,0,,,,,,,17,17,228,17

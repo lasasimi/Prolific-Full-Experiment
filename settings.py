@@ -6,8 +6,9 @@ SESSION_CONFIGS = [
         # NOTE: change to the full experiment
         name='p00_fullexperiment_20251020',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
-        num_demo_participants=20, # N08 N04 (must be a multiple of 4)
+        num_demo_participants=4, # N08 N04 (must be a multiple of 4)
         display_name="Combined app",
+        use_browser_bots=True,
         # no consent, failed training, faield attention check, and became inactive in mock app
         returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
         # screened out, either because answered neutral (not eligible) or not wanting to commit
@@ -27,6 +28,7 @@ SESSION_CONFIGS = [
         N08_p99 = 0,
         N04_p99 = 0,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
+
     ),
 ]
 

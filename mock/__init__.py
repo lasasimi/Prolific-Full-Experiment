@@ -29,7 +29,31 @@ class C(BaseConstants):
     MEDIUM_WAIT = 15 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
-    N_TEST = 8 # SIZE OF DISCUSSION GROUP 
+    N_TEST = 4 # SIZE OF DISCUSSION GROUP
+
+    PURPLE_TEAM_IDS = [1, 2] #[1, 3, 5, 7, 9]
+    GREEN_TEAM_IDS = [3, 4] #[2, 4, 6, 8, 10]
+    FIXED_NETWORK = {
+        1: [2, 3],
+        2: [1, 4],
+        3: [1, 4],
+        4: [2, 3]
+    }
+    '''
+    FIXED_NETWORK = {
+        1: [2, 3, 9, 10],
+        2: [1, 3, 4, 10],
+        3: [1, 2, 4, 5],
+        4: [2, 3, 5, 6],
+        5: [3, 4, 6, 7],
+        6: [4, 5, 7, 8],
+        7: [5, 6, 8, 9],
+        8: [6, 7, 9, 10],
+        9: [7, 8, 10, 1],
+        10: [9, 1, 2, 8],
+    }
+'''
+
     MAX_WARNING = 3 # Max number of forced responses before the inactivity warning shows up
     MAX_FORCED = NUM_ROUNDS // 2  # Max number of forced responses to not get paid
     SCENARIOS = open_CSV('presurvey/scenarios_1np.csv')
@@ -45,6 +69,73 @@ class C(BaseConstants):
 
 class Subsession(BaseSubsession):
     pass
+   
+
+
+def group_by_arrival_time_method(subsession, waiting_players):
+    """
+    Called by a wait page with group_by_arrival_time = True.
+    For the test network: forms groups of 4 = 2 For (purple) + 2 Against (green).
+    Neutral (0) are expelled as singles.
+    """
+
+    session = subsession.session
+    sce = session.SCE
+
+    print(f'Waiting players: {waiting_players}')
+
+    purple_candidates = []  # For (1)
+    green_candidates = []   # Against (-1)
+    neutral_players = []    # Neutral / missing
+
+    # Classify players by their presurvey response on this scenario
+    for p in waiting_players:
+        p.participant.scenario = sce
+
+        resp = p.participant.all_responses.get(sce, None)
+        if resp == 1:
+            purple_candidates.append(p)
+        elif resp == -1:
+            green_candidates.append(p)
+        else:
+            # Neutral (0) or no response
+            neutral_players.append(p)
+
+    # 1) If any neutrals are waiting, expel them one by one as "singles"
+    if neutral_players:
+        player = neutral_players[0]
+        print(f'Expelling neutral player {player.participant.code} from grouping.')
+        player.participant.single_group = True
+        return [player]
+
+    # 2) If we have at least 2 purple and 2 green, form the 4-player group
+    if len(purple_candidates) >= 2 and len(green_candidates) >= 2:
+        purple_players = purple_candidates[:2]
+        green_players = green_candidates[:2]
+
+        # Position mapping for teams:
+        # 1, 2 -> purple ; 3, 4 -> green
+        slot_map = {
+            1: purple_players[0],
+            2: purple_players[1],
+            3: green_players[0],
+            4: green_players[1],
+        }
+
+        ordered_players = [slot_map[pos] for pos in range(1, C.N_TEST + 1)]
+
+        print('Creating a 4-player group with fixed team positions:')
+        print([(pos, slot_map[pos].participant.code) for pos in range(1, C.N_TEST + 1)])
+
+        # IMPORTANT: do not assign neighbors here.
+        # Neighbors are assigned later based on id_in_group and C.FIXED_NETWORK.
+        return ordered_players
+
+    # 3) Otherwise, not enough people yet -> keep waiting
+    print('Not enough players yet to form a 4-player network.')
+    return []
+
+
 
 def creating_session(subsession):
     session = subsession.session
@@ -96,86 +187,6 @@ def counters_full(player):
     return (session.N04_p00 == session.MAX_N04_p00 and session.N04_p25 == session.MAX_N04_p25 and session.N04_p50 == session.MAX_N04_p50 and
             session.N08_p00 == session.MAX_N08_p00 and session.N08_p25 == session.MAX_N08_p25 and session.N08_p50 == session.MAX_N08_p50 and session.MAX_N08_p99 == session.N08_p99 and session.MAX_N04_p99 == session.N04_p99)
 
-
-def group_by_arrival_time_method(subsession, waiting_players):
-    session = subsession.session
-    print(f'Waiting players: {waiting_players}')
-    response = {}
-    for p in waiting_players:
-        response[p.participant.code] = p.participant.all_responses
-        p.participant.scenario = session.SCE
-    
-    # Dynamically reconstruct scenario_counts from participant.vars
-    sce = session.SCE
-    scenario_counts = {sce: {'A': [], 'F': []}}
-    for p in waiting_players:
-        if sce in response[p.participant.code].keys():
-            if response[p.participant.code][sce] == -1:
-                scenario_counts[sce]['A'].append(p)
-            elif response[p.participant.code][sce] == 1:
-                scenario_counts[sce]['F'].append(p)
-    print(f"Debug: Scenario counts before grouping: {scenario_counts}")
-
-    group = []
-
-    if len(waiting_players) == C.N_TEST and not N08_full(subsession):
-    # check if creating 1 group of 8 is possible 
-        print('N08 is not full, creating a group of 8')
-        sce = session.SCE
-        print(f"Debug: Scenario {sce}, A count: {len(scenario_counts[sce]['A'])}, F count: {len(scenario_counts[sce]['F'])}")
-        if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: 
-            print('Ready to create a LARGE discussion group')
-            group = scenario_counts[sce]['A'] + scenario_counts[sce]['F'] 
-            for p in group:
-                p.participant.scenario = sce
-                # Save the scenario and faction to participant.vars
-                p.participant.vars['scenario'] = sce
-                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
-            return group 
-    # If N08 is full or any of the players has been waiting for medium time, create a group of 4
-    if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
-        print('N08 is full or medium wait, checking for smaller groups')
-        # NOTE: for later, ability to specifically check for A or -1 for the N04 group
-        # if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
-        #     print('Creating a group of 4 for A (-1)')
-        sce = session.SCE
-        if len(waiting_players) >= C.N_TEST//2:
-            print('Creating a group of 4')
-            print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))
-
-            if len(scenario_counts[sce]['A']) >= C.N_TEST//2:
-                group = random.sample(scenario_counts[sce]['A'], k=C.N_TEST//2)
-            elif len(scenario_counts[sce]['F']) >= C.N_TEST//2:
-                group = random.sample(scenario_counts[sce]['F'], k=C.N_TEST//2)
-            
-                print("About to assign scenarios to group:", group)
-                for p in group:
-                    p.participant.scenario = sce
-                    # Save the scenario and faction to participant.vars
-                    p.participant.vars['scenario'] = sce
-                    p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
-                return group
-            
-    # Check if counters are full
-    if all(counters_full(p) for p in waiting_players):
-        print("All counters are full. Adding all waiting players to long_waiting.")
-        long_waiting = waiting_players  # Add all players to long_waiting
-    else:
-        # players waiting for more than threshold need to be let go
-        long_waiting = [p for p in waiting_players if long_wait(p) or counters_full(p)]
-
-    if len(long_waiting) >= 1:
-        for player in long_waiting:
-            print('Ready to let participant go, waiting for too long')
-            return [player]
-        
-    if not group:
-        print('Not enough players yet to create a group')
-        return []
-    
-    return group
-
-
 class Group(BaseGroup):
     group_size = models.StringField(initial='single')
     is_group_single = models.BooleanField()
@@ -222,6 +233,11 @@ class Player(BasePlayer):
     prev_majority = models.IntegerField()
     # Neighbor responses
     neighbor_responses = models.StringField()
+
+   
+
+    ###Set the id of neighbors based on their first round to clasify them in the teams
+   
     
 def counters_update(group:Group):
     if group.group_size == 'N08':
@@ -411,6 +427,7 @@ class DiscussionGRPWaitPage(WaitPage):
                     player.participant.own_faction = []
                     player.participant.other_faction = []
 
+
         else:
             # Copy group variable settings from round 1
             group.group_size = group.in_round(1).group_size
@@ -426,22 +443,16 @@ class DiscussionGRPWaitPage(WaitPage):
                 p.old_response = p.in_round(p.round_number - 1).new_response
 
         if group.group_size == 'N08':
+            # Use the fixed network neighbors instead of random factions
             for p in group.get_players():
-                factions = [random.choice(['own','other']) for i in range(int(C.N_TEST/2)-1)]
-                labels, counts = np.unique(factions, return_counts=True)
-                # Convert to plain str and int types
-                faction_counts = {str(label): int(count) for label, count in zip(labels, counts)}
-                faction_map = {
-                    'own': p.participant.own_faction,
-                    'other': p.participant.other_faction,
-                    # Add more if needed
-                }
-                
-                print(f"Debug: faction map {faction_map}, faction counts {faction_counts}")
-                p.participant.discussion_grp = []
-                for key in faction_counts.keys():
-                    p.participant.discussion_grp = p.participant.discussion_grp + random.sample(faction_map[key],faction_counts[key])
+                pos = p.id_in_group  # 1..4
+                neighbor_positions = C.FIXED_NETWORK[pos]   # e.g., [2, 3]
+                neighbors = [group.get_player_by_id(npos) for npos in neighbor_positions]
+
+                p.participant.discussion_grp = [n.participant.code for n in neighbors]
                 p.discussion_grp = str(p.participant.discussion_grp)
+
+
 
         if group.group_size == 'N04':
             for p in group.get_players():
@@ -776,5 +787,33 @@ class FinalRound(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
+
+class Identity(Page):
+    """
+    Simple page telling them their 'side' and that they will interact with 
+    the same 4 people (fixed network).
+    """
+
+    @staticmethod
+    def is_displayed(player):
+        # Show once, at the start of the group discussion, only for actual group participants
+        return (
+            player.round_number == 1
+            and player.participant.complete_presurvey
+            and not player.participant.single_group
+            and not player.participant.away_long
+        )
+
+    @staticmethod
+    def vars_for_template(player):
+        # Logical side based on presurvey team; you can rename mapping as needed
+        # Here we simply say: you = PURPLE, others = GREEN (text only)
+        return dict(
+            your_team=player.team,          # 'Red' or 'Blue'
+            your_color='PURPLE',            # for the message text
+            incumbent_color='GREEN',
+            neighbor_ids=[n.id_in_group for n in player.get_neighbors()],
+        )
+
 
 page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, FinalRoundWaitPage, FinalRound]

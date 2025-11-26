@@ -6,7 +6,7 @@ from . import *
 class PlayerBot(Bot):
     def play_round(self):
         yield Submission(Feedback, 
-                         dict(feedback_final='This is a test feedback.'), 
+                         dict(feedback_final='This is a test feedback.', future_participation=True), 
                          check_html=False)
         yield Submission(MyPage, 
                     check_html=False)
