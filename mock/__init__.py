@@ -24,22 +24,22 @@ class C(BaseConstants):
     # NOTE: Replace with 20 for real experiment
     NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
-    LONG_WAIT = 20  #(minutes)
+    LONG_WAIT = 5  #(minutes)
     # NOTE: Set this to 10 minutes
     MEDIUM_WAIT = 15 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
-    N_TEST = 4 # SIZE OF DISCUSSION GROUP
+    N_TEST = 10 # SIZE OF DISCUSSION GROUP
 
-    PURPLE_TEAM_IDS = [1, 2] #[1, 3, 5, 7, 9]
-    GREEN_TEAM_IDS = [3, 4] #[2, 4, 6, 8, 10]
-    FIXED_NETWORK = {
-        1: [2, 3],
-        2: [1, 4],
-        3: [1, 4],
-        4: [2, 3]
-    }
-    '''
+    PURPLE_TEAM_IDS = [1, 3, 5, 7, 9] # [1, 2]
+    GREEN_TEAM_IDS =  [2, 4, 6, 8, 10] # [3, 4]
+    #FIXED_NETWORK = {
+    #    1: [2, 3],
+    #    2: [1, 4],
+    #    3: [1, 4],
+    #    4: [2, 3]
+    #}
+
     FIXED_NETWORK = {
         1: [2, 3, 9, 10],
         2: [1, 3, 4, 10],
@@ -52,7 +52,6 @@ class C(BaseConstants):
         9: [7, 8, 10, 1],
         10: [9, 1, 2, 8],
     }
-'''
 
     MAX_WARNING = 3 # Max number of forced responses before the inactivity warning shows up
     MAX_FORCED = NUM_ROUNDS // 2  # Max number of forced responses to not get paid
@@ -76,6 +75,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
     """
     Called by a wait page with group_by_arrival_time = True.
     For the test network: forms groups of 4 = 2 For (purple) + 2 Against (green).
+    Updated, 5 and 5
     Neutral (0) are expelled as singles.
     """
 
@@ -83,15 +83,23 @@ def group_by_arrival_time_method(subsession, waiting_players):
     sce = session.SCE
 
     print(f'Waiting players: {waiting_players}')
+    now = time.time()
+    for p in waiting_players:
+        if not hasattr(p.participant, 'wait_page_arrival'):
+            p.participant.wait_page_arrival = now
+        p.participant.scenario = sce
+
+    waiting_players_sorted = sorted(
+        waiting_players,
+        key=lambda p: p.participant.wait_page_arrival
+    )
 
     purple_candidates = []  # For (1)
     green_candidates = []   # Against (-1)
     neutral_players = []    # Neutral / missing
 
     # Classify players by their presurvey response on this scenario
-    for p in waiting_players:
-        p.participant.scenario = sce
-
+    for p in waiting_players_sorted:
         resp = p.participant.all_responses.get(sce, None)
         if resp == 1:
             purple_candidates.append(p)
@@ -107,19 +115,38 @@ def group_by_arrival_time_method(subsession, waiting_players):
         print(f'Expelling neutral player {player.participant.code} from grouping.')
         player.participant.single_group = True
         return [player]
+    #Long waiting!!
+    long_waiting = [p for p in waiting_players_sorted if long_wait(p)]
+    if long_waiting:
+        player = long_waiting[0]
+        print(
+            f'Kicking player {player.participant.code} for long wait: '
+            f'{time.time() - player.participant.wait_page_arrival:.1f} seconds.'
+        )
+        # Decide how to classify them:
+        # here I treat them as "away_long" so they go to noPay flow
+        player.participant.away_long = True
+        player.participant.single_group = True
+        return [player]
 
     # 2) If we have at least 2 purple and 2 green, form the 4-player group
-    if len(purple_candidates) >= 2 and len(green_candidates) >= 2:
-        purple_players = purple_candidates[:2]
-        green_players = green_candidates[:2]
+    if len(purple_candidates) >= 5 and len(green_candidates) >= 5:
+        purple_players = purple_candidates[:5]
+        green_players = green_candidates[:5]
 
         # Position mapping for teams:
-        # 1, 2 -> purple ; 3, 4 -> green
+        # 1, 3, 5, 7, 9 -> purple ; 2, 4, 6, 8, 10 -> green
         slot_map = {
             1: purple_players[0],
-            2: purple_players[1],
-            3: green_players[0],
+            2: green_players[0],
+            3: purple_players[1],
             4: green_players[1],
+            5: purple_players[2],
+            6: green_players[2],
+            7: purple_players[3],
+            8: green_players[3],
+            9: purple_players[4],
+            10: green_players[4],
         }
 
         ordered_players = [slot_map[pos] for pos in range(1, C.N_TEST + 1)]

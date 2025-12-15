@@ -47,7 +47,9 @@ class PlayerBot(Bot):
 
             # Deterministic presurvey opinions for grouping:
             # players 1-2 are purple (For=1), players 3-4 are green (Against=-1)
-            if self.player.id_in_subsession in [1, 2]:
+            # Deterministic presurvey opinions for grouping:
+            # Odd players are purple (For=1), Even players are green (Against=-1)
+            if self.player.id_in_subsession % 2 == 1:
                 resp = 1
             else:
                 resp = -1

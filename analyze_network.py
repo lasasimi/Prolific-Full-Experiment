@@ -28,37 +28,30 @@ def analyze_network(csv_path='bot_test_data/mock.csv'):
     print(f'Total data rows: {len(df_game)}')
     print()
     
-    # Expected network
-    print('🔗 EXPECTED FIXED NETWORK STRUCTURE')
-    print('-' * 70)
-    print('Position 1 → neighbors at positions [2, 3]')
-    print('Position 2 → neighbors at positions [1, 4]')
-    print('Position 3 → neighbors at positions [1, 4]')
-    print('Position 4 → neighbors at positions [2, 3]')
-    print()
+ 
     
-    # Find 4-player groups (those with exactly 2 neighbors)
-    print('✅ ACTUAL 4-PLAYER GROUPS')
+    # Find 10-player groups (those with exactly 4 neighbors)
+    print('✅ ACTUAL 10-PLAYER GROUPS')
     print('-' * 70)
     
     round1 = df_game[df_game['subsession.round_number'] == 1].copy()
-    four_player_participants = []
+    ten_player_participants = []
     
     for _, row in round1.iterrows():
         disc_grp_str = row['player.discussion_grp']
         neighbors = eval(disc_grp_str)
-        if len(neighbors) == 2:
-            four_player_participants.append(row['participant.code'])
+        if len(neighbors) == 4:
+            ten_player_participants.append(row['participant.code'])
     
-    # Group them into sets of 4
-    groups_found = len(four_player_participants) // 4
-    print(f'Found {groups_found} complete 4-player group(s)\n')
+    # Group them into sets of 10
+    groups_found = len(ten_player_participants) // 10
+    print(f'Found {groups_found} complete 10-player group(s)\n')
     
     # Analyze each group
     for group_num in range(groups_found):
-        start_idx = group_num * 4
-        end_idx = start_idx + 4
-        group_codes = four_player_participants[start_idx:end_idx]
+        start_idx = group_num * 10
+        end_idx = start_idx + 10
+        group_codes = ten_player_participants[start_idx:end_idx]
         
         print(f'Group {group_num + 1}: {group_codes}')
         
@@ -104,7 +97,7 @@ def analyze_network(csv_path='bot_test_data/mock.csv'):
     
     # Group statistics
     if groups_found > 0:
-        sample_group_data = df_game[df_game['participant.code'].isin(four_player_participants[:4])]
+        sample_group_data = df_game[df_game['participant.code'].isin(ten_player_participants[:10])]
         if len(sample_group_data) > 0:
             print('📈 GROUP TREATMENT DETAILS')
             print('-' * 70)

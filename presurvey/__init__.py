@@ -228,7 +228,7 @@ class Introduction(Page):
         player.participant.gives_consent = player.gives_consent
         player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
  
- 
+
 class AudioCheck(Page):
     form_model = 'player'
     form_fields = ['audio_answer', 'audio_answer_image', 'audio_unlocked']
@@ -250,7 +250,6 @@ class AudioCheck(Page):
     def is_displayed(player:Player):
         return player.round_number == 1 and player.participant.gives_consent
     ## Give option to return the submission if the audio check is failed
-
    
 class Demographics(Page):
     form_model = 'player'

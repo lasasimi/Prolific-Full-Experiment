@@ -1,5 +1,5 @@
 {{ extends 'otree/WaitPage.html' }}
-<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+<link rel="stylesheet" href="{% static 'global/style.css' %}" />
 {{ block title }}
 <!-- We leave this blank so the title can be fully handled inside content -->
 {{ endblock }}
@@ -9,8 +9,10 @@
 
 <style>
     body {
-        background-color: #d3d3d3; /* Light gray background */
+        background-color: #d3d3d3;
+        /* Light gray background */
     }
+
     #game-area {
         width: 500px;
         height: 80px;
@@ -19,54 +21,71 @@
         margin: 20px auto;
         background-color: white;
     }
+
     #circle {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%; /* circle by default */
-    background-color: rgb(255, 128, 0);
-    position: absolute;
-    cursor: pointer;
-    display: flex;             /* only needed if using emoji/text inside */
-    align-items: center;       /* center emoji vertically */
-    justify-content: center;   /* center emoji horizontally */
-    font-size: 14px;           /* size for emoji, optional */
-    text-align: center;
-}
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        /* circle by default */
+        background-color: rgb(255, 128, 0);
+        position: absolute;
+        cursor: pointer;
+        display: flex;
+        /* only needed if using emoji/text inside */
+        align-items: center;
+        /* center emoji vertically */
+        justify-content: center;
+        /* center emoji horizontally */
+        font-size: 14px;
+        /* size for emoji, optional */
+        text-align: center;
+    }
 </style>
 <div class="yellow-box" style="text-align: center">
     <strong>🚨
-    Keep this tab open and do not disable audio.</strong> Otherwise, you will not know when you're grouped.
+        Keep this tab open and do not disable audio.</strong> Otherwise, you will not know when you're grouped.
 </div>
 
 <div class="wait-container">
     <!-- Notification message -->
-   
+
 
 
     <!-- Centered Title -->
     <div class="custom-title">🕒 Waiting for a Group to Form</div>
 
-    <p>You completed Phase 1! You are now waiting to be placed into a group with other participants for the interactive round (Phase 2).</p>
-    <img src="/static/neighbors-new.png" class="img-fluid" alt="Meeting Neighbors Image" style="float:right; margin-left: 15px; max-width: 100%; height: 200px; "> 
-        <p>🗓️ Imagine that <strong>tomorrow</strong>, the next <strong>community meeting is going to happen.</strong>
-        <p>🚶🏻 Now, you are out for a walk. You notice that the neighbors seem to be <strong>talking about the dilemma.</strong></p>
-        <p>💭 In the next phase, <strong>you will meet various neighbors and get to hear about what they think.</strong>
-        <p>🗳️<strong>You could use this to make up your mind on what to choose</strong> in the upcoming meeting.</p>
-        <p>🏁 At the end of the rounds, you will see what your community decides on.</p>  
+    <p>You completed Phase 1! You are now waiting to be placed into a group with other participants for the interactive
+        round (Phase 2).</p>
+    <img src="/static/neighbors-new.png" class="img-fluid" alt="Meeting Neighbors Image"
+        style="float:right; margin-left: 15px; max-width: 100%; height: 200px; ">
+    <p>🗓️ Imagine that <strong>tomorrow</strong>, the next <strong>community meeting is going to happen.</strong>
+    <p>🚶🏻 Now, you are out for a walk. You notice that the neighbors seem to be <strong>talking about the
+            dilemma.</strong></p>
+    <p>💭 In the next phase, <strong>you will meet various neighbors and get to hear about what they think.</strong>
+    <p>🗳️<strong>You could use this to make up your mind on what to choose</strong> in the upcoming meeting.</p>
+    <p>🏁 At the end of the rounds, you will see what your community decides on.</p>
     <hr>
 
     <strong>⚠️ Important Information</strong>
     <ul>
-    <li>You may wait <strong><span style="color: red;">10-20 minutes</span></strong> while your group is formed, <strong><span style="color: red;">do not leave this tab/window or you will be considered inactive and will not be grouped</strong></span>.</li>
-    <li>The next part of the study involves <strong>real-time interaction</strong> with others indicated by the <b>blinking (Live) 🔴 text.</b></li> 
+        <li>You may wait <strong><span style="color: red;">10-20 minutes</span></strong> while your group is formed,
+            <strong><span style="color: red;">do not leave this tab/window or you will be considered inactive and will
+                    not be grouped</strong></span>.
+        </li>
+        <li>The next part of the study involves <strong>real-time interaction</strong> with others indicated by the
+            <b>blinking (Live) 🔴 text.</b>
+        </li>
     </ul>
 
-    <p class="yellow-box" style="text-align: center"> <strong>There will be a prompt</strong> to check whether you are active. You must <strong>click the button</strong> to indicate your activity in this waiting page. <strong><span style="color: red;">Inactivity will forfeit all rewards.</strong></span></p>
-    <b>Prevent being inactive</b> by 🔄 refreshing the page or playing  this game 👇<br><hr>
+    <p class="yellow-box" style="text-align: center"> <strong>There will be a prompt</strong> to check whether you are
+        active. You must <strong>click the button</strong> to indicate your activity in this waiting page. <strong><span
+                style="color: red;">Inactivity will forfeit all rewards.</strong></span></p>
+    <b>Prevent being inactive</b> by 🔄 refreshing the page or playing this game 👇<br>
+    <hr>
     <!-- 👇 Mini Catch-the-Circle Game -->
     <div style="text-align:center;">
         <h5>🎮 Mini Game While You Wait</h5>
-        <em>Catch the shape as many times as you can before it refreshes!  </em>
+        <em>Catch the shape as many times as you can before it refreshes! </em>
 
         <div id="game-area">
             <div id="circle"></div>
@@ -79,14 +98,15 @@
     </div>
     <hr>
     <strong>🔔 After you are grouped:</strong>
-    <ul><li>Stay at your <strong>browser tab/window</strong> and remain <strong>attentive</strong>.</li>
-    <li>Stay <strong>active</strong> until the activity ends.</li>
-    </li>
+    <ul>
+        <li>Stay at your <strong>browser tab/window</strong> and remain <strong>attentive</strong>.</li>
+        <li>Stay <strong>active</strong> until the activity ends.</li>
+        </li>
     </ul>
     <strong>💰 Total Payment:</strong>
     <ul>
-    <li><strong>3.50 GBP / 4.72 USD</strong> if you complete all the 20 short rounds.</li>
-    <li><strong>1.50 GBP / 2.01 USD</strong> if a group is not formed after 20 minutes.</li>
+        <li><strong>3.50 GBP / 4.72 USD</strong> if you complete all the 20 short rounds.</li>
+        <li><strong>1.50 GBP / 2.01 USD</strong> if a group is not formed after 20 minutes.</li>
     </ul>
 
 </div>
@@ -126,19 +146,19 @@
             localStorage.setItem("circleHighScore", highScore);
         }
     });
-    
-    function changeShapeAndColor() {
-    // Shapes: circle, square, rounded square
-    const shapes = ["50%", "0%", "20%"];
-    const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
-    circle.style.borderRadius = randomShape;
-    localStorage.setItem("circleShape", randomShape);
 
-    // Colors: pick a random color
-    const colors = ["rgb(255,128,0)", "rgb(0,128,255)", "rgb(128,0,255)", "rgb(0,200,0)", "rgb(255,0,128)"];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    circle.style.backgroundColor = randomColor;
-    localStorage.setItem("circleColor", randomColor);
+    function changeShapeAndColor() {
+        // Shapes: circle, square, rounded square
+        const shapes = ["50%", "0%", "20%"];
+        const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+        circle.style.borderRadius = randomShape;
+        localStorage.setItem("circleShape", randomShape);
+
+        // Colors: pick a random color
+        const colors = ["rgb(255,128,0)", "rgb(0,128,255)", "rgb(128,0,255)", "rgb(0,200,0)", "rgb(255,0,128)"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        circle.style.backgroundColor = randomColor;
+        localStorage.setItem("circleColor", randomColor);
     }
 
     // Apply saved shape and color on page load
@@ -163,33 +183,33 @@
 
 {% if participant.audio_unlocked %}
 <script>
-  const bgm = new Audio("{{ static 'lounge-jazz-elevator-music.mp3' }}");
-  bgm.loop = true;
-  bgm.volume = 0.4;
-  bgm.play().catch(()=>{});
+    const bgm = new Audio("{{ static 'lounge-jazz-elevator-music.mp3' }}");
+    bgm.loop = true;
+    bgm.volume = 0.4;
+    bgm.play().catch(() => { });
 
-  window.addEventListener("beforeunload", () => {
-      bgm.pause();
-      bgm.currentTime = 0;
-      // Play bell once when leaving waiting page
-      const bell = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
-      bell.play().catch(()=>{});
-  });
+    window.addEventListener("beforeunload", () => {
+        bgm.pause();
+        bgm.currentTime = 0;
+        // Play bell once when leaving waiting page
+        const bell = new Audio("{{ static 'bike-bell-ring-once.mp3' }}");
+        bell.play().catch(() => { });
+    });
 </script>
 {% endif %}
 
 
 
 {% if view.group_by_arrival_time %}
-    <script>
-        // Reload the page every 20 seconds to check for group formation
-        if (!window.reloadScheduled) {
-            window.reloadScheduled = true;
-            var SECOND = 1000;
-            setInterval(function () {
-                window.location.reload();
-            }, 20 * SECOND); // IMPORTANT: must be higher than GBAT_INACTIVE_SECONDS_TO_CONFIRM = 15 in settings.py or else it will reload before the server confirms inactivity
-        }
-    </script>
+<script>
+    // Reload the page every 20 seconds to check for group formation
+    if (!window.reloadScheduled) {
+        window.reloadScheduled = true;
+        var SECOND = 1000;
+        setInterval(function () {
+            window.location.reload();
+        }, 20 * SECOND); // IMPORTANT: must be higher than GBAT_INACTIVE_SECONDS_TO_CONFIRM = 15 in settings.py or else it will reload before the server confirms inactivity
+    }
+</script>
 {% endif %}
 {{ endblock }}
