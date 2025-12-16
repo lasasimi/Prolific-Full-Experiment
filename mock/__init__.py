@@ -159,7 +159,7 @@ def group_by_arrival_time_method(subsession, waiting_players):
         return ordered_players
 
     # 3) Otherwise, not enough people yet -> keep waiting
-    print('Not enough players yet to form a 4-player network.')
+    print('Not enough players yet to form a 10-player network.')
     return []
 
 
@@ -167,15 +167,11 @@ def group_by_arrival_time_method(subsession, waiting_players):
 def creating_session(subsession):
     session = subsession.session
     # Retrieve values from session config and store them in the session
-    session.MAX_N04_p00 = session.config.get('N04_p00', 0)
-    session.MAX_N04_p25 = session.config.get('N04_p25', 0)
-    session.MAX_N04_p50 = session.config.get('N04_p50', 0)
-    session.MAX_N08_p00 = session.config.get('N08_p00', 0)
-    session.MAX_N08_p25 = session.config.get('N08_p25', 0)
-    session.MAX_N08_p50 = session.config.get('N08_p50', 0)
+    session.MAX_p00 = session.config.get('p00', 0)
+    session.MAX_p50 = session.config.get('p50', 0)
+    session.MAX_p100 = session.config.get('p100', 0)
     # Control condition
-    session.MAX_N08_p99 = session.config.get('N08_p99', 0) 
-    session.MAX_N04_p99 = session.config.get('N04_p99', 0)
+    session.MAX_p99 = session.config.get('p99', 0)
     session.SCE = session.config.get('SCE')
     session.start_time = time.time()  # record the session start time
 
@@ -187,14 +183,6 @@ def creating_session(subsession):
         player.participant.too_many_forced = False
         player.participant.forced_response_counter = 0
 
-def N08_full(subsession):
-    session = subsession.session
-    return (
-    session.N08_p00 == session.MAX_N08_p00 and
-    session.N08_p25 == session.MAX_N08_p25 and
-    session.N08_p50 == session.MAX_N08_p50 and
-    session.N08_p99 == session.MAX_N08_p99
-)
 
 def long_wait(player):
     participant = player.participant
@@ -211,14 +199,16 @@ def medium_wait(player):
 
 def counters_full(player):
     session = player.subsession.session
-    return (session.N04_p00 == session.MAX_N04_p00 and session.N04_p25 == session.MAX_N04_p25 and session.N04_p50 == session.MAX_N04_p50 and
-            session.N08_p00 == session.MAX_N08_p00 and session.N08_p25 == session.MAX_N08_p25 and session.N08_p50 == session.MAX_N08_p50 and session.MAX_N08_p99 == session.N08_p99 and session.MAX_N04_p99 == session.N04_p99)
+    return (session.p00 == session.MAX_p00 and 
+            session.p50 == session.MAX_p50 and
+            session.p100 == session.MAX_p100 and 
+            session.p99 == session.MAX_p99)
 
 class Group(BaseGroup):
-    group_size = models.StringField(initial='single')
+    # group_size = models.StringField(initial='single')
     is_group_single = models.BooleanField()
-    beta_50 = models.BooleanField()  # for beta 0.50 treatment
-    anti_prop = models.StringField()  # for p value treatment
+    # beta_50 = models.BooleanField()  # for beta 0.50 treatment
+    campaign_prop = models.StringField()  # for p value treatment
     group_responses = models.LongStringField()  # store as string and later to dump as JSON
     majority_response = models.IntegerField() # to store the majority response in the final round
 
@@ -267,43 +257,34 @@ class Player(BasePlayer):
    
     
 def counters_update(group:Group):
-    if group.group_size == 'N08':
-        if group.anti_prop == 'p00':
-            group.subsession.session.N08_p00 += 1
-        if group.anti_prop == 'p25':
-            group.subsession.session.N08_p25 += 1
-        if group.anti_prop == 'p50':
-            group.subsession.session.N08_p50 += 1
-        if group.anti_prop == 'p99':
-            group.subsession.session.N08_p99 += 1
-    if group.group_size == 'N04':
-        if group.anti_prop == 'p00':
-            group.subsession.session.N04_p00 += 1
-        if group.anti_prop == 'p25':
-            group.subsession.session.N04_p25 += 1
-        if group.anti_prop == 'p50':
-            group.subsession.session.N04_p50 += 1
-        if group.anti_prop == 'p99':
-            group.subsession.session.N04_p99 += 1
+    if group.campaign_prop == 'p00':
+        group.subsession.session.p00 += 1
+    if group.campaign_prop == 'p50':
+        group.subsession.session.p50 += 1
+    if group.campaign_prop == 'p100':
+        group.subsession.session.p100 += 1
+    if group.anti_prop == 'p99':
+        group.subsession.session.N08_p99 += 1
+
 
 def p_00(group:Group):
-    group.anti_prop = 'p00'
-    counters_update(group)
-
-def p_25(group:Group):
-    group.anti_prop = 'p25'
+    group.campaign_prop = 'p00'
     counters_update(group)
 
 def p_50(group:Group):
-    group.anti_prop = 'p50'
+    group.campaign_prop = 'p50'
+    counters_update(group)
+
+def p_100(group:Group):
+    group.campaign_prop = 'p100'
     counters_update(group)
 
 def p_99(group:Group):
-    group.anti_prop = 'p99'
+    group.campaign_prop = 'p99'
     counters_update(group)
 
 def random_p(group:Group):
-    group.anti_prop = random.choice(['p00','p25','p50'])
+    group.campaign_prop = random.choice(['p00','p50','p100'])
     counters_update(group)
 
 
@@ -324,34 +305,16 @@ class GroupSizeWaitPage(WaitPage):
         group_players = group.get_players()
         print(f'Debug: Group players: {group_players}, number of players: {len(group_players)}')
         if len(group_players) == C.N_TEST:
-            group_size = 'N08'
             is_group_single = False
-        elif len(group_players) == C.N_TEST/2:
-            group_size = 'N04'
-            is_group_single = False
-        else:
-            group_size = 'single'
-            is_group_single = True     
 
-        # Save to the group model (for round 1 only)
-        group.group_size = group_size
         group.is_group_single = is_group_single 
 
         if not group.is_group_single:
-            if group.group_size == 'N08':
-                group.beta_50 = True
-                conditions = [
-                    (session.N08_p00 < session.MAX_N08_p00, p_00),
-                    (session.N08_p25 < session.MAX_N08_p25, p_25),
-                    (session.N08_p50 < session.MAX_N08_p50, p_50),
-                    (session.N08_p99 < session.MAX_N08_p99, p_99)]              
-            elif group.group_size == 'N04':
-                group.beta_50 = False
-                conditions = [
-                    (session.N04_p00 < session.MAX_N04_p00, p_00),
-                    (session.N04_p25 < session.MAX_N04_p25, p_25),
-                    (session.N04_p50 < session.MAX_N04_p50, p_50),
-                    (session.N04_p99 < session.MAX_N04_p99, p_99)] 
+            conditions = [
+                (session.p00 < session.MAX_p00, p_00),
+                (session.p50 < session.MAX_p50, p_50),
+                (session.p100 < session.MAX_p100, p_100),
+                (session.p99 < session.MAX_p99, p_99)]              
                 
             # Shuffle the order
             random.shuffle(conditions)
@@ -359,26 +322,25 @@ class GroupSizeWaitPage(WaitPage):
             for condition, action in conditions:
                 if condition:
                     action(group)
-                    print(f'Condition: non-fallback (random choice)', f'Group beta .50?:{group.beta_50}', f'Group AC prop:{group.anti_prop}')
+                    print(f'Condition: non-fallback (random choice)', f'Group campaign prop:{group.campaign_prop}')
                     break
             else: 
                 # The else is not tied to the if. It runs only if none of the conditions were True, because only then does the for loop finish without breaking.
 
                 # if all quotas are full, choose randomly
                 random_p(group)
-                print("Condition: fallback (random choice)", f'Group beta .50?:{group.beta_50}', f'Group AC prop:{group.anti_prop}')
+                print("Condition: fallback (random choice)", f'Group campaign prop:{group.campaign_prop}')
 
         # Save persistently to participant
         # REVIEW 
         for p in group_players:
-            p.participant.group_size = group_size
             p.participant.is_group_single = is_group_single
-            if group_size == 'single' and not long_away(p):
+            if p.participant.is_group_single and not long_away(p):
                 p.participant.single_group = True  # they go to the pay app, but no bonus payment 
-            if group_size == 'single' and long_away(p):
+            if p.participant.is_group_single and long_away(p):
                 p.participant.away_long = True  # they go to the noPay app, no payment
 
-        print(f'Debug counter: session.N04_p00:{session.N04_p00}, session.N04_p25:{session.N04_p25}, session.N04_p50:{session.N04_p50}, session.N08_p00:{session.N08_p00}, session.N08_p25:{session.N08_p25}, session.N08_p50:{session.N08_p50}, session.N08_p99:{session.N08_p99}, session.N04_p99:{session.N04_p99}')
+        print(f'Debug counter: session.p00:{session.p00}, session.p50:{session.p50}, session.p100:{session.p100}, session.p99:{session.p99}')
 
     @staticmethod
     def is_displayed(player):
@@ -391,49 +353,47 @@ class DiscussionGRPWaitPage(WaitPage):
     def after_all_players_arrive(group: Group):
 
         if group.subsession.round_number == 1:
-            # Define how many anticonformists in each faction based on group parameter
-            if group.anti_prop == 'p50':
-                n_anti = 2
-            elif group.anti_prop == 'p25':
-                n_anti = 1
-            elif group.anti_prop == 'p00':
-                n_anti = 0
-            elif group.anti_prop == 'p99':
-                n_anti = 99
+            # # Define how many anticonformists in each faction based on group parameter
+            # if group.anti_prop == 'p50':
+            #     n_anti = 2
+            # elif group.anti_prop == 'p25':
+            #     n_anti = 1
+            # elif group.anti_prop == 'p00':
+            #     n_anti = 0
+            # elif group.anti_prop == 'p99':
+            #     n_anti = 99
 
-            print(f"Debug: n_anti = {n_anti}, group.anti_prop = {group.anti_prop}")
-            # Save control as a participant variable 
-            if n_anti == 99:
-                for p in group.get_players():
-                    p.participant.control = True
+            # print(f"Debug: n_anti = {n_anti}, group.anti_prop = {group.anti_prop}")
+            # # Save control as a participant variable 
+            # if n_anti == 99:
+            #     for p in group.get_players():
+            #         p.participant.control = True
                     
-            # Select participants to be anticonformists 
-            if group.group_size == 'N08':
-                faction_A = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==-1]
-                faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
+            # Save faction members
+            faction_A = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==-1]
+            faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
 
-                if n_anti != 99:
-                    anticonformists = random.sample(faction_A,n_anti) + random.sample(faction_F,n_anti) 
-                    print(f"Debug: anticonformists = {anticonformists}")
+            if n_anti != 99:
+                anticonformists = random.sample(faction_A,n_anti) + random.sample(faction_F,n_anti) 
+                print(f"Debug: anticonformists = {anticonformists}")
 
-                    # Extract participant codes from the anticonformists list
-                    anticonformists_codes = anticonformists
-                    print(f"Debug: anticonformists codes = {anticonformists}")
+                # Extract participant codes from the anticonformists list
+                anticonformists_codes = anticonformists
+                print(f"Debug: anticonformists codes = {anticonformists}")
 
-            elif group.group_size == 'N04':
-                faction_U = group.get_players()
 
-                if n_anti != 99: 
-                    anticonformists = random.sample(faction_U,n_anti)
-                    print(f"Debug: anticonformists = {anticonformists}")
+            faction_U = group.get_players()
 
-                    # Extract participant codes from the anticonformists list
-                    anticonformists_codes = [p.participant.code for p in anticonformists]
-                    print(f"Debug: anticonformists codes = {anticonformists_codes}")
-                else:
-                    anticonformists_codes = []
+            if n_anti != 99: 
+                anticonformists = random.sample(faction_U,n_anti)
+                print(f"Debug: anticonformists = {anticonformists}")
+
+                # Extract participant codes from the anticonformists list
+                anticonformists_codes = [p.participant.code for p in anticonformists]
+                print(f"Debug: anticonformists codes = {anticonformists_codes}")
             else:
-                anticonformists = []
+                anticonformists_codes = []
+
             # Assign anticonformists to their participant level variable
             if n_anti != 99:
                 for player in group.get_players():
@@ -457,10 +417,10 @@ class DiscussionGRPWaitPage(WaitPage):
 
         else:
             # Copy group variable settings from round 1
-            group.group_size = group.in_round(1).group_size
+            # group.group_size = group.in_round(1).group_size
             group.is_group_single = group.in_round(1).is_group_single 
-            group.beta_50 = group.in_round(1).beta_50
-            group.anti_prop = group.in_round(1).anti_prop  
+            # group.beta_50 = group.in_round(1).beta_50
+            group.campaign_prop = group.in_round(1).campaign_prop  
 
         if group.subsession.round_number == 1:
             for p in group.get_players():
@@ -469,23 +429,20 @@ class DiscussionGRPWaitPage(WaitPage):
             for p in group.get_players():
                 p.old_response = p.in_round(p.round_number - 1).new_response
 
-        if group.group_size == 'N08':
-            # Use the fixed network neighbors instead of random factions
-            for p in group.get_players():
-                pos = p.id_in_group  # 1..4
-                neighbor_positions = C.FIXED_NETWORK[pos]   # e.g., [2, 3]
-                neighbors = [group.get_player_by_id(npos) for npos in neighbor_positions]
+        # Use the fixed network neighbors instead of random factions
+        for p in group.get_players():
+            pos = p.id_in_group  # 1..4
+            neighbor_positions = C.FIXED_NETWORK[pos]   # e.g., [2, 3]
+            neighbors = [group.get_player_by_id(npos) for npos in neighbor_positions]
 
-                p.participant.discussion_grp = [n.participant.code for n in neighbors]
-                p.discussion_grp = str(p.participant.discussion_grp)
+            p.participant.discussion_grp = [n.participant.code for n in neighbors]
+            p.discussion_grp = str(p.participant.discussion_grp)
 
-
-
-        if group.group_size == 'N04':
-            for p in group.get_players():
-                others = p.get_others_in_group()
-                p.participant.discussion_grp = [o.participant.code for o in others]
-                p.discussion_grp = str(p.participant.discussion_grp)
+        # if group.group_size == 'N04':
+        #     for p in group.get_players():
+        #         others = p.get_others_in_group()
+        #         p.participant.discussion_grp = [o.participant.code for o in others]
+        #         p.discussion_grp = str(p.participant.discussion_grp)
 
         for player in group.get_players():
             print(f"Debug: player's discussion group: {player.participant.discussion_grp}")
@@ -493,6 +450,7 @@ class DiscussionGRPWaitPage(WaitPage):
     @staticmethod
     def is_displayed(player):
         return player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
+    
     @staticmethod
     def vars_for_template(player):
         return dict(
