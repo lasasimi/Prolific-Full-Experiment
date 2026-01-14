@@ -18,12 +18,12 @@ SESSION_CONFIGS = [
         # maximum groups in each condition
         N04_p00 = 5,
         N08_p00 = 5,
-        N04_p25 = 5,
-        N08_p25 = 5,
         N04_p50 = 5,
         N08_p50 = 5,
         N08_p99 = 5,
         N04_p99 = 5,
+        N04_p100 = 5,
+        N08_p100 = 5,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     dict(
@@ -41,14 +41,14 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-         N04_p00 = 5,
+        N04_p00 = 5,
         N08_p00 = 5,
-        N04_p25 = 5,
-        N08_p25 = 5,
         N04_p50 = 5,
         N08_p50 = 5,
         N08_p99 = 5,
         N04_p99 = 5,
+        N04_p100 = 5,
+        N08_p100 = 5,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     dict(
@@ -68,17 +68,42 @@ SESSION_CONFIGS = [
         # maximum groups in each condition
         N04_p00 = 5,
         N08_p00 = 5,
-        N04_p25 = 5,
-        N08_p25 = 5,
         N04_p50 = 5,
         N08_p50 = 5,
         N08_p99 = 5,
         N04_p99 = 5,
+        N04_p100 = 5,
+        N08_p100 = 5,
+        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+    ),
+    dict(
+        name='N08_N04_Aonly',
+        app_sequence=['presurvey', 'mock_N08_N04_Aonly', 'noPay', 'Pay'],
+        num_demo_participants=20, # N08 N04 (must be a multiple of 4)
+        display_name="N08_N04_Aonly",
+        # no consent, failed training, faield attention check, and became inactive in mock app
+        returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
+        # screened out, either because answered neutral (not eligible) or not wanting to commit
+        screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
+        # finished presurvey, waited too long, not matched with other participants
+        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
+        # finished presurvey, commitment, AND completed mock app
+        maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
+        
+        # maximum groups in each condition
+        N04_p00 = 5,
+        N08_p00 = 5,
+        N04_p50 = 5,
+        N08_p50 = 5,
+        N08_p99 = 5,
+        N04_p99 = 5,
+        N04_p100 = 5,
+        N08_p100 = 5,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     dict(
         name='N04_Aonly',
-        app_sequence=['presurvey', 'mock_N04_Aonly', 'noPay', 'Pay'],
+        app_sequence=['presurvey_N04_Aonly', 'mock_N04_Aonly', 'noPay', 'Pay_N04_Aonly'],
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="N04_Aonly",
         # no consent, failed training, faield attention check, and became inactive in mock app
@@ -93,12 +118,12 @@ SESSION_CONFIGS = [
         # maximum groups in each condition
         N04_p00 = 5,
         N08_p00 = 5,
-        N04_p25 = 5,
-        N08_p25 = 5,
         N04_p50 = 5,
         N08_p50 = 5,
         N08_p99 = 5,
         N04_p99 = 5,
+        N04_p100 = 5,
+        N08_p100 = 5,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
 ]
@@ -121,14 +146,32 @@ PARTICIPANT_FIELDS = ['audio_unlocked',
                       'eligible_notneutral', 'forced_response_counter', 'away_long', 'positive',
                       'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three', 'last_active', 'forced_response_remaining', 'control', 'too_many_forced']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
-                  'N04_p00','N04_p25','N04_p50','N08_p00' ,'N08_p25','N08_p50', 'N08_p99','N04_p99',
-                  'MAX_N04_p00','MAX_N04_p25','MAX_N04_p50','MAX_N08_p00','MAX_N08_p25','MAX_N08_p50','MAX_N08_p99', 'MAX_N04_p99',
+                  'N04_p00','N04_p100','N04_p50','N08_p00' ,'N08_p100','N08_p50', 'N08_p99','N04_p99',
+                  'MAX_N04_p00','MAX_N04_p100','MAX_N04_p50','MAX_N08_p00','MAX_N08_p100','MAX_N08_p50','MAX_N08_p99', 'MAX_N04_p99',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='p00_fullexperiment_np_20251020', 
-         display_name='p00_fullexperiment_np_20251020',
+    dict(name='fullexperiment_np_2026019', 
+         display_name='fullexperiment_np_2026019',
          ),
+    dict(name='fullexperiment_np_2026020', 
+         display_name='fullexperiment_np_2026020',
+         ),
+    dict(name='fullexperiment_np_2026021', 
+        display_name='fullexperiment_np_2026021',
+        ),
+    dict(name='fullexperiment_np_2026022', 
+        display_name='fullexperiment_np_2026022',
+        ),
+    dict(name='fullexperiment_np_2026023', 
+        display_name='fullexperiment_np_2026023',
+        ),
+    dict(name='fullexperiment_np_2026024', 
+        display_name='fullexperiment_np_2026024',
+        ),
+    dict(name='fullexperiment_np_2026025', 
+        display_name='fullexperiment_np_2026025',
+        ),
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60

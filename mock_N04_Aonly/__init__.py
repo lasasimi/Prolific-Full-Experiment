@@ -25,8 +25,8 @@ class C(BaseConstants):
     NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
-    # NOTE: Set this to 10 minutes / 19 minutes for N04-1only
-    MEDIUM_WAIT = 19 #(minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    # NOTE: This number is low because we already kicked out the F players in presurvey app
+    MEDIUM_WAIT = 1 #(minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
@@ -50,10 +50,10 @@ def creating_session(subsession):
     session = subsession.session
     # Retrieve values from session config and store them in the session
     session.MAX_N04_p00 = session.config.get('N04_p00', 0)
-    session.MAX_N04_p25 = session.config.get('N04_p25', 0)
+    session.MAX_N04_p100 = session.config.get('N04_p100', 0)
     session.MAX_N04_p50 = session.config.get('N04_p50', 0)
     session.MAX_N08_p00 = session.config.get('N08_p00', 0)
-    session.MAX_N08_p25 = session.config.get('N08_p25', 0)
+    session.MAX_N08_p100 = session.config.get('N08_p100', 0)
     session.MAX_N08_p50 = session.config.get('N08_p50', 0)
     # Control condition
     session.MAX_N08_p99 = session.config.get('N08_p99', 0) 
@@ -74,7 +74,7 @@ def N08_full(subsession):
     session = subsession.session
     return (
     session.N08_p00 == session.MAX_N08_p00 and
-    session.N08_p25 == session.MAX_N08_p25 and
+    session.N08_p100 == session.MAX_N08_p100 and
     session.N08_p50 == session.MAX_N08_p50 and
     session.N08_p99 == session.MAX_N08_p99
 )
@@ -82,7 +82,7 @@ def N08_full(subsession):
 def N04_full(subsession):
     session = subsession.session
     return (session.N04_p00 == session.MAX_N04_p00 and 
-            session.N04_p25 == session.MAX_N04_p25 and 
+            session.N04_p100 == session.MAX_N04_p100 and 
             session.N04_p50 == session.MAX_N04_p50 and 
             session.N04_p99 == session.MAX_N04_p99)
 
@@ -101,8 +101,8 @@ def medium_wait(player):
 
 def counters_full(player):
     session = player.subsession.session
-    return (session.N04_p00 == session.MAX_N04_p00 and session.N04_p25 == session.MAX_N04_p25 and session.N04_p50 == session.MAX_N04_p50 and
-            session.N08_p00 == session.MAX_N08_p00 and session.N08_p25 == session.MAX_N08_p25 and session.N08_p50 == session.MAX_N08_p50 and 
+    return (session.N04_p00 == session.MAX_N04_p00 and session.N04_p100 == session.MAX_N04_p100 and session.N04_p50 == session.MAX_N04_p50 and
+            session.N08_p00 == session.MAX_N08_p00 and session.N08_p100 == session.MAX_N08_p100 and session.N08_p50 == session.MAX_N08_p50 and 
             session.N08_p99 == session.MAX_N08_p99 and session.N04_p99 == session.MAX_N04_p99)
 
 def group_by_arrival_time_method(subsession, waiting_players):
@@ -265,8 +265,8 @@ def counters_update(group:Group):
     if group.group_size == 'N08':
         if group.anti_prop == 'p00':
             group.subsession.session.N08_p00 += 1
-        if group.anti_prop == 'p25':
-            group.subsession.session.N08_p25 += 1
+        if group.anti_prop == 'p100':
+            group.subsession.session.N08_p100 += 1
         if group.anti_prop == 'p50':
             group.subsession.session.N08_p50 += 1
         if group.anti_prop == 'p99':
@@ -274,8 +274,8 @@ def counters_update(group:Group):
     if group.group_size == 'N04':
         if group.anti_prop == 'p00':
             group.subsession.session.N04_p00 += 1
-        if group.anti_prop == 'p25':
-            group.subsession.session.N04_p25 += 1
+        if group.anti_prop == 'p100':
+            group.subsession.session.N04_p100 += 1
         if group.anti_prop == 'p50':
             group.subsession.session.N04_p50 += 1
         if group.anti_prop == 'p99':
@@ -285,8 +285,8 @@ def p_00(group:Group):
     group.anti_prop = 'p00'
     counters_update(group)
 
-def p_25(group:Group):
-    group.anti_prop = 'p25'
+def p_100(group:Group):
+    group.anti_prop = 'p100'
     counters_update(group)
 
 def p_50(group:Group):
@@ -298,7 +298,7 @@ def p_99(group:Group):
     counters_update(group)
 
 def random_p(group:Group):
-    group.anti_prop = random.choice(['p00','p25','p50'])
+    group.anti_prop = random.choice(['p00','p100','p50'])
     counters_update(group)
 
 
@@ -345,17 +345,17 @@ class GroupSizeWaitPage(WaitPage):
                 group.beta_50 = True
                 conditions = [
                     (session.N08_p00 < session.MAX_N08_p00, p_00),
-                    (session.N08_p25 < session.MAX_N08_p25, p_25),
+                    (session.N08_p100 < session.MAX_N08_p100, p_100),
                     (session.N08_p50 < session.MAX_N08_p50, p_50),
                     (session.N08_p99 < session.MAX_N08_p99, p_99)] 
             # N04 grouping logic
             elif group.group_size == 'N04' and not group.positive_opinion:
                 group.beta_50 = False
                 conditions = [
-                    (session.N04_p00 < session.MAX_N04_p50, p_00),
-                    (session.N04_p25 < session.MAX_N04_p50, p_25),
+                    (session.N04_p00 < session.MAX_N04_p00, p_00),
+                    (session.N04_p100 < session.MAX_N04_p100, p_100),
                     (session.N04_p50 < session.MAX_N04_p50, p_50),
-                    (session.N04_p00 < session.MAX_N04_p00, p_00)]
+                    (session.N04_p99 < session.MAX_N04_p00, p_99)]
                 # note: adjustable if only want specific p levels, remove non-needed lines
             
             # Shuffle the order
@@ -382,7 +382,7 @@ class GroupSizeWaitPage(WaitPage):
             if group_size == 'single' and long_away(p):
                 p.participant.away_long = True  # they go to the noPay app, no payment
 
-        print(f'Debug counter: session.N04_p00:{session.N04_p00}, session.N04_p25:{session.N04_p25}, session.N04_p50:{session.N04_p50}, session.N08_p00:{session.N08_p00}, session.N08_p25:{session.N08_p25}, session.N08_p50:{session.N08_p50}, session.N08_p99:{session.N08_p99}, session.N04_p99:{session.N04_p99}')
+        print(f'Debug counter: session.N04_p00:{session.N04_p00}, session.N04_p100:{session.N04_p100}, session.N04_p50:{session.N04_p50}, session.N08_p00:{session.N08_p00}, session.N08_p100:{session.N08_p100}, session.N08_p50:{session.N08_p50}, session.N08_p99:{session.N08_p99}, session.N04_p99:{session.N04_p99}')
 
     @staticmethod
     def is_displayed(player):
@@ -398,8 +398,8 @@ class DiscussionGRPWaitPage(WaitPage):
             # Define how many anticonformists in each faction based on group parameter
             if group.anti_prop == 'p50':
                 n_anti = 2
-            elif group.anti_prop == 'p25':
-                n_anti = 1
+            elif group.anti_prop == 'p100':
+                n_anti = 4
             elif group.anti_prop == 'p00':
                 n_anti = 0
             elif group.anti_prop == 'p99':

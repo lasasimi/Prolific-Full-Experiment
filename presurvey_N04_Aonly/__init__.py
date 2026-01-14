@@ -22,7 +22,7 @@ def open_CSV(filename):
 
 
 class C(BaseConstants):
-    NAME_IN_URL = 'presurvey'
+    NAME_IN_URL = 'presurvey_N04_Aonly'
     PLAYERS_PER_GROUP = None
 
     # REMEMBER TO CHANGE TO POLITICAL/NON-POLITICAL FRAMING DEPENDING ON THE EXPERIMENTAL DESIGN
@@ -447,9 +447,9 @@ class Scenario(Page):
         # In the last round, check whether the player is eligible for the discussion
         if player.round_number == C.NUM_ROUNDS:
             
-            # If all responses are neutral, set eligible_notneutral from True to False    
+            # If all responses are neutral or positive, set eligible_notneutral from True to False    
             player.participant.eligible_notneutral = not all(
-                response == 0 for response in player.participant.vars['all_responses'].values()
+                response >= 0 for response in player.participant.vars['all_responses'].values()
             )
 
             player.participant.complete_presurvey = player.participant.eligible_notneutral
@@ -496,11 +496,11 @@ class Commitment(Page):
         only displayed if participant eligible
         if not eligible, plan accordingly. 
         """
-# # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-page_sequence = [Introduction, AudioCheck,
-                Scenario, Commitment]
+# # # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
+# page_sequence = [Introduction, AudioCheck,
+#                 Scenario, Commitment]
 
-#Full page sequence
-# page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-#                  Scenario, Commitment]
+# #Full page sequence
+page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+                 Scenario, Commitment]
