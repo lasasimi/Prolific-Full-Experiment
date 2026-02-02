@@ -245,6 +245,12 @@ class AudioCheck(Page):
         return dict(
             mp3_url='presurvey/static/test.mp3',
         )
+    
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            is_bot=player.participant._is_bot
+        )
 
     @staticmethod
     def is_displayed(player:Player):
@@ -497,10 +503,10 @@ class Commitment(Page):
         if not eligible, plan accordingly. 
         """
 # # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-page_sequence = [Introduction, AudioCheck,
-                Scenario, Commitment]
+# page_sequence = [Introduction, AudioCheck,
+#                 Scenario, Commitment]
 
 #Full page sequence
-# page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-#                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-#                  Scenario, Commitment]
+page_sequence = [Introduction, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
+                 Scenario, Commitment]

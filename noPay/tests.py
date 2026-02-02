@@ -5,4 +5,5 @@ from . import *
 
 class PlayerBot(Bot):
     def play_round(self):
-        yield ExitPage
+        if ExitPage.is_displayed(self.player):
+            yield ExitPage

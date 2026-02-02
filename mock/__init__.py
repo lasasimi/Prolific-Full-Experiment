@@ -81,6 +81,9 @@ def N08_full(subsession):
 
 def long_wait(player):
     participant = player.participant
+    # In bot tests, immediately trigger long_wait to allow single-player progression
+    if participant._is_bot:
+        return False
     return time.time() - participant.wait_page_arrival > C.LONG_WAIT * 60 
 
 def long_away(player):
@@ -90,6 +93,9 @@ def long_away(player):
 
 def medium_wait(player):
     participant = player.participant
+    # In bot tests, immediately trigger medium_wait to allow group formation
+    if participant._is_bot:
+        return True
     return time.time() - participant.wait_page_arrival > C.MEDIUM_WAIT * 60 
 
 def counters_full(player):

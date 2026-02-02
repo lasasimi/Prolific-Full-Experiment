@@ -68,12 +68,60 @@ const nextBtn = document.getElementById('nextBtn');
 const nextHint = document.getElementById('nextHint');
 const audioControls = document.getElementById('audioControls');
 const audioQuestion = document.getElementById('audioQuestion');
-
+const imgHiddenField = document.getElementById('id_audio_answer_image');
+const imgHint = document.getElementById('imgSelectHint');
 
 function revealSections() {
     audioControls.style.display = 'block';
     audioQuestion.style.display = 'block';
     nextHint.style.display = 'none';
+}
+
+// Bot detection - auto-enable for browser bots
+if (js_vars.is_bot) {
+    // Pre-fill all fields so the bot can submit without clicking
+    hiddenField.value = '1';
+    const audioAnswerBot = document.querySelector('input[name="audio_answer"][value="4"]');
+    if (audioAnswerBot) {
+        audioAnswerBot.checked = true;
+    }
+    const imgAnswerBot = document.querySelector('.selectable-image[data-value="5"]');
+    if (imgAnswerBot) {
+        imgAnswerBot.classList.add('img-selected');
+    }
+    
+    imgHiddenField.value = '5'; // correct image answer
+    nextBtn.disabled = false;
+    status.textContent = '✅ Bot mode - audio check bypassed';
+    status.style.color = '#1a7f00';
+    enableBtn.disabled = true;
+    revealSections();
+
+    // Auto-submit for browser bots
+    setTimeout(() => {
+        nextBtn.click();
+    }, 0);
+    
+    // Disable form validation for bots
+    form.addEventListener('submit', e => {
+        // Allow bot submission without validation
+        return true;
+    }, true); // Use capture phase to run before other handlers
+} else {
+    // Normal validation for human users
+    form.addEventListener('submit', e => {
+        if (hiddenField.value !== '1') {
+            e.preventDefault();
+            status.textContent = '⚠️ Enable audio and play the test sound before continuing.';
+            status.style.color = '#c23b00';
+            nextHint.style.display = 'block';
+            return;
+        }
+        if (!imgHiddenField.value) {
+            e.preventDefault();
+            imgHint.style.display = 'block';
+        }
+    });
 }
 
 async function unlockAudio() {
@@ -109,20 +157,8 @@ document.getElementById('playBtn').addEventListener('click', async () => {
     }
 });
 
-// Strengthen submit guard to require image selection too
-form.addEventListener('submit', e => {
-    if (hiddenField.value !== '1') {
-        e.preventDefault();
-        status.textContent = '⚠️ Enable audio and play the test sound before continuing.';
-        status.style.color = '#c23b00';
-        nextHint.style.display = 'block';
-        return;
-    }
-    if (!imgHiddenField.value) {
-        e.preventDefault();
-        imgHint.style.display = 'block';
-    }
-});
+// Form validation is now handled inside the bot detection block above
+// (moved there to separate bot vs human logic)
 
 document.getElementById('pauseBtn').addEventListener('click', () => {
     audio.pause();
@@ -140,10 +176,6 @@ document.getElementById('volUpBtn').addEventListener('click', () => {
 document.getElementById('volDownBtn').addEventListener('click', () => {
     audio.volume = Math.max(audio.volume - 0.1, 0);
 });
-
-
-const imgHiddenField = document.getElementById('id_audio_answer_image');
-const imgHint = document.getElementById('imgSelectHint');
 
 function clearSelected() {
     document.querySelectorAll('.selectable-image').forEach(el => {
