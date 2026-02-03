@@ -77,6 +77,36 @@ class PlayerBot(Bot):
                     emotional_charge=1,
                     response=-1
                 )
+            elif self.player.id_in_group in range(21, 25):
+                yield Scenario, dict(
+                    political_charge=1,
+                    emotional_charge=1,
+                    response=1
+                )
+            elif self.player.id_in_group in range(25, 29):
+                yield Scenario, dict(
+                    political_charge=1,
+                    emotional_charge=1,
+                    response=-1
+                )
+            elif self.player.id_in_group in range(29, 33):
+                yield Scenario, dict(
+                    political_charge=1,
+                    emotional_charge=1,
+                    response=1
+                )
+            elif self.player.id_in_group in range(33, 37):
+                yield Scenario, dict(
+                    political_charge=1,
+                    emotional_charge=1,
+                    response=-1
+                )
+            elif self.player.id_in_group in range(37, 41):
+                yield Scenario, dict(
+                    political_charge=1,
+                    emotional_charge=1,
+                    response=1
+                )
         
         if Commitment.is_displayed(self.player):
             yield Commitment, dict(

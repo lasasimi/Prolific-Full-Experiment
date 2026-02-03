@@ -79,7 +79,7 @@ SESSION_CONFIGS = [
     dict(
         name='N08_N04_Aonly',
         app_sequence=['presurvey', 'mock_N08_N04_Aonly', 'noPay', 'Pay'],
-        num_demo_participants=20, # N08 N04 (must be a multiple of 4)
+        num_demo_participants=40, # N08 N04 (must be a multiple of 4)
         display_name="N08_N04_Aonly",
         # no consent, failed training, faield attention check, and became inactive in mock app
         returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
@@ -172,9 +172,12 @@ ROOMS = [
     dict(name='fullexperiment_np_20260208', 
         display_name='fullexperiment_np_20260208',
         ),
-    dict(name='fullexperiment_np_reinvited', 
-        display_name='fullexperiment_np_reinvited',
-        )
+    dict(name='fullexperiment_np_reinvited_1', 
+        display_name='fullexperiment_np_reinvited_1',
+        ),
+    dict(name='fullexperiment_np_reinvited_2', 
+        display_name='fullexperiment_np_reinvited_2',
+        ),   
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60
