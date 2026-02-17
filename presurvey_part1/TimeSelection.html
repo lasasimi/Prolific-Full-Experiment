@@ -1,0 +1,114 @@
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+{{ block content }}
+
+ 
+<div class="card bg-mid m-0">
+    <h2 class="card-header">🟦 Phase 1: Initial Survey</h2>
+    <div class="card-body"> 
+    <p>Thank you for your willingess to participate in the Phase 2!</p>
+    Below, you may indicate what time suits you best for the Phase 2. <b>You only need to attend once</b>. However, we encourage you to indicate more than one time slot, as each session requires a minimum number of participants to run.
+    <br><b>{{ form.time_selection.label }}</b>
+
+    <input type="hidden" name="time_selection" id="time_selection_hidden" value="{{ saved_time_selection_csv }}">
+
+    <div>
+        <label><input type="checkbox" name="time_selection_choices" value="1" {% if '1' in saved_time_selection %}checked{% endif %}> Thursday, February 24 | 4:00 - 4:30 PM ET</label><br>
+        <label><input type="checkbox" name="time_selection_choices" value="2" {% if '2' in saved_time_selection %}checked{% endif %}> Thursday, February 24 | 7:00 - 7:30 PM ET</label><br>
+        <label><input type="checkbox" name="time_selection_choices" value="3" {% if '3' in saved_time_selection %}checked{% endif %}> Friday, February 25 | 4:00 - 4:30 PM ET</label><br>
+        <label><input type="checkbox" name="time_selection_choices" value="4" {% if '4' in saved_time_selection %}checked{% endif %}> Friday, February 25 | 7:00 - 7:30 PM ET</label><br>
+        <label><input type="checkbox" name="time_selection_choices" value="5" {% if '5' in saved_time_selection %}checked{% endif %}> Saturday, February 26 | 4:00 - 4:30 PM ET</label><br>
+        <label><input type="checkbox" name="time_selection_choices" value="6" {% if '6' in saved_time_selection %}checked{% endif %}> Saturday, February 26 | 7:00 - 7:30 PM ET</label><br>
+        <label><input type="checkbox" name="time_selection_choices" value="99" {% if '99' in saved_time_selection %}checked{% endif %}> I cannot attend at all the time mentioned above</label><br>
+    </div>
+
+    <div id="time-selection-client-error" style="display:none; color:#b00020; margin-top:8px;"></div>
+
+    {{ formfield_errors 'time_selection' }}
+    <br>
+    📨 <b>We will send you a reminder message</b> at least one day before your scheduled session. If there are not enough participants for your selected time slot, we will contact you at least one day before to offer an alternative time. We will do our best to accommodate your preferences. 
+    <br><br>
+    💰 You will earn <b>an additional 3.10 GBP / 4.18 USD</b> after finishing the Phase 2. There is no penalty for not being able to attend the second phase, but we will be the most grateful if you can attend the session(s) you selected!
+    <br><br>    
+    </div>
+    
+</div>
+
+<br>
+    <button class="next-button" type="submit">Next</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('form');
+        var hidden = document.getElementById('time_selection_hidden');
+        var errorBox = document.getElementById('time-selection-client-error');
+        var allCheckboxes = Array.from(document.querySelectorAll('input[name="time_selection_choices"]'));
+        var cannotAttendCheckbox = document.querySelector('input[name="time_selection_choices"][value="99"]');
+        var regularCheckboxes = allCheckboxes.filter(function(el) { return el.value !== '99'; });
+
+        function getCheckedValues() {
+            return Array.from(document.querySelectorAll('input[name="time_selection_choices"]:checked'))
+                .map(function(el) { return el.value; });
+        }
+
+        function syncHidden() {
+            hidden.value = getCheckedValues().join(',');
+        }
+
+        function updateExclusiveState() {
+            var selected = getCheckedValues();
+            var has99 = selected.includes('99');
+
+            regularCheckboxes.forEach(function(checkbox) {
+                if (has99) {
+                    checkbox.checked = false;
+                    checkbox.disabled = true;
+                } else {
+                    checkbox.disabled = false;
+                }
+            });
+
+            var hasRegular = regularCheckboxes.some(function(checkbox) { return checkbox.checked; });
+            cannotAttendCheckbox.disabled = hasRegular;
+
+            syncHidden();
+        }
+
+        document.querySelectorAll('input[name="time_selection_choices"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                updateExclusiveState();
+                errorBox.style.display = 'none';
+            });
+        });
+
+        updateExclusiveState();
+
+        form.addEventListener('submit', function(event) {
+            var selected = getCheckedValues();
+            syncHidden();
+
+            if (selected.length < 1) {
+                event.preventDefault();
+                errorBox.textContent = 'Please select at least one time slot.';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            if (selected.length > 3) {
+                event.preventDefault();
+                errorBox.textContent = 'Please select at most 3 time slots.';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            if (selected.includes('99') && selected.length > 1) {
+                event.preventDefault();
+                errorBox.textContent = 'If you cannot attend any of the time slots, please select only that option.';
+                errorBox.style.display = 'block';
+            }
+        });
+    });
+</script>
+
+{{ endblock }}

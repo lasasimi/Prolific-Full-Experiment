@@ -103,7 +103,7 @@ SESSION_CONFIGS = [
     ),
     dict(
         name='N04_Aonly',
-        app_sequence=['presurvey_N04_Aonly', 'mock_N04_Aonly', 'noPay', 'Pay_N04_Aonly'],
+        app_sequence=['presurvey_N04_Aonly', 'mock_N04_Aonly', 'noPay', 'Pay_N04_Aonly'], # different explanation on Pay app
         num_demo_participants=20, # N08 N04 (must be a multiple of 4)
         display_name="N04_Aonly",
         # no consent, failed training, faield attention check, and became inactive in mock app
@@ -126,6 +126,20 @@ SESSION_CONFIGS = [
         N08_p100 = 5,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
+    dict(
+        name='Phase_1',
+        app_sequence=['presurvey_part1', 'noPay', 'Pay_phase1'], # different explanation on Pay app
+        num_demo_participants=20, # N08 N04 (must be a multiple of 4),
+        display_name='Phase_1',
+        # no consent, failed training, faield attention check, and became inactive in mock app
+        returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
+        # noteliegible link (paid for completion but neutral)
+        noteligiblelink='https://app.prolific.com/submissions/complete?cc=C10VZUJS',
+        # eligibile link (paid for completion and non-neutral)
+        eligiblelink='https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', 
+    
+        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        )
 ]
 
 
@@ -144,7 +158,7 @@ PARTICIPANT_FIELDS = ['audio_unlocked',
                       'active', 'single_group', 'reason','player_ids', 'group_size', 'is_group_single',
                       'scenario','anticonformist','position','own_faction','other_faction','discussion_grp','complete_presurvey',
                       'eligible_notneutral', 'forced_response_counter', 'away_long', 'positive',
-                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three', 'last_active', 'forced_response_remaining', 'control', 'too_many_forced']
+                      'nudge_training', 'correct_nudge_training', 'nudge_training_two','nudge_training_three', 'last_active', 'forced_response_remaining', 'control', 'too_many_forced', 'commit_phase2']
 SESSION_FIELDS = ['combined_responses','scenario_counts', 
                   'N04_p00','N04_p100','N04_p50','N08_p00' ,'N08_p100','N08_p50', 'N08_p99','N04_p99',
                   'MAX_N04_p00','MAX_N04_p100','MAX_N04_p50','MAX_N08_p00','MAX_N08_p100','MAX_N08_p50','MAX_N08_p99', 'MAX_N04_p99',
