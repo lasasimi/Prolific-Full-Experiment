@@ -1,0 +1,12 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Community Dilemma Study//EN
+BEGIN:VEVENT
+UID:phase2-community-dilemma-20260221@example.com
+DTSTAMP:20260217T100000Z
+DTSTART:20260221T210000Z
+DTEND:20260221T220000Z
+SUMMARY:Phase 2: A Study of Community Dilemma
+DESCRIPTION:Please log in to Prolific and see the study with the title above. You will receive xx GBP for a full completion when grouped. Thank you
+END:VEVENT
+END:VCALENDAR
