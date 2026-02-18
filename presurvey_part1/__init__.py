@@ -35,6 +35,17 @@ class Subsession(BaseSubsession):
     pass
 
 
+TIME_SLOT_LABELS = {
+    '1': 'Thursday, February 24 | 4:00 - 4:30 PM ET',
+    '2': 'Thursday, February 24 | 7:00 - 7:30 PM ET',
+    '3': 'Friday, February 25 | 4:00 - 4:30 PM ET',
+    '4': 'Friday, February 25 | 7:00 - 7:30 PM ET',
+    '5': 'Saturday, February 26 | 4:00 - 4:30 PM ET',
+    '6': 'Saturday, February 26 | 7:00 - 7:30 PM ET',
+    '99': '🚫 None of the listed slots work for me',
+}
+
+
 def creating_session(subsession):
     session = subsession.session
     # counter for keepin track of treatments
@@ -69,6 +80,17 @@ def creating_session(subsession):
         player.participant.vars['nudge_training'] = None
         player.participant.vars['correct_nudge_training'] = False # To track if the participant answered the nudge training question correctly
         player.participant.vars['commit_phase2'] = True 
+        player.participant.vars['training_wrong_question_keys'] = []
+
+
+def get_training_wrong_question_keys(player: 'Player'):
+    checks = {
+        'dilemmatopic': player.dilemmatopic is True,
+        'majority': player.majority is True,
+        'howmanyneighbors': player.howmanyneighbors is True,
+    }
+    return [field_name for field_name, is_correct in checks.items() if not is_correct]
+
 class Group(BaseGroup):
     pass
 
@@ -136,8 +158,8 @@ class Player(BasePlayer):
     # Commit phase 2
     commit_phase2 = models.BooleanField(
         label="Do you want to participate in the second phase of the experiment?",
-        choices=[[True, 'Yes, I commit to participate in the second phase'],
-                [False, 'No, I do not want to participate in the second phase']])
+        choices=[[True, 'Yes, I commit to participate in the second phase (continue)'],
+                [False, 'No, I do not want to participate in the second phase (exit survey)']],)
 
     time_selection = models.LongStringField(
         label="Please select at least 1 and a maximum of 3 options.",
@@ -254,36 +276,6 @@ class Introduction(Page):
     def before_next_page(player, timeout_happened):
         player.participant.gives_consent = player.gives_consent
         player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
- 
- 
-class AudioCheck(Page):
-    form_model = 'player'
-    form_fields = ['audio_answer', 'audio_answer_image', 'audio_unlocked']
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        player.participant.audio_unlocked = player.audio_unlocked
-        if player.audio_answer !=4 or player.audio_answer_image !=5: # incorrect answer
-            player.participant.gives_consent = False
-            player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
-
-    @staticmethod
-    def vars_for_template(player:Player):
-        return dict(
-            mp3_url='presurvey/static/test.mp3',
-        )
-    
-    @staticmethod
-    def js_vars(player: Player):
-        return dict(
-            is_bot=player.participant._is_bot
-        )
-
-    @staticmethod
-    def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.gives_consent
-    ## Give option to return the submission if the audio check is failed
-
 
 class SecondPhaseCommit(Page):
     form_model = 'player'
@@ -323,6 +315,12 @@ class TimeSelection(Page):
         selected_time_slots = player.time_selection
         if isinstance(selected_time_slots, list):
             player.time_selection = ','.join(selected_time_slots)
+
+        selected_slot_ids = [s.strip() for s in (player.time_selection or '').split(',') if s.strip()]
+        player.participant.vars['selected_time_slot_ids'] = selected_slot_ids
+        player.participant.vars['selected_time_slots_display'] = [
+            TIME_SLOT_LABELS[s] for s in selected_slot_ids if s in TIME_SLOT_LABELS
+        ]
         
         # if answer is 99 (cannot attend any time slot), set commit_phase2 to False and complete_presurvey to False since they are not eligible for the main experiment
         if player.time_selection and '99' in player.time_selection.split(','):
@@ -332,6 +330,38 @@ class TimeSelection(Page):
             player.participant.commit_phase2 = True
             player.participant.complete_presurvey = True
 
+
+class AudioCheck(Page):
+    form_model = 'player'
+    form_fields = ['audio_answer', 'audio_answer_image', 'audio_unlocked']
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.participant.audio_unlocked = player.audio_unlocked
+        if player.audio_answer !=4 or player.audio_answer_image !=5: # incorrect answer
+            player.participant.gives_consent = False
+            player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
+
+    @staticmethod
+    def vars_for_template(player:Player):
+        return dict(
+            mp3_url='presurvey/static/test.mp3',
+        )
+    
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            is_bot=player.participant._is_bot
+        )
+
+    @staticmethod
+    def is_displayed(player:Player):
+        if player.participant.commit_phase2 == False:
+            return False
+        else:
+            return player.round_number == 1 and player.participant.gives_consent
+        
+    ## Give option to return the submission if the audio check is failed
     
 class Demographics(Page):
     form_model = 'player'
@@ -379,10 +409,9 @@ class TrainingNeighbor_1(Page):
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        total_correct = np.sum([player.dilemmatopic, 
-                                player.majority, 
-                                player.howmanyneighbors])
-        if total_correct != 3:
+        wrong_question_keys = get_training_wrong_question_keys(player)
+        player.participant.vars['training_wrong_question_keys'] = wrong_question_keys
+        if wrong_question_keys:
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
@@ -412,14 +441,14 @@ class TrainingNeighbor_2(Page):
             scenario_against = "Do not help with the search",
             scenario_neutral = "Verify the cat in the garden",
             scenario_for = "Help search near the sewage",
+            wrong_question_keys = player.participant.vars.get('training_wrong_question_keys', []),
         )
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        total_correct = np.sum([player.dilemmatopic, 
-                                player.majority, 
-                                player.howmanyneighbors])
-        if total_correct != 3:
+        wrong_question_keys = get_training_wrong_question_keys(player)
+        player.participant.vars['training_wrong_question_keys'] = wrong_question_keys
+        if wrong_question_keys:
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
@@ -470,14 +499,14 @@ class TrainingNeighbor_3(Page):
             scenario_against = "Do not help with the search",
             scenario_neutral = "Verify the cat in the garden",
             scenario_for = "Help search near the sewage",
+            wrong_question_keys = player.participant.vars.get('training_wrong_question_keys', []),
         )
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        total_correct = np.sum([player.dilemmatopic, 
-                                player.majority, 
-                                player.howmanyneighbors])
-        if total_correct != 3:
+        wrong_question_keys = get_training_wrong_question_keys(player)
+        player.participant.vars['training_wrong_question_keys'] = wrong_question_keys
+        if wrong_question_keys:
             player.participant.vars['training_attempt'] -= 1
             player.participant.complete_presurvey = False
         else:
@@ -548,39 +577,6 @@ class Scenario(Page):
         return player.participant.complete_presurvey and player.round_number <= C.NUM_ROUNDS 
 
 
-class Commitment(Page):
-    form_model = 'player'
-
-    @staticmethod
-    def get_form_fields(player:Player):  
-        form_fields = ['commit_attention_Q1','commit_attention_Q2', 'commit_attention_Q3']
-        random.shuffle(form_fields)  
-        return form_fields
-    
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        total_commitment = np.sum([player.commit_attention_Q1, player.commit_attention_Q2,
-                                   player.commit_attention_Q3])
-        
-        if total_commitment < 3:
-            player.participant.failed_commitment = True # initially false
-            player.participant.complete_presurvey = False
-        else:
-            player.participant.complete_presurvey = True # this is to check if participant moves forward to the mock app
-            player.participant.wait_page_arrival = time.time()
-
-        print(f"Commitment failed?: {player.participant.failed_commitment}, Complete presurvey?: {player.participant.complete_presurvey}")
-    @staticmethod
-    def is_displayed(player:Player):
-        return player.participant.complete_presurvey and player.round_number == C.NUM_ROUNDS
-        """
-        only displayed if participant eligible
-        if not eligible, plan accordingly. 
-        """
-# # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
-# page_sequence = [Introduction, AudioCheck,
-#                 Scenario, Commitment]
-
 class Reminder(Page):
     form_model = 'player'
 
@@ -588,7 +584,13 @@ class Reminder(Page):
     def is_displayed(player: Player):
         return player.participant.complete_presurvey and player.round_number == C.NUM_ROUNDS
     
+
+    
+# # For testing manually (without bots) NOTE: don't forget to replace the page_sequence with the full sequence
+# page_sequence = [Introduction, AudioCheck,
+#                 Scenario, Commitment]
+
 #Full page sequence
-page_sequence = [Introduction, AudioCheck, SecondPhaseCommit, TimeSelection, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
+page_sequence = [Introduction, SecondPhaseCommit, TimeSelection, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
                  TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
                  Scenario]

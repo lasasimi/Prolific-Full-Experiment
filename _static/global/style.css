@@ -221,6 +221,13 @@ table {
     font-weight: 500;
 }  
 
+.wrong-question-indicator {
+    color: #d71f1f;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
 .alert {
     background-color: #fdfbea;
     color: #d7901f;

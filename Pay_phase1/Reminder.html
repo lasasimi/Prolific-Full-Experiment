@@ -5,27 +5,36 @@
 
  
 <div class="card bg-mid m-0">
-    <h2 class="card-header">🟦 Phase 1 End</h2>
+    <h2 class="card-header">🟦 Phase 1: End</h2>
     <div class="card-body"> 
 
     
-    <h5><strong>Thank you for participating</strong></h5>
+    <h5><strong>Thank you for completing the Phase 1!</strong></h5>
     
-    You are eligible to participate in the second phase of the study. You are rewarded with <b>0.40 GBP / 0.54 USD</b> for your time at the end of this survey. We will send you a message on Prolific to remind you on that day. 
+    You are eligible to participate in the second phase of the study. You are rewarded with <b>0.40 GBP / 0.54 USD</b> for your time at the end of this survey.
     
     <div class = "green-box">
-    💡 Remember: You need to log in on <b>either one</b> of these days: <b>Saturday or Sunday this week</b> at <b>4:00 PM - 4:30 PM EST</b>.
+    💡 Remember: You need to log in on <b>one of your selected time slots</b>: 
+    <br>
+    <!-- Dynamically show chosen time slots -->
+    {{ if selected_time_slots }}
+    <ul>
+        {{ for slot in selected_time_slots }}
+            <li><b>{{ slot }}</b></li>
+        {{ endfor }}
+    </ul>
+    {{ else }}
+    <b>Your selected slot information is unavailable.</b>
+    {{ endif }}
     </div>
 
     <br>
-    📅 To help you remember, you can add a reminder by clicking one of these links:
-    <ul>
-        <li>⏰ <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Phase+2%3A+A+Study+of+Community+Dilemma&dates=20260221T210000Z/20260221T220000Z&details=Please+log+in+to+Prolific+and+see+the+study+with+the+title+above.+You+will+receive+xx+GBP+for+a+full+completion+when+grouped.+Thank+you" target="_blank">Add to my Google Calendar</a></li>
-        <li>⏰ <a href="https://lasasimi.github.io/public-links/phase2_community_dilemma.ics" target="_blank">Download .ics to add to my Apple/Outlook</a></li>
-    </ul>
+    📅  We will send you <b>a message on Prolific</b> to remind you on <b>the day before</b> if there are enough people in that slot. Otherwise, we will offer you an alternative timeslot. To avoid forgetting, please <b>note the selected time slot in your personal calendar</b>.
+    <br><br>
+    😊 We truly appreciate your help!
     </div>
 </div>
 
 <br>
-    <button class="next-button" type="submit">Next</button>
+    <button class="next-button" type="submit">Submit</button>
 {{ endblock }}

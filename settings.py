@@ -128,7 +128,7 @@ SESSION_CONFIGS = [
     ),
     dict(
         name='Phase_1',
-        app_sequence=['presurvey_part1', 'noPay', 'Pay_phase1'], # different explanation on Pay app
+        app_sequence=['presurvey_part1', 'Pay_phase1', 'noPay'], # different explanation on Pay app
         num_demo_participants=20, # N08 N04 (must be a multiple of 4),
         display_name='Phase_1',
         # no consent, failed training, faield attention check, and became inactive in mock app
