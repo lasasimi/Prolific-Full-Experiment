@@ -14,13 +14,52 @@
 
     <input type="hidden" name="time_selection" id="time_selection_hidden" value="{{ saved_time_selection_csv }}">
 
-    <div>
-        <label><input type="checkbox" name="time_selection_choices" value="1" {% if '1' in saved_time_selection %}checked{% endif %}> Thursday, February 24 | 4:00 - 4:30 PM ET</label><br>
-        <label><input type="checkbox" name="time_selection_choices" value="2" {% if '2' in saved_time_selection %}checked{% endif %}> Thursday, February 24 | 7:00 - 7:30 PM ET</label><br>
-        <label><input type="checkbox" name="time_selection_choices" value="3" {% if '3' in saved_time_selection %}checked{% endif %}> Friday, February 25 | 4:00 - 4:30 PM ET</label><br>
-        <label><input type="checkbox" name="time_selection_choices" value="4" {% if '4' in saved_time_selection %}checked{% endif %}> Friday, February 25 | 7:00 - 7:30 PM ET</label><br>
-        <label><input type="checkbox" name="time_selection_choices" value="5" {% if '5' in saved_time_selection %}checked{% endif %}> Saturday, February 26 | 4:00 - 4:30 PM ET</label><br>
-        <label><input type="checkbox" name="time_selection_choices" value="6" {% if '6' in saved_time_selection %}checked{% endif %}> Saturday, February 26 | 7:00 - 7:30 PM ET</label><br>
+    <!-- Time slot ID map (day-first): 1-4 Wed, 5-8 Thu, 9-12 Fri, 13-16 Sat; each is 4:00, 5:00, 6:00, 7:00 PM ET. 99 = none of the listed slots. -->
+    <div class="table-responsive mt-2">
+        <table class="table table-sm text-center">
+            <thead class="text-center">
+                <tr>
+                    <th></th>
+                    <th class="text-center">Wed, February 25</th>
+                    <th class="text-center">Thu, February 26</th>
+                    <th class="text-center">Fri, February 27</th>
+                    <th class="text-center">Sat, February 28</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">4:00 - 4:30 PM ET</th>
+                    <td><input type="checkbox" name="time_selection_choices" value="1" {% if '1' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="5" {% if '5' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="9" {% if '9' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="13" {% if '13' in saved_time_selection %}checked{% endif %}></td>
+                </tr>
+                <tr>
+                    <th scope="row">5:00 - 5:30 PM ET</th>
+                    <td><input type="checkbox" name="time_selection_choices" value="2" {% if '2' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="6" {% if '6' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="10" {% if '10' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="14" {% if '14' in saved_time_selection %}checked{% endif %}></td>
+                </tr>
+                <tr>
+                    <th scope="row">6:00 - 6:30 PM ET</th>
+                    <td><input type="checkbox" name="time_selection_choices" value="3" {% if '3' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="7" {% if '7' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="11" {% if '11' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="15" {% if '15' in saved_time_selection %}checked{% endif %}></td>
+                </tr>
+                <tr>
+                    <th scope="row">7:00 - 7:30 PM ET</th>
+                    <td><input type="checkbox" name="time_selection_choices" value="4" {% if '4' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="8" {% if '8' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="12" {% if '12' in saved_time_selection %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="time_selection_choices" value="16" {% if '16' in saved_time_selection %}checked{% endif %}></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-2">
         <label><input type="checkbox" name="time_selection_choices" value="99" {% if '99' in saved_time_selection %}checked{% endif %}> 🚫None of the times listed above work for me (exit survey)</label><br>
     </div>
 
@@ -94,13 +133,6 @@
             if (selected.length < 1) {
                 event.preventDefault();
                 errorBox.textContent = 'Please select at least one time slot.';
-                errorBox.style.display = 'block';
-                return;
-            }
-
-            if (selected.length > 3) {
-                event.preventDefault();
-                errorBox.textContent = 'Please select at most 3 time slots.';
                 errorBox.style.display = 'block';
                 return;
             }

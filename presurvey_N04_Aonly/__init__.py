@@ -68,6 +68,16 @@ def creating_session(subsession):
         player.participant.vars['forced_response_counter'] = 0 
         player.participant.vars['nudge_training'] = None
         player.participant.vars['correct_nudge_training'] = False # To track if the participant answered the nudge training question correctly
+        player.participant.vars['training_wrong_question_keys'] = []
+
+
+def get_training_wrong_question_keys(player: 'Player'):
+    checks = {
+        'dilemmatopic': player.dilemmatopic is True,
+        'majority': player.majority is True,
+        'howmanyneighbors': player.howmanyneighbors is True,
+    }
+    return [field_name for field_name, is_correct in checks.items() if not is_correct]
 
 class Group(BaseGroup):
     pass
@@ -298,10 +308,9 @@ class TrainingNeighbor_1(Page):
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        total_correct = np.sum([player.dilemmatopic, 
-                                player.majority, 
-                                player.howmanyneighbors])
-        if total_correct != 3:
+        wrong_question_keys = get_training_wrong_question_keys(player)
+        player.participant.vars['training_wrong_question_keys'] = wrong_question_keys
+        if wrong_question_keys:
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
@@ -331,14 +340,14 @@ class TrainingNeighbor_2(Page):
             scenario_against = "Do not help with the search",
             scenario_neutral = "Verify the cat in the garden",
             scenario_for = "Help search near the sewage",
+            wrong_question_keys = player.participant.vars.get('training_wrong_question_keys', []),
         )
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        total_correct = np.sum([player.dilemmatopic, 
-                                player.majority, 
-                                player.howmanyneighbors])
-        if total_correct != 3:
+        wrong_question_keys = get_training_wrong_question_keys(player)
+        player.participant.vars['training_wrong_question_keys'] = wrong_question_keys
+        if wrong_question_keys:
             player.participant.vars['training_attempt'] -= 1
         else:
             player.participant.vars['training_success'] = True
@@ -389,14 +398,14 @@ class TrainingNeighbor_3(Page):
             scenario_against = "Do not help with the search",
             scenario_neutral = "Verify the cat in the garden",
             scenario_for = "Help search near the sewage",
+            wrong_question_keys = player.participant.vars.get('training_wrong_question_keys', []),
         )
     
     @staticmethod
     def before_next_page(player, timeout_happened):
-        total_correct = np.sum([player.dilemmatopic, 
-                                player.majority, 
-                                player.howmanyneighbors])
-        if total_correct != 3:
+        wrong_question_keys = get_training_wrong_question_keys(player)
+        player.participant.vars['training_wrong_question_keys'] = wrong_question_keys
+        if wrong_question_keys:
             player.participant.vars['training_attempt'] -= 1
             player.participant.complete_presurvey = False
         else:

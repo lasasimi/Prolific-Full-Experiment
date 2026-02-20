@@ -37,7 +37,8 @@ class Reminder(Page):
         # Hide reminder for screened-out participants, failed commitment, or those who did not commit to phase 2 (selected 99)
         if (not player.participant.eligible_notneutral
             or player.participant.failed_commitment
-            or not player.participant.commit_phase2):
+            or not player.participant.commit_phase2 
+            or not player.participant.gives_consent):
             return False
         else:
             return not player.participant.failed_attention_check and player.participant.active
@@ -71,7 +72,7 @@ class MyPage(Page):
     @staticmethod
     def is_displayed(player: Player):
         # Participants who did not commit to phase 2 should skip this app and continue to noPay
-        if not player.participant.commit_phase2:
+        if not player.participant.commit_phase2 or not player.participant.gives_consent:
             return False
         # if they were not eligible, we need to check if they were active and did not fail the attention check
         if not player.participant.eligible_notneutral: # those who were not eligible

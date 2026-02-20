@@ -35,13 +35,29 @@ class Subsession(BaseSubsession):
     pass
 
 
+# Time slot ID map (day-first):
+# 1-4 = Wed (4:00, 5:00, 6:00, 7:00 PM ET)
+# 5-8 = Thu (4:00, 5:00, 6:00, 7:00 PM ET)
+# 9-12 = Fri (4:00, 5:00, 6:00, 7:00 PM ET)
+# 13-16 = Sat (4:00, 5:00, 6:00, 7:00 PM ET)
+# 99 = none of the listed slots
 TIME_SLOT_LABELS = {
-    '1': 'Thursday, February 24 | 4:00 - 4:30 PM ET',
-    '2': 'Thursday, February 24 | 7:00 - 7:30 PM ET',
-    '3': 'Friday, February 25 | 4:00 - 4:30 PM ET',
-    '4': 'Friday, February 25 | 7:00 - 7:30 PM ET',
-    '5': 'Saturday, February 26 | 4:00 - 4:30 PM ET',
-    '6': 'Saturday, February 26 | 7:00 - 7:30 PM ET',
+    '1': 'Wed, February 25 | 4:00 - 4:30 PM ET',
+    '2': 'Wed, February 25 | 5:00 - 5:30 PM ET',
+    '3': 'Wed, February 25 | 6:00 - 6:30 PM ET',
+    '4': 'Wed, February 25 | 7:00 - 7:30 PM ET',
+    '5': 'Thu, February 26 | 4:00 - 4:30 PM ET',
+    '6': 'Thu, February 26 | 5:00 - 5:30 PM ET',
+    '7': 'Thu, February 26 | 6:00 - 6:30 PM ET',
+    '8': 'Thu, February 26 | 7:00 - 7:30 PM ET',
+    '9': 'Fri, February 27 | 4:00 - 4:30 PM ET',
+    '10': 'Fri, February 27 | 5:00 - 5:30 PM ET',
+    '11': 'Fri, February 27 | 6:00 - 6:30 PM ET',
+    '12': 'Fri, February 27 | 7:00 - 7:30 PM ET',
+    '13': 'Sat, February 28 | 4:00 - 4:30 PM ET',
+    '14': 'Sat, February 28 | 5:00 - 5:30 PM ET',
+    '15': 'Sat, February 28 | 6:00 - 6:30 PM ET',
+    '16': 'Sat, February 28 | 7:00 - 7:30 PM ET',
     '99': '🚫 None of the listed slots work for me',
 }
 
@@ -79,7 +95,7 @@ def creating_session(subsession):
         player.participant.vars['forced_response_counter'] = 0 
         player.participant.vars['nudge_training'] = None
         player.participant.vars['correct_nudge_training'] = False # To track if the participant answered the nudge training question correctly
-        player.participant.vars['commit_phase2'] = True 
+        player.participant.vars['commit_phase2'] = False 
         player.participant.vars['training_wrong_question_keys'] = []
 
 
@@ -158,12 +174,31 @@ class Player(BasePlayer):
     # Commit phase 2
     commit_phase2 = models.BooleanField(
         label="Do you want to participate in the second phase of the experiment?",
-        choices=[[True, 'Yes, I commit to participate in the second phase (continue)'],
-                [False, 'No, I do not want to participate in the second phase (exit survey)']],)
+        choices=[[True, 'Yes, I can attend the second phase in at least in one of the timeslots above.'],
+                [False, 'No, I cannot attend the second phase.']],)
 
     time_selection = models.LongStringField(
-        label="Please select at least 1 and a maximum of 3 options.",
+        label="Please select at least 1 option (you may select as many as you are available for).",
         blank=True)
+    
+    #Time slot ID map (day-first): 
+    # 1-4 Wed, 5-8 Thu, 9-12 Fri, 13-16 Sat; each is 4:00, 5:00, 6:00, 7:00 PM ET. 99 = none of the listed slots. 
+    timeslot_1 = models.IntegerField(initial=0)
+    timeslot_2 = models.IntegerField(initial=0)
+    timeslot_3 = models.IntegerField(initial=0)
+    timeslot_4 = models.IntegerField(initial=0)
+    timeslot_5 = models.IntegerField(initial=0)
+    timeslot_6 = models.IntegerField(initial=0)
+    timeslot_7 = models.IntegerField(initial=0)
+    timeslot_8 = models.IntegerField(initial=0)
+    timeslot_9 = models.IntegerField(initial=0)
+    timeslot_10 = models.IntegerField(initial=0)
+    timeslot_11 = models.IntegerField(initial=0)
+    timeslot_12 = models.IntegerField(initial=0)
+    timeslot_13 = models.IntegerField(initial=0)
+    timeslot_14 = models.IntegerField(initial=0)
+    timeslot_15 = models.IntegerField(initial=0)
+    timeslot_16 = models.IntegerField(initial=0)
     
     def time_selection_error_message(player, value):
         if not value:
@@ -175,8 +210,6 @@ class Player(BasePlayer):
             selected = [s.strip() for s in value.split(',') if s.strip()]
         if len(selected) < 1:
             return 'Please select at least one time slot.'
-        if len(selected) > 3:
-            return 'Please select at most 3 time slots.'
         if '99' in selected and len(selected) > 1:
             return 'If you cannot attend any of the time slots, please select only that option.'
     
@@ -214,7 +247,6 @@ class Player(BasePlayer):
             [True, 'False'],
         ])
 
-    total_correct = models.IntegerField()
     training_counter = models.IntegerField(initial=0) # Counter for training attempts, used to limit the number of attempts
     # Attention check
     attention_check = models.IntegerField(
@@ -266,7 +298,7 @@ class Player(BasePlayer):
 # PAGES
 class Introduction(Page):
     form_model = 'player'
-    form_fields = ['gives_consent']
+    form_fields = ['gives_consent', 'commit_phase2']
 
     @staticmethod
     def is_displayed(player:Player):
@@ -275,22 +307,12 @@ class Introduction(Page):
     @staticmethod
     def before_next_page(player, timeout_happened):
         player.participant.gives_consent = player.gives_consent
-        player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
-
-class SecondPhaseCommit(Page):
-    form_model = 'player'
-    form_fields = ['commit_phase2']
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        if not player.commit_phase2:
-            player.participant.complete_presurvey = False
-            player.participant.commit_phase2 = False # If the participant does not commit to phase 2, they are not eligible for the main experiment
-
-    @staticmethod
-    def is_displayed(player:Player):
-        return player.round_number == 1 and player.participant.gives_consent
-    
+        player.participant.commit_phase2 = player.commit_phase2
+        if player.participant.gives_consent and player.participant.commit_phase2:
+            player.participant.active = True# Assigning active status based on consent
+        else:
+            player.participant.active = False
+            player.participant.complete_presurvey = False 
 
 class TimeSelection(Page):
     form_model = 'player'
@@ -317,10 +339,25 @@ class TimeSelection(Page):
             player.time_selection = ','.join(selected_time_slots)
 
         selected_slot_ids = [s.strip() for s in (player.time_selection or '').split(',') if s.strip()]
-        player.participant.vars['selected_time_slot_ids'] = selected_slot_ids
+
+        # Save selected slots for downstream Reminder page display
+        selected_slot_ids_for_display = sorted(
+            [s for s in selected_slot_ids if s in TIME_SLOT_LABELS and s != '99'],
+            key=lambda s: int(s),
+        )
+        player.participant.vars['selected_time_slot_ids'] = selected_slot_ids_for_display
         player.participant.vars['selected_time_slots_display'] = [
-            TIME_SLOT_LABELS[s] for s in selected_slot_ids if s in TIME_SLOT_LABELS
+            TIME_SLOT_LABELS[s] for s in selected_slot_ids_for_display
         ]
+
+        # Create one-hot encoding for slots 1-16 from player.time_selection (ignore 99)
+        slot_keys = [str(i) for i in range(1, 17)]
+        selected_slot_set = {s for s in selected_slot_ids if s in slot_keys}
+        one_hot_by_slot = {slot: (1 if slot in selected_slot_set else 0) for slot in slot_keys}
+
+        # Store one-hot values directly on Player so they appear in standard oTree exports
+        for i in range(1, 17):
+            setattr(player, f'timeslot_{i}', one_hot_by_slot[str(i)])
         
         # if answer is 99 (cannot attend any time slot), set commit_phase2 to False and complete_presurvey to False since they are not eligible for the main experiment
         if player.time_selection and '99' in player.time_selection.split(','):
@@ -591,6 +628,4 @@ class Reminder(Page):
 #                 Scenario, Commitment]
 
 #Full page sequence
-page_sequence = [Introduction, SecondPhaseCommit, TimeSelection, AudioCheck, Demographics, NeighborhoodInstruction, Training, TrainingNeighbor_1, 
-                 TrainingNeighbor_2, AttentionCheck, TrainingNeighbor_3, ExperimentInstruction,
-                 Scenario]
+page_sequence = [Introduction, TimeSelection, AudioCheck, NeighborhoodInstruction, Scenario]
