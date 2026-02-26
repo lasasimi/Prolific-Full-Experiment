@@ -41,8 +41,9 @@ class ExitPage(Page):
             player.participant.reason="you did not pass the attention check."
         elif not player.participant.gives_consent:
             player.participant.reason="you did not consent to participate or could not enable the audio output."
-        elif not player.participant.commit_phase2:
-            player.participant.reason="you did not commit to participate in the second phase of the experiment."
+        if 'commit_phase2' in player.participant.vars:
+            if not player.participant.commit_phase2:
+                player.participant.reason="you did not commit to participate in the second phase of the experiment."
         # From mock app
         elif not player.participant.active:
             player.participant.reason="you have been timed out for inactivity."
@@ -56,7 +57,10 @@ class ExitPage(Page):
     def is_displayed(player: Player):
         # if they did not complete presurvey, they did not get payment either because they were not active in the mock app, or did not pass the attention/training(complete_presurvey), or did not give consent
         if not player.participant.complete_presurvey:
-            return not player.participant.active or not player.participant.gives_consent or player.participant.failed_attention_check or player.participant.training_attempt == 0 or not player.participant.commit_phase2
+            if 'commit_phase2' in player.participant.vars:
+                return not player.participant.commit_phase2
+            else:
+                return not player.participant.active or not player.participant.gives_consent or player.participant.failed_attention_check or player.participant.training_attempt == 0 
         else:
             return not player.participant.active or player.participant.away_long
 page_sequence = [ExitPage]
