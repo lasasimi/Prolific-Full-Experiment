@@ -36,28 +36,28 @@ class Subsession(BaseSubsession):
 
 
 # Time slot ID map (day-first):
-# 1-4 = Wed (4:00, 5:00, 6:00, 7:00 PM ET)
-# 5-8 = Thu (4:00, 5:00, 6:00, 7:00 PM ET)
-# 9-12 = Fri (4:00, 5:00, 6:00, 7:00 PM ET)
-# 13-16 = Sat (4:00, 5:00, 6:00, 7:00 PM ET)
+# 1-4 = Sat (4:00, 5:00, 6:00, 7:00 PM ET)
+# 5-8 = Sun (4:00, 5:00, 6:00, 7:00 PM ET)
+# 9-12 = Mon (4:00, 5:00, 6:00, 7:00 PM ET)
+# 13-16 = Tue (4:00, 5:00, 6:00, 7:00 PM ET)
 # 99 = none of the listed slots
 TIME_SLOT_LABELS = {
-    '1': 'Wed, February 25 | 4:00 - 4:30 PM ET',
-    '2': 'Wed, February 25 | 5:00 - 5:30 PM ET',
-    '3': 'Wed, February 25 | 6:00 - 6:30 PM ET',
-    '4': 'Wed, February 25 | 7:00 - 7:30 PM ET',
-    '5': 'Thu, February 26 | 4:00 - 4:30 PM ET',
-    '6': 'Thu, February 26 | 5:00 - 5:30 PM ET',
-    '7': 'Thu, February 26 | 6:00 - 6:30 PM ET',
-    '8': 'Thu, February 26 | 7:00 - 7:30 PM ET',
-    '9': 'Fri, February 27 | 4:00 - 4:30 PM ET',
-    '10': 'Fri, February 27 | 5:00 - 5:30 PM ET',
-    '11': 'Fri, February 27 | 6:00 - 6:30 PM ET',
-    '12': 'Fri, February 27 | 7:00 - 7:30 PM ET',
-    '13': 'Sat, February 28 | 4:00 - 4:30 PM ET',
-    '14': 'Sat, February 28 | 5:00 - 5:30 PM ET',
-    '15': 'Sat, February 28 | 6:00 - 6:30 PM ET',
-    '16': 'Sat, February 28 | 7:00 - 7:30 PM ET',
+    '1': 'Sat, March 7 | 4:00 - 4:30 PM ET',
+    '2': 'Sat, March 7 | 5:00 - 5:30 PM ET',
+    '3': 'Sat, March 7 | 6:00 - 6:30 PM ET',
+    '4': 'Sat, March 7 | 7:00 - 7:30 PM ET',
+    '5': 'Sun, March 8 | 4:00 - 4:30 PM ET',
+    '6': 'Sun, March 8 | 5:00 - 5:30 PM ET',
+    '7': 'Sun, March 8 | 6:00 - 6:30 PM ET',
+    '8': 'Sun, March 8 | 7:00 - 7:30 PM ET',
+    '9': 'Mon, March 9 | 4:00 - 4:30 PM ET',
+    '10': 'Mon, March 9 | 5:00 - 5:30 PM ET',
+    '11': 'Mon, March 9 | 6:00 - 6:30 PM ET',
+    '12': 'Mon, March 9 | 7:00 - 7:30 PM ET',
+    '13': 'Tue, March 10 | 4:00 - 4:30 PM ET',
+    '14': 'Tue, March 10 | 5:00 - 5:30 PM ET',
+    '15': 'Tue, March 10 | 6:00 - 6:30 PM ET',
+    '16': 'Tue, March 10 | 7:00 - 7:30 PM ET',
     '99': '🚫 None of the listed slots work for me',
 }
 
