@@ -165,23 +165,20 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase1_np_20260221', 
-         display_name='phase1_np_20260221',
+    dict(name='phase1_np_20260304', 
+         display_name='phase1_np_20260304',
          ),
-    dict(name='phase1_np_20260222', 
-         display_name='phase1_np_20260222',
+    dict(name='phase2_np_20260307', 
+         display_name='phase2_np_20260307',
          ),
-    dict(name='phase2_np_20260225', 
-         display_name='phase2_np_20260225',
+    dict(name='phase2_np_20260308', 
+         display_name='phase2_np_20260308',
          ),
-    dict(name='phase2_np_20260226', 
-         display_name='phase2_np_20260226',
+    dict(name='phase2_np_20260309', 
+         display_name='phase2_np_20260309',
          ),
-    dict(name='phase2_np_20260227', 
-         display_name='phase2_np_20260227',
-         ),
-    dict(name='phase2_np_20260228', 
-         display_name='phase2_np_20260228',
+    dict(name='phase2_np_20260310', 
+         display_name='phase2_np_20260310',
          )
 ]
 

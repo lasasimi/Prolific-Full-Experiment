@@ -313,7 +313,8 @@ class Introduction(Page):
         else:
             player.participant.active = False
             player.participant.complete_presurvey = False 
-
+            player.participant.commit_phase2 = False
+            
 class TimeSelection(Page):
     form_model = 'player'
     form_fields = ['time_selection']
@@ -377,7 +378,7 @@ class AudioCheck(Page):
         player.participant.audio_unlocked = player.audio_unlocked
         if player.audio_answer !=4 or player.audio_answer_image !=5: # incorrect answer
             player.participant.gives_consent = False
-            player.participant.complete_presurvey = player.participant.gives_consent # Assigning active status based on consent
+            player.participant.complete_presurvey = False  # Assigning active status based on consent
 
     @staticmethod
     def vars_for_template(player:Player):
