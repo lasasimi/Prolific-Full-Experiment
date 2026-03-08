@@ -267,7 +267,7 @@ def p_99(group:Group):
     counters_update(group)
 
 def random_p(group:Group):
-    group.anti_prop = random.choice(['p00','p100','p50'])
+    group.anti_prop = random.choice(['p00','p100','p50', 'p99'])
     counters_update(group)
 
 

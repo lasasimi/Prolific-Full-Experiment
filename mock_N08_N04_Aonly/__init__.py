@@ -362,7 +362,7 @@ class GroupSizeWaitPage(WaitPage):
                     (session.N04_p00 < session.MAX_N04_p00, p_00),
                     (session.N04_p100 < session.MAX_N04_p100, p_100),
                     (session.N04_p50 < session.MAX_N04_p50, p_50),
-                    (session.N04_p99 < session.MAX_N04_p00, p_99)]
+                    (session.N04_p99 < session.MAX_N04_p99, p_99)]
                 # note: adjustable if only want specific p levels, remove non-needed lines
             
             # Shuffle the order
