@@ -128,7 +128,7 @@ SESSION_CONFIGS = [
     ),
     dict(
         name='Phase_1',
-        app_sequence=['presurvey_part1', 'Pay_phase1', 'noPay'], # different explanation and end links on Pay app (so we can group participants differently based on neutra/not neutral in the Prolific group)
+        app_sequence=['presurvey_part1b', 'Pay_phase1', 'noPay'], # different explanation and end links on Pay app (so we can group participants differently based on neutra/not neutral in the Prolific group)
         num_demo_participants=20, # N08 N04 (must be a multiple of 4),
         display_name='Phase_1',
         # no consent, failed training, faield attention check, and became inactive in mock app
@@ -165,21 +165,15 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase1_np_20260304', 
-         display_name='phase1_np_20260304',
+    dict(name='phase1_np_20260311', 
+         display_name='phase1_np_20260311',
          ),
-    dict(name='phase2_np_20260307', 
-         display_name='phase2_np_20260307',
+    dict(name='phase2_np_20260313', 
+         display_name='phase2_np_20260313',
          ),
-    dict(name='phase2_np_20260308', 
-         display_name='phase2_np_20260308',
+    dict(name='phase2_np_20260314', 
+         display_name='phase2_np_20260314',
          ),
-    dict(name='phase2_np_20260309', 
-         display_name='phase2_np_20260309',
-         ),
-    dict(name='phase2_np_20260310', 
-         display_name='phase2_np_20260310',
-         )
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60
