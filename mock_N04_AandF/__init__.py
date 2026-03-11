@@ -308,7 +308,7 @@ def p_99(group:Group):
     counters_update(group)
 
 def random_p(group:Group):
-    group.anti_prop = random.choice(['p00','p100','p50'])
+    group.anti_prop = random.choice(['p00','p100','p50', 'p99'])
     counters_update(group)
 
 
@@ -370,7 +370,7 @@ class GroupSizeWaitPage(WaitPage):
                     (session.N04_p00 < session.MAX_N04_p00, p_00),
                     (session.N04_p100 < session.MAX_N04_p100, p_100),
                     (session.N04_p50 < session.MAX_N04_p50, p_50),
-                    (session.N04_p99 < session.MAX_N04_p00, p_99)]
+                    (session.N04_p99 < session.MAX_N04_p99, p_99)]
             
             # Shuffle the order
             random.shuffle(conditions)
