@@ -49,15 +49,15 @@ class Subsession(BaseSubsession):
 def creating_session(subsession):
     session = subsession.session
     # Retrieve values from session config and store them in the session
-    session.MAX_N04_p00 = session.config.get('N04_p00', 0)
-    session.MAX_N04_p100 = session.config.get('N04_p100', 0)
-    session.MAX_N04_p50 = session.config.get('N04_p50', 0)
-    session.MAX_N08_p00 = session.config.get('N08_p00', 0)
-    session.MAX_N08_p100 = session.config.get('N08_p100', 0)
-    session.MAX_N08_p50 = session.config.get('N08_p50', 0)
+    session.MAX_N04_p00 = session.config.get('MAX_N04_p00', 0)
+    session.MAX_N04_p100 = session.config.get('MAX_N04_p100', 0)
+    session.MAX_N04_p50 = session.config.get('MAX_N04_p50', 0)
+    session.MAX_N08_p00 = session.config.get('MAX_N08_p00', 0)
+    session.MAX_N08_p100 = session.config.get('MAX_N08_p100', 0)
+    session.MAX_N08_p50 = session.config.get('MAX_N08_p50', 0)
     # Control condition
-    session.MAX_N08_p99 = session.config.get('N08_p99', 0) 
-    session.MAX_N04_p99 = session.config.get('N04_p99', 0)
+    session.MAX_N08_p99 = session.config.get('MAX_N08_p99', 0) 
+    session.MAX_N04_p99 = session.config.get('MAX_N04_p99', 0)
     session.SCE = session.config.get('SCE')
     session.start_time = time.time()  # record the session start time
 
