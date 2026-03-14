@@ -304,7 +304,16 @@ def p_99(group:Group):
     counters_update(group)
 
 def random_p(group:Group):
-    group.anti_prop = random.choice(['p00','p100','p50', 'p99'])
+    session = group.subsession.session
+    choices = [p for p, mx in [
+        ('p00', session.MAX_N08_p00 if group.group_size == 'N08' else session.MAX_N04_p00),
+        ('p100', session.MAX_N08_p100 if group.group_size == 'N08' else session.MAX_N04_p100),
+        ('p50', session.MAX_N08_p50 if group.group_size == 'N08' else session.MAX_N04_p50),
+        ('p99', session.MAX_N08_p99 if group.group_size == 'N08' else session.MAX_N04_p99),
+    ] if mx > 0]
+    if not choices:
+        choices = ['p00', 'p100', 'p50', 'p99']
+    group.anti_prop = random.choice(choices)
     counters_update(group)
 
 
