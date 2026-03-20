@@ -5,11 +5,7 @@ import random
 import time
 
 doc = """
-Pre-survey for the Prolific Full Experiment.
-This app collects demographic information and responses to a series of scenarios (only +1 For or -1 Against)
-We will add a task training, and an attention check.
-After pre-survey, participants will be redirected to the main experiment app (and we send the data from this app for the Grouping)
-Whilst we group them, they will see a waiting page, ideally with a description of the task or a game to play.
+Phase 1 with 2 days (8 timeslot options) to choose from
 """
 
 def open_CSV(filename):
@@ -36,17 +32,17 @@ class Subsession(BaseSubsession):
 
 
 # Time slot ID map (day-first):
-# 1-4 = Fri (4:00, 5:00, 6:00, 7:00 PM ET)
-# 5-8 = Sat (4:00, 5:00, 6:00, 7:00 PM ET)
+# 1-4 = Sun (4:00, 5:00, 6:00, 7:00 PM ET)
+# 5-8 = Mon (4:00, 5:00, 6:00, 7:00 PM ET)
 TIME_SLOT_LABELS = {
-    '1': 'Fri, March 13 | 4:00 - 4:30 PM ET',
-    '2': 'Fri, March 13 | 5:00 - 5:30 PM ET',
-    '3': 'Fri, March 13 | 6:00 - 6:30 PM ET',
-    '4': 'Fri, March 13 | 7:00 - 7:30 PM ET',
-    '5': 'Sat, March 14 | 4:00 - 4:30 PM ET',
-    '6': 'Sat, March 14 | 5:00 - 5:30 PM ET',
-    '7': 'Sat, March 14 | 6:00 - 6:30 PM ET',
-    '8': 'Sat, March 14 | 7:00 - 7:30 PM ET',
+    '1': 'Sun, March 22 | 4:00 - 4:30 PM ET',
+    '2': 'Sun, March 22 | 5:00 - 5:30 PM ET',
+    '3': 'Sun, March 22 | 6:00 - 6:30 PM ET',
+    '4': 'Sun, March 22 | 7:00 - 7:30 PM ET',
+    '5': 'Mon, March 23 | 4:00 - 4:30 PM ET',
+    '6': 'Mon, March 23 | 5:00 - 5:30 PM ET',
+    '7': 'Mon, March 23 | 6:00 - 6:30 PM ET',
+    '8': 'Mon, March 23 | 7:00 - 7:30 PM ET',
     '99': '🚫 None of the listed slots work for me',
 }
 

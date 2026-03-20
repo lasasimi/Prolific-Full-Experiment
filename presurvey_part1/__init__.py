@@ -5,11 +5,7 @@ import random
 import time
 
 doc = """
-Pre-survey for the Prolific Full Experiment.
-This app collects demographic information and responses to a series of scenarios (only +1 For or -1 Against)
-We will add a task training, and an attention check.
-After pre-survey, participants will be redirected to the main experiment app (and we send the data from this app for the Grouping)
-Whilst we group them, they will see a waiting page, ideally with a description of the task or a game to play.
+Phase 1 with 4 days (16 timeslot options) to choose from
 """
 
 def open_CSV(filename):

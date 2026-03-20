@@ -41,14 +41,14 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 5,
-        MAX_N08_p00 = 5,
-        MAX_N04_p50 = 5,
-        MAX_N08_p50 = 5,
-        MAX_N08_p99 = 5,
-        MAX_N04_p99 = 5,
-        MAX_N04_p100 = 5,
-        MAX_N08_p100 = 5,
+        MAX_N04_p00 = 0,
+        MAX_N08_p00 = 0,
+        MAX_N04_p50 = 0,
+        MAX_N08_p50 = 0,
+        MAX_N08_p99 = 2,
+        MAX_N04_p99 = 2,
+        MAX_N04_p100 = 0,
+        MAX_N08_p100 = 1,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     dict(
@@ -95,10 +95,10 @@ SESSION_CONFIGS = [
         MAX_N08_p00 = 0,
         MAX_N04_p50 = 0,
         MAX_N08_p50 = 0,
-        MAX_N08_p99 = 3,
-        MAX_N04_p99 = 3,
+        MAX_N08_p99 = 2,
+        MAX_N04_p99 = 2,
         MAX_N04_p100 = 0,
-        MAX_N08_p100 = 2,
+        MAX_N08_p100 = 1,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     dict(
@@ -116,14 +116,14 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 5,
-        MAX_N08_p00 = 5,
-        MAX_N04_p50 = 5,
-        MAX_N08_p50 = 5,
-        MAX_N08_p99 = 5,
-        MAX_N04_p99 = 5,
-        MAX_N04_p100 = 5,
-        MAX_N08_p100 = 5,
+        MAX_N04_p00 = 0,
+        MAX_N08_p00 = 0,
+        MAX_N04_p50 = 0,
+        MAX_N08_p50 = 0,
+        MAX_N08_p99 = 2,
+        MAX_N04_p99 = 2,
+        MAX_N04_p100 = 0,
+        MAX_N08_p100 = 1,
         SCE = 's2_n', # scenario framing (s2_n or s2_p)
     ),
     dict(
@@ -165,15 +165,16 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase1_np_20260311', 
-         display_name='phase1_np_20260311',
+    dict(name='phase1_np_20260320', 
+         display_name='phase1_np_20260320',
          ),
-    dict(name='phase2_np_20260313', 
-         display_name='phase2_np_20260313',
+    dict(name='phase2_np_20260322', 
+         display_name='phase2_np_20260322',
          ),
-    dict(name='phase2_np_20260314', 
-         display_name='phase2_np_20260314',
+    dict(name='phase2_np_20260323', 
+         display_name='phase2_np_20260323',
          ),
+    
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60
