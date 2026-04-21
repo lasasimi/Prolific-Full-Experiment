@@ -22,7 +22,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
 
     # NOTE: Replace with 20 for real experiment
-    NUM_ROUNDS = 20 
+    NUM_ROUNDS = 2 
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
     # NOTE: Set this to 10 minutes
@@ -229,6 +229,11 @@ class Player(BasePlayer):
     prev_majority = models.IntegerField()
     # Neighbor responses
     neighbor_responses = models.StringField()
+    # Additional measure of affective polarization
+    affective_polarization = models.IntegerField(label="What feelings do you have towards people who choose to ", 
+        choices=[-5,-4,-3,-2,-1,0,1,2,3,4,5],
+        widget=widgets.RadioSelectHorizontal)
+                                                                                                                  
     
 def counters_update(group:Group):
     if group.group_size == 'N08':
@@ -771,7 +776,23 @@ class FinalRoundWaitPage(WaitPage):
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
+
+class Additional(Page):
+    form_model = 'player'
+    form_fields = ['affective_polarization']
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
     
+    @staticmethod
+    def vars_for_template(player):
+        # Get scenario details
+        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+        return dict(
+            direction = (row.iloc[0]['Against'] if player.participant.vars['faction'] == 'A' else row.iloc[0]['For']).lower(),
+        )
+
 class FinalRound(Page):
     timeout_seconds = 90
     @staticmethod
@@ -793,4 +814,4 @@ class FinalRound(Page):
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, Additional, FinalRoundWaitPage, FinalRound]

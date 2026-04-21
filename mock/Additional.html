@@ -1,0 +1,140 @@
+
+{{ block title }}
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
+{{ endblock }}
+
+
+
+{{ block content }}
+<br>
+<div class="card bg-mid m-0 p-3">
+    <p class="question-prompt">{{ form.affective_polarization.label }} {{ direction }}?</p>
+
+    <div class="likert-wrapper">
+        <div class="likert-buttons">
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="-5" required><span class="val">-5</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="-4"><span class="val">-4</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="-3"><span class="val">-3</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="-2"><span class="val">-2</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="-1"><span class="val">-1</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="0"><span class="val">0</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="1"><span class="val">1</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="2"><span class="val">2</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="3"><span class="val">3</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="4"><span class="val">4</span></label>
+            <label class="likert-item"><input type="radio" name="affective_polarization" value="5"><span class="val">5</span></label>
+        </div>
+    </div>
+    <div class="likert-endpoints">
+        <span>These people are very unlikeable to me</span>
+        <span>Neutral</span>
+        <span>These people are very likeable to me</span>
+    </div>
+</div>
+
+<br>
+    <button id="next-button" class="next-button" type="submit">Next</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('custom-title');
+        if (!el) return;
+        const text = el.getAttribute('data-text') || el.textContent.trim();
+        el.textContent = '';
+
+        const cursor = document.createElement('span');
+        cursor.className = 'typer-cursor';
+        cursor.textContent = '|';
+        el.appendChild(cursor);
+
+        let i = 0;
+        function typeNext() {
+            if (i < text.length) {
+                // insert the next character before the cursor
+                cursor.insertAdjacentText('beforebegin', text[i]);
+                // small extra delay after spaces for readability
+                const delay = (text[i] === ' ') ? 80 : 36;
+                i++;
+                setTimeout(typeNext, delay);
+            } else {
+                // leave blinking cursor
+            }
+        }
+        typeNext();
+
+        // reveal final selection after 2 seconds
+        setTimeout(() => {
+            const sel = document.getElementById('final-selection');
+            if (sel) {
+                sel.classList.remove('delayed-hidden');
+                sel.classList.add('delayed-visible');
+                sel.setAttribute('aria-hidden', 'false');
+            }
+        }, 3500);
+    });
+</script>
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    body {
+        background-color: #ffffff; /* Light gray background */
+    }
+    /* typing cursor + title sizing */
+    .custom-title { 
+        font-weight:600; 
+        font-size:1.25rem; 
+        text-align:center; 
+        white-space:pre-wrap; 
+    }
+    .typer-cursor { 
+        display:inline-block; 
+        margin-left:4px; 
+        color:#333; 
+        animation: blink 1s steps(1) infinite; 
+    }
+    /* delayed reveal */
+    .delayed-hidden { opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s; }
+    .delayed-visible { opacity: 1; visibility: visible; transition: opacity .35s ease, visibility .35s; }
+
+    /* Likert scale */
+    .question-prompt {
+        font-weight: 500;
+        margin-bottom: 1.2rem;
+    }
+    .likert-wrapper {
+        padding: 8px 0 8px;
+        margin: 8px 0 4px;
+    }
+    .likert-buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+    .likert-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        cursor: pointer;
+        user-select: none;
+    }
+    .likert-item input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+    .likert-item .val {
+        margin-top: 6px;
+        font-size: 0.9rem;
+    }
+    .likert-endpoints {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #555;
+        margin-top: 8px;
+    }
+</style>
+{{ endblock}}

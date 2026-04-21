@@ -16,15 +16,15 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 5,
-        MAX_N08_p00 = 5,
-        MAX_N04_p50 = 5,
-        MAX_N08_p50 = 5,
-        MAX_N08_p99 = 5,
-        MAX_N04_p99 = 5,
-        MAX_N04_p100 = 5,
-        MAX_N08_p100 = 5,
-        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        MAX_N04_p00 = 10,
+        MAX_N08_p00 = 10,
+        MAX_N04_p50 = 10,
+        MAX_N08_p50 = 10,
+        MAX_N08_p99 = 10,
+        MAX_N04_p99 = 10,
+        MAX_N04_p100 = 10,
+        MAX_N08_p100 = 10,
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     dict(
         name='N08_only',
@@ -49,7 +49,7 @@ SESSION_CONFIGS = [
         MAX_N04_p99 = 2,
         MAX_N04_p100 = 0,
         MAX_N08_p100 = 1,
-        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     dict(
         name='N04_AandF',
@@ -74,7 +74,7 @@ SESSION_CONFIGS = [
         MAX_N04_p99 = 5,
         MAX_N04_p100 = 5,
         MAX_N08_p100 = 5,
-        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     dict(
         name='N08_N04_Aonly',
@@ -99,7 +99,7 @@ SESSION_CONFIGS = [
         MAX_N04_p99 = 2,
         MAX_N04_p100 = 0,
         MAX_N08_p100 = 1,
-        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     dict(
         name='N04_Aonly',
@@ -124,7 +124,7 @@ SESSION_CONFIGS = [
         MAX_N04_p99 = 2,
         MAX_N04_p100 = 0,
         MAX_N08_p100 = 1,
-        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     dict(
         name='Phase_1',
@@ -138,7 +138,7 @@ SESSION_CONFIGS = [
         # eligibile link (paid for completion and non-neutral)
         eligiblelink='https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', 
     
-        SCE = 's2_n', # scenario framing (s2_n or s2_p)
+        SCE = 's2_p', # scenario framing (s2_n or s2_p)
         )
 ]
 
