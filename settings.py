@@ -165,16 +165,15 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase1_np_20260320', 
-         display_name='phase1_np_20260320',
+    dict(name='phase2_p_20260423a', 
+         display_name='phase2_p_20260423a',
          ),
-    dict(name='phase2_np_20260322', 
-         display_name='phase2_np_20260322',
+    dict(name='phase2_p_20260423b', 
+         display_name='phase2_p_20260423b',
          ),
-    dict(name='phase2_np_20260323', 
-         display_name='phase2_np_20260323',
+    dict(name='phase2_p_20260423c', 
+         display_name='phase2_p_20260423c',
          ),
-    
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60

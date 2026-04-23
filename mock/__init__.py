@@ -785,7 +785,7 @@ class FinalRoundWaitPage(WaitPage):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 class Additional(Page):
-    timeout_seconds = 120
+    timeout_seconds = 180
     form_model = 'player'
 
     @staticmethod
@@ -799,6 +799,12 @@ class Additional(Page):
     @staticmethod
     def get_form_fields(player: Player):
         return Additional._ordered_aff_pol_fields(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.aff_pol_A = 99
+            player.aff_pol_F = 99
 
     @staticmethod
     def is_displayed(player):

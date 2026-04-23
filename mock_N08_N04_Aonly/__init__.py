@@ -846,6 +846,12 @@ class Additional(Page):
         return Additional._ordered_aff_pol_fields(player)
 
     @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.aff_pol_A = 99
+            player.aff_pol_F = 99
+
+    @staticmethod
     def is_displayed(player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 

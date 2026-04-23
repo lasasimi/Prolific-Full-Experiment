@@ -7,7 +7,13 @@
 
 {{ block content }}
 <br>
+
 <div class="card bg-mid m-0 p-3">
+
+    <div class="card-body">
+    <h4>Questions </h4>
+    Before we proceed to show your community's final decision, please answer the questions below about your feelings towards other people in this study. Your answers will not be shared.
+    <br><br>
     {{ for q in aff_pol_questions }}
     <div class="slider-question" data-field="{{ q.field_name }}">
         <p class="question-prompt">What feelings do you have towards people in this study who chose to <strong>{{ q.suffix }}?</strong></p>
@@ -30,8 +36,8 @@
             />
             <!-- tick row injected by JS -->
             <div class="direction-labels">
-                <span>Very unfavorable</span>
-                <span>Very favorable</span>
+                <span>Very cold</span>
+                <span>Very warm</span>
             </div>
             <div class="direction-meta">
                 Selected: <b id="value_{{ q.field_name }}">—</b>
@@ -42,7 +48,7 @@
         </div>
     </div>
     {{ endfor }}
-
+</div>
 </div>
 
 <br>
@@ -240,7 +246,7 @@
     justify-content: space-between;
     width: 100%;
     margin-top: 8px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #444;
     gap: 12px;
     }
