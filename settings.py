@@ -16,14 +16,14 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 10,
+        MAX_N04_p00 = 15,
         MAX_N08_p00 = 10,
-        MAX_N04_p50 = 10,
+        MAX_N04_p50 = 15,
         MAX_N08_p50 = 10,
-        MAX_N08_p99 = 10,
-        MAX_N04_p99 = 10,
-        MAX_N04_p100 = 10,
-        MAX_N08_p100 = 10,
+        MAX_N08_p99 = 0,
+        MAX_N04_p99 = 0,
+        MAX_N04_p100 = 0,
+        MAX_N08_p100 = 0,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     dict(

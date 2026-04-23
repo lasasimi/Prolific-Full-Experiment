@@ -22,14 +22,14 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
 
     # NOTE: Replace with 20 for real experiment
-    NUM_ROUNDS = 2 
+    NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
     # NOTE: Set this to 10 minutes
     MEDIUM_WAIT = 15 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
-    N_TEST = 4 # SIZE OF DISCUSSION GROUP 
+    N_TEST = 8 # SIZE OF DISCUSSION GROUP 
     MAX_WARNING = 3 # Max number of forced responses before the inactivity warning shows up
     MAX_FORCED = NUM_ROUNDS // 2  # Max number of forced responses to not get paid
     SCENARIOS = open_CSV('presurvey/scenarios_1np.csv')
@@ -38,7 +38,7 @@ class C(BaseConstants):
 
     # Custom admin view fields
     ADMIN_VIEW_FIELDS = {
-        'player': ['round_number', 'scenario', 'old_response', 'new_response', 'forced_response', 'prev_majority', 'neighbor_responses', 'discussion_grp'],
+        'player': ['round_number', 'scenario', 'old_response', 'new_response', 'forced_response', 'prev_majority', 'neighbor_responses', 'discussion_grp', 'aff_pol_A', 'aff_pol_F'],
         'group': ['group_size', 'is_group_single', 'beta_50', 'anti_prop', 'group_responses', 'majority_response'],
     }
  
@@ -231,12 +231,12 @@ class Player(BasePlayer):
     neighbor_responses = models.StringField()
     # Additional measure of affective polarization
     aff_pol_A = models.IntegerField(
-        label="What feelings do you have towards people in this study who choose to",
+        label="What feelings do you have towards people in this study who chose to",
         min=0,
         max=100,
     )
     aff_pol_F = models.IntegerField(
-        label="What feelings do you have towards people in this study who choose to",
+        label="What feelings do you have towards people in this study who chose to",
         min=0,
         max=100,
     )
@@ -785,6 +785,7 @@ class FinalRoundWaitPage(WaitPage):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
 class Additional(Page):
+    timeout_seconds = 120
     form_model = 'player'
 
     @staticmethod

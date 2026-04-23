@@ -1,12 +1,10 @@
 {{ extends 'otree/WaitPage.html' }}
-<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
-{{ block title }}
-<!-- We leave this blank so the title can be fully handled inside content -->
-{{ endblock }}
 
+{{ block title }} 
+{{ endblock }}
 {{ block content }}
 
-
+<link rel="stylesheet" href="{% static 'global/style.css' %}"/>
 <style>
     body {
         background-color: #d3d3d3; /* Light gray background */

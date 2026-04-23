@@ -266,7 +266,18 @@ class Player(BasePlayer):
     prev_majority = models.IntegerField()
     # Neighbor responses
     neighbor_responses = models.StringField()
-    
+    # Additional measure of affective polarization
+    aff_pol_A = models.IntegerField(
+        label="What feelings do you have towards people in this study who chose to",
+        min=0,
+        max=100,
+    )
+    aff_pol_F = models.IntegerField(
+        label="What feelings do you have towards people in this study who chose to",
+        min=0,
+        max=100,
+    )
+
 def counters_update(group:Group):
     if group.group_size == 'N08':
         if group.anti_prop == 'p00':
@@ -817,7 +828,59 @@ class FinalRoundWaitPage(WaitPage):
     @staticmethod
     def is_displayed(player:Player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
-    
+
+class Additional(Page):
+    timeout_seconds = 120
+    form_model = 'player'
+
+    @staticmethod
+    def _ordered_aff_pol_fields(player: Player):
+        if 'additional_form_order' not in player.participant.vars:
+            fields = ['aff_pol_A', 'aff_pol_F']
+            random.shuffle(fields)
+            player.participant.vars['additional_form_order'] = fields
+        return player.participant.vars['additional_form_order']
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        return Additional._ordered_aff_pol_fields(player)
+
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
+
+    @staticmethod
+    def error_message(player: Player, values):
+        errors = {}
+        for field_name in Additional._ordered_aff_pol_fields(player):
+            value = values.get(field_name)
+            if value is None:
+                errors[field_name] = 'Please move the slider to provide an answer.'
+                continue
+            if value < 0 or value > 100 or value % 10 != 0:
+                errors[field_name] = 'Please choose one of these values: 0, 10, ..., 100.'
+        return errors
+
+    @staticmethod
+    def vars_for_template(player):
+        # Get scenario details
+        row = C.SCENARIOS[C.SCENARIOS['code']==player.participant.scenario]
+        suffix_map = {
+            'aff_pol_A': row.iloc[0]['Against'].lower(),
+            'aff_pol_F': row.iloc[0]['For'].lower(),
+        }
+        ordered_fields = Additional._ordered_aff_pol_fields(player)
+        # Pass as list of dicts so the template engine can access values without variable key lookups
+        aff_pol_questions = [
+            {'field_name': f, 'suffix': suffix_map[f]}
+            for f in ordered_fields
+        ]
+        return dict(
+            option_against=row.iloc[0]['Against'].lower(),
+            option_for=row.iloc[0]['For'].lower(),
+            aff_pol_questions=aff_pol_questions,
+        )
+
 class FinalRound(Page):
     timeout_seconds = 90
     @staticmethod
@@ -839,4 +902,4 @@ class FinalRound(Page):
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS and player.participant.complete_presurvey and not player.participant.single_group and not player.participant.away_long
 
-page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, FinalRoundWaitPage, FinalRound]
+page_sequence = [GroupingWaitPage, GroupSizeWaitPage, AttentionCheck, DiscussionGRPWaitPage, Nudge, NudgeTraining, NudgeTrainingLast, Phase3, Discussion, Additional, FinalRoundWaitPage, FinalRound]
