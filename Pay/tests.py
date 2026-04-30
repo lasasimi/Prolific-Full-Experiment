@@ -12,4 +12,5 @@ class PlayerBot(Bot):
                             check_html=False)
         if MyPage.is_displayed(self.player):
             yield Submission(MyPage, 
+                        dict(pay='CCCCCC'),
                         check_html=False)

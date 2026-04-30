@@ -47,66 +47,19 @@ class PlayerBot(Bot):
             yield ExperimentInstruction
 
         if Scenario.is_displayed(self.player):
-            if self.player.id_in_group in range(1,5):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=-1
-                )
-            elif self.player.id_in_group in range(5, 9):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=1
-                )
-            elif self.player.id_in_group in range(9, 13):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=-1
-                )
-            elif self.player.id_in_group in range(13, 17):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=1
-                )
-            elif self.player.id_in_group in range(17, 21):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=-1
-                )
-            elif self.player.id_in_group in range(21, 25):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=1
-                )
-            elif self.player.id_in_group in range(25, 29):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=-1
-                )
-            elif self.player.id_in_group in range(29, 33):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=1
-                )
-            elif self.player.id_in_group in range(33, 37):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=-1
-                )
-            elif self.player.id_in_group in range(37, 41):
-                yield Scenario, dict(
-                    political_charge=1,
-                    emotional_charge=1,
-                    response=1
-                )
+            block_size = 5
+
+            # which block the participant belongs to
+            block_index = (self.player.id_in_group - 1) // block_size
+
+            # alternate between 1 and -1, first block answers 1, second block answers -1, etc.
+            response = 1 if block_index % 2 == 0 else -1
+
+            yield Scenario, dict(
+                political_charge=1,
+                emotional_charge=1,
+                response=response,
+            )
         
         if Commitment.is_displayed(self.player):
             yield Commitment, dict(

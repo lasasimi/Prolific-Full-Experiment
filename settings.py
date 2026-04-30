@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         name='all_N08_N04',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
-        num_demo_participants=20, # N08 N04 (must be a multiple of 4)
+        num_demo_participants=100, # N08 N04 (must be a multiple of 4)
         display_name="all_N08_N04",
         # no consent, failed training, faield attention check, and became inactive in mock app
         returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
@@ -16,9 +16,9 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 15,
+        MAX_N04_p00 = 11,
         MAX_N08_p00 = 10,
-        MAX_N04_p50 = 15,
+        MAX_N04_p50 = 14,
         MAX_N08_p50 = 10,
         MAX_N08_p99 = 0,
         MAX_N04_p99 = 0,
@@ -165,14 +165,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase2_p_20260423a', 
-         display_name='phase2_p_20260423a',
-         ),
-    dict(name='phase2_p_20260423b', 
-         display_name='phase2_p_20260423b',
-         ),
-    dict(name='phase2_p_20260423c', 
-         display_name='phase2_p_20260423c',
+    dict(name='phase2_p_20260424', 
+         display_name='phase2_p_20260424',
          ),
 ]
 

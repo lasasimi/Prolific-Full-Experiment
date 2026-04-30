@@ -10,29 +10,30 @@ class PlayerBot(Bot):
                 self.player.participant.wait_page_arrival = time.time() - (1 * 60 + 5)
 
                 yield Submission(Nudge,
-                                dict(nudge_training=1,),
+                             dict(nudge_training=random.choice([-1, 0, 1])),
+                             check_html=False)
+                yield Submission(NudgeTraining, 
+                                dict(nudge_training_two=random.choice([-1, 0, 1])),
                                 check_html=False)
-                yield Submission(NudgeTraining,
-                                dict(nudge_training_two=1,),
-                                check_html=False) 
-                yield Submission(NudgeTrainingLast,
-                                dict(nudge_training_three=1,),
+                yield Submission(NudgeTrainingLast, 
+                                dict(nudge_training_three=random.choice([-1, 0, 1])),
                                 check_html=False)
-
                 yield Phase3
+
                 yield Submission(Discussion, 
-                                dict(new_response= random.choice([-1, 0, 1])),
-                                check_html=False)
-            elif self.player.round_number == C.NUM_ROUNDS:
+                            dict(new_response= random.choice([-1, 0, 1])),
+                            check_html=False)
+            elif self.player.round_number < C.NUM_ROUNDS:
                 yield Submission(Discussion, 
-                    dict(new_response= random.choice([-1, 0, 1])),
-                    check_html=False)
-                yield FinalRound 
+                            dict(new_response= random.choice([-1, 0, 1])),
+                            check_html=False)
             else:
                 yield Submission(Discussion, 
                             dict(new_response= random.choice([-1, 0, 1])),
                             check_html=False)
-                
+                yield Submission(Additional, dict(aff_pol_A=10, 
+                                   aff_pol_F=10,))
+                yield FinalRound
 
             # if self.player.round_number == 1:
             #     yield Discussion, dict(
