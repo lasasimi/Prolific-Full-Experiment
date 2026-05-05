@@ -4,7 +4,6 @@ import json
 import time
 import random
 import pandas as pd # type: ignore
-from collections import Counter
 
 doc = """
 Grouping participants with different group sizes and anticonformists to participate in a synchronous discussion task.
@@ -19,7 +18,7 @@ def open_CSV(filename):
 
 
 class C(BaseConstants):
-    NAME_IN_URL = 'mock_N08_N04_Aonly'
+    NAME_IN_URL = 'mock_N08_N04_Aonly_old'
     PLAYERS_PER_GROUP = None
 
     # NOTE: Replace with 20 for real experiment
@@ -123,15 +122,12 @@ def group_by_arrival_time_method(subsession, waiting_players):
     # Dynamically reconstruct scenario_counts from participant.vars
     sce = session.SCE
     scenario_counts = {sce: {'A': [], 'F': []}}
-    sce_A = scenario_counts[sce]['A'] # player objects choosing -1
-    sce_F = scenario_counts[sce]['F'] # player objects choosing +1
-
     for p in waiting_players:
         if sce in response[p.participant.code].keys():
             if response[p.participant.code][sce] == -1:
-                sce_A.append(p)
+                scenario_counts[sce]['A'].append(p)
             elif response[p.participant.code][sce] == 1:
-                sce_F.append(p)
+                scenario_counts[sce]['F'].append(p)
     print(f"Debug: Scenario counts before grouping: {scenario_counts}")
 
     group = []
@@ -140,27 +136,26 @@ def group_by_arrival_time_method(subsession, waiting_players):
     # check if creating 1 group of 8 is possible 
         print('N08 is not full, creating a group of 8')
         sce = session.SCE
-        print(f"Debug: Scenario {sce}, A count: {len(sce_A)}, F count: {len(sce_F)}")
-        if len(sce_A) == C.N_TEST/2 and len(sce_F) == C.N_TEST/2: 
+        print(f"Debug: Scenario {sce}, A count: {len(scenario_counts[sce]['A'])}, F count: {len(scenario_counts[sce]['F'])}")
+        if len(scenario_counts[sce]['A']) == C.N_TEST/2 and len(scenario_counts[sce]['F']) == C.N_TEST/2: 
             print('Ready to create a LARGE discussion group')
-            group = sce_A + sce_F 
+            group = scenario_counts[sce]['A'] + scenario_counts[sce]['F'] 
             for p in group:
                 p.participant.scenario = sce
                 # Save the scenario and faction to participant.vars
                 p.participant.vars['scenario'] = sce
-                p.participant.vars['faction'] = 'A' if p in sce_A else 'F'
+                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
             return group 
     
     # If N08 is full or any of the players has been waiting for medium time, create a group of 4
-    medium_wait_players = {p for p in waiting_players if medium_wait(p)}
-    if N08_full(subsession) or medium_wait_players:
+    if N08_full(subsession) or any(medium_wait(p) for p in waiting_players):
         print('N08 is full or medium wait, checking for smaller groups')
         
         sce = session.SCE
 
         # Check if there is already a medium wait within F players and A players
-        f_medium = [p for p in sce_F if p in medium_wait_players]
-        a_medium = [p for p in sce_A if p in medium_wait_players]
+        f_medium = [p for p in scenario_counts[sce]['F'] if medium_wait(p)]
+        a_medium = [p for p in scenario_counts[sce]['A'] if medium_wait(p)]
         print(f"Debug: F medium wait players: {f_medium}, A medium wait players: {a_medium}")
 
         # Let go the f_medium player individually, remove this function if you still want to form F groups of 4
@@ -175,16 +170,16 @@ def group_by_arrival_time_method(subsession, waiting_players):
         positive = False # to debug later
 
         # Create N04 only for A players if there is any A medium wait
-        if not N04_full(subsession) and len(sce_A) >= C.N_TEST//2 and a_medium:
-            print(len(sce_A), len(sce_F))
+        if not N04_full(subsession) and len(scenario_counts[sce]['A']) >= C.N_TEST//2 and a_medium:
+            print(len(scenario_counts[sce]['A']), len(scenario_counts[sce]['F']))
             print('Creating a group of 4 from A players')
-            group = random.sample(sce_A, k=C.N_TEST//2)
+            group = random.sample(scenario_counts[sce]['A'], k=C.N_TEST//2)
             positive = False
             for p in group:
                 p.participant.scenario = sce
                 # Save the scenario and faction to participant.vars
                 p.participant.vars['scenario'] = sce
-                p.participant.vars['faction'] = 'A' if p in sce_A else 'F'
+                p.participant.vars['faction'] = 'A' if p in scenario_counts[sce]['A'] else 'F'
                 p.participant.positive = positive
                 print(f"Debug: {p.participant.code} positive={positive}")
             return group
@@ -205,13 +200,12 @@ def group_by_arrival_time_method(subsession, waiting_players):
         #     return group
    
     # Long-wait/full-counter fallback for remaining ungrouped players
-    all_full = counters_full(waiting_players[0]) if waiting_players else False
-    if all_full:
+    if all(counters_full(p) for p in waiting_players):
         print("All counters are full. Adding all waiting players to long_waiting.")
         long_waiting = waiting_players  # Add all players to long_waiting
     else:
         # players waiting for more than threshold need to be let go
-        long_waiting = [p for p in waiting_players if long_wait(p)]
+        long_waiting = [p for p in waiting_players if long_wait(p) or counters_full(p)]
 
     if len(long_waiting) >= 1:
         for player in long_waiting:
@@ -425,7 +419,7 @@ class DiscussionGRPWaitPage(WaitPage):
     template_name = 'mock/DiscussionGRPWaitPage.html'
     @staticmethod
     def after_all_players_arrive(group: Group):
-        players = group.get_players()
+
         if group.subsession.round_number == 1:
             # Define how many anticonformists in each faction based on group parameter
             if group.anti_prop == 'p50':
@@ -440,13 +434,13 @@ class DiscussionGRPWaitPage(WaitPage):
             print(f"Debug: n_anti = {n_anti}, group.anti_prop = {group.anti_prop}")
             # Save control as a participant variable 
             if n_anti == 99:
-                for p in players:
+                for p in group.get_players():
                     p.participant.control = True
                     
             # Select participants to be anticonformists 
             if group.group_size == 'N08':
-                faction_A = [p.participant.code for p in players if p.participant.all_responses[p.participant.scenario]==-1]
-                faction_F = [p.participant.code  for p in players if p.participant.all_responses[p.participant.scenario]==1]
+                faction_A = [p.participant.code for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==-1]
+                faction_F = [p.participant.code  for p in group.get_players() if p.participant.all_responses[p.participant.scenario]==1]
 
                 if n_anti != 99:
                     anticonformists = random.sample(faction_A,n_anti) + random.sample(faction_F,n_anti) 
@@ -457,7 +451,7 @@ class DiscussionGRPWaitPage(WaitPage):
                     print(f"Debug: anticonformists codes = {anticonformists}")
 
             elif group.group_size == 'N04':
-                faction_U = players
+                faction_U = group.get_players()
 
                 if n_anti != 99: 
                     anticonformists = random.sample(faction_U,n_anti)
@@ -472,44 +466,44 @@ class DiscussionGRPWaitPage(WaitPage):
                 anticonformists = []
             # Assign anticonformists to their participant level variable
             if n_anti != 99:
-                for p in players:
-                    if p.participant.code in anticonformists_codes:
-                        p.participant.anticonformist = True 
+                for player in group.get_players():
+                    if player.participant.code in anticonformists_codes:
+                        player.participant.anticonformist = True 
 
-            for p in players:
-                scenario_position = p.participant.all_responses[p.participant.scenario]
-                others = p.get_others_in_group()
+            for player in group.get_players():
+                scenario_position = player.participant.all_responses[player.participant.scenario]
                 if scenario_position==-1:
-                    p.participant.own_faction = [other.participant.code for other in others if other.participant.all_responses[other.participant.scenario]==-1]
-                    p.participant.other_faction = [other.participant.code for other in others if other.participant.all_responses[other.participant.scenario]==1]
+                    player.participant.own_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==-1]
+                    player.participant.other_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==1]
 
                 elif scenario_position==1:
-                    p.participant.own_faction = [other.participant.code for other in others if other.participant.all_responses[other.participant.scenario]==1]
-                    p.participant.other_faction = [other.participant.code for other in others if other.participant.all_responses[other.participant.scenario]==-1] 
+                    player.participant.own_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==1]
+                    player.participant.other_faction = [other.participant.code for other in player.get_others_in_group() if other.participant.all_responses[other.participant.scenario]==-1] 
                 
                 else:
-                    p.participant.own_faction = []
-                    p.participant.other_faction = []
+                    player.participant.own_faction = []
+                    player.participant.other_faction = []
 
         else:
             # Copy group variable settings from round 1
-            round1 = group.in_round(1)
-            group.group_size = round1.group_size
-            group.is_group_single = round1.is_group_single 
-            group.beta_50 = round1.beta_50
-            group.anti_prop = round1.anti_prop  
+            group.group_size = group.in_round(1).group_size
+            group.is_group_single = group.in_round(1).is_group_single 
+            group.beta_50 = group.in_round(1).beta_50
+            group.anti_prop = group.in_round(1).anti_prop  
 
         if group.subsession.round_number == 1:
-            for p in players:
+            for p in group.get_players():
                 p.old_response = p.participant.all_responses[p.participant.scenario]
         else:
-            for p in players:
+            for p in group.get_players():
                 p.old_response = p.in_round(p.round_number - 1).new_response
 
         if group.group_size == 'N08':
-            for p in players:
+            for p in group.get_players():
                 factions = [random.choice(['own','other']) for i in range(int(C.N_TEST/2)-1)]
-                faction_counts = dict(Counter(factions))
+                labels, counts = np.unique(factions, return_counts=True)
+                # Convert to plain str and int types
+                faction_counts = {str(label): int(count) for label, count in zip(labels, counts)}
                 faction_map = {
                     'own': p.participant.own_faction,
                     'other': p.participant.other_faction,
@@ -523,12 +517,12 @@ class DiscussionGRPWaitPage(WaitPage):
                 p.discussion_grp = str(p.participant.discussion_grp)
 
         if group.group_size == 'N04':
-            for p in players:
+            for p in group.get_players():
                 others = p.get_others_in_group()
                 p.participant.discussion_grp = [o.participant.code for o in others]
                 p.discussion_grp = str(p.participant.discussion_grp)
 
-        for player in players:
+        for player in group.get_players():
             print(f"Debug: player's discussion group: {player.participant.discussion_grp}")
 
     @staticmethod
