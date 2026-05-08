@@ -10,7 +10,7 @@ POST = requests.post
 SERVER_URL = "https://collective-minds-ddd728d51f4d.herokuapp.com/room/fullexperiment_np_reinvited_1"
 
 # Prefer environment variable, fallback to hardcoded value
-OTREE_REST_KEY = os.getenv("OTREE_REST_KEY", "Complex2025!")
+OTREE_REST_KEY = os.environ["OTREE_REST_KEY"]
 
 
 def call_api(method, *path_parts, **params) -> dict:

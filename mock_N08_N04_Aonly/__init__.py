@@ -101,9 +101,10 @@ def long_away(player):
 
 def medium_wait(player):
     participant = player.participant
-    # In bot tests, immediately trigger medium_wait to allow group formation
-    # if participant._is_bot:
-    #     return True
+    if participant._is_bot:
+        # Short delay for bots: allows N08 groups to form first from the simultaneous batch,
+        # then remaining bots fall through to N04/single paths as intended.
+        return time.time() - participant.wait_page_arrival > 5  # 5 seconds for bots
     return time.time() - participant.wait_page_arrival > C.MEDIUM_WAIT * 60 
 
 def counters_full(player):
@@ -135,15 +136,19 @@ def group_by_arrival_time_method(subsession, waiting_players):
     print(f"Debug: Scenario counts before grouping: {scenario_counts}")
 
     group = []
-
-    if len(waiting_players) == C.N_TEST and not N08_full(subsession):
+    # Debug
+    print(f"A count: {len(sce_A)}, F count: {len(sce_F)}, need: {C.N_TEST/2} each")
+    print(f"N08_full: {N08_full(subsession)}, any medium_wait: {any(medium_wait(p) for p in waiting_players)}")
+    
+    if len(waiting_players) >= C.N_TEST and not N08_full(subsession):
     # check if creating 1 group of 8 is possible 
         print('N08 is not full, creating a group of 8')
         sce = session.SCE
         print(f"Debug: Scenario {sce}, A count: {len(sce_A)}, F count: {len(sce_F)}")
-        if len(sce_A) == C.N_TEST/2 and len(sce_F) == C.N_TEST/2: 
+        if len(sce_A) >= C.N_TEST//2 and len(sce_F) >= C.N_TEST//2: 
             print('Ready to create a LARGE discussion group')
-            group = sce_A + sce_F 
+            # sample from each faction list
+            group = random.sample(sce_A, C.N_TEST//2) + random.sample(sce_F, C.N_TEST//2)
             for p in group:
                 p.participant.scenario = sce
                 # Save the scenario and faction to participant.vars
