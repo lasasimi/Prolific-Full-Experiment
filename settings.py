@@ -4,7 +4,7 @@ SESSION_CONFIGS = [
     dict(
         name='all_N08_N04',
         app_sequence=['presurvey', 'mock', 'noPay', 'Pay'],
-        num_demo_participants=100, # N08 N04 (must be a multiple of 4)
+        num_demo_participants=8, # N08 N04 (must be a multiple of 4)
         display_name="all_N08_N04",
         # no consent, failed training, faield attention check, and became inactive in mock app
         returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
@@ -215,11 +215,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase2_p_20260508', 
-         display_name='phase2_p_20260508',
-    ),
-    dict(name='phase2_p_20260509', 
-         display_name='phase2_p_20260509',  
+    dict(name='phase1_p_20260510', 
+         display_name='phase1_p_20260510',
     ),
 ]
 
