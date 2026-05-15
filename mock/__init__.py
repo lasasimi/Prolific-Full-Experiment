@@ -25,8 +25,8 @@ class C(BaseConstants):
     NUM_ROUNDS = 20 
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
-    # NOTE: Set this to 10 minutes
-    MEDIUM_WAIT = 15 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    # NOTE: Set this to 19 minutes for longer wait time, or 15 minutes for shorter wait time
+    MEDIUM_WAIT = 19 # (minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 

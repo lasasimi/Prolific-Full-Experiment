@@ -35,14 +35,14 @@ class Subsession(BaseSubsession):
 # 1-4 = Thu (4:00, 5:00, 6:00, 7:00 PM ET)
 # 5-8 = Fri (4:00, 5:00, 6:00, 7:00 PM ET)
 TIME_SLOT_LABELS = {
-    '1': 'Tue, May 12 | 4:00 - 4:30 PM ET',
-    '2': 'Tue, May 12 | 5:00 - 5:30 PM ET',
-    '3': 'Tue, May 12 | 6:00 - 6:30 PM ET',
-    '4': 'Tue, May 12 | 7:00 - 7:30 PM ET',
-    '5': 'Wed, May 13 | 4:00 - 4:30 PM ET',
-    '6': 'Wed, May 13 | 5:00 - 5:30 PM ET',
-    '7': 'Wed, May 13 | 6:00 - 6:30 PM ET',
-    '8': 'Wed, May 13 | 7:00 - 7:30 PM ET',
+    '1': 'Sat, May 16 | 4:00 - 4:30 PM ET',
+    '2': 'Sat, May 16 | 5:00 - 5:30 PM ET',
+    '3': 'Sat, May 16 | 6:00 - 6:30 PM ET',
+    '4': 'Sat, May 16 | 7:00 - 7:30 PM ET',
+    '5': 'Sun, May 17 | 4:00 - 4:30 PM ET',
+    '6': 'Sun, May 17 | 5:00 - 5:30 PM ET',
+    '7': 'Sun, May 17 | 6:00 - 6:30 PM ET',
+    '8': 'Sun, May 17 | 7:00 - 7:30 PM ET',
     '99': '🚫 None of the listed slots work for me',
 }
 

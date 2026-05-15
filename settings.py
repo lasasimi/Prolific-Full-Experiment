@@ -16,41 +16,41 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 7,
-        MAX_N08_p00 = 10,
-        MAX_N04_p50 = 5,
-        MAX_N08_p50 = 10,
-        MAX_N04_p99 = 0,
-        MAX_N08_p99 = 0,
-        MAX_N04_p100 = 0,
-        MAX_N08_p100 = 0,
-        SCE = 's2_p', # scenario framing (s2_n or s2_p)
-    ),
-    dict(
-        name='all_old',
-        app_sequence=['presurvey', 'mock_old', 'noPay', 'Pay'],
-        num_demo_participants=100, # N08 N04 (must be a multiple of 4)
-        display_name="all_old",
-        # no consent, failed training, faield attention check, and became inactive in mock app
-        returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
-        # screened out, either because answered neutral (not eligible) or not wanting to commit
-        screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
-        # finished presurvey, waited too long, not matched with other participants
-        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
-        # finished presurvey, commitment, AND completed mock app
-        maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
-        
-        # maximum groups in each condition
-        MAX_N04_p00 = 5,
+        MAX_N04_p00 = 0,
         MAX_N08_p00 = 5,
-        MAX_N04_p50 = 5,
-        MAX_N08_p50 = 5,
-        MAX_N04_p99 = 0,
+        MAX_N04_p50 = 0,
+        MAX_N08_p50 = 0,
+        MAX_N04_p99 = 20,
         MAX_N08_p99 = 0,
         MAX_N04_p100 = 0,
-        MAX_N08_p100 = 0,
+        MAX_N08_p100 = 9,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
+    # dict(
+    #     name='all_old',
+    #     app_sequence=['presurvey', 'mock_old', 'noPay', 'Pay'],
+    #     num_demo_participants=100, # N08 N04 (must be a multiple of 4)
+    #     display_name="all_old",
+    #     # no consent, failed training, faield attention check, and became inactive in mock app
+    #     returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
+    #     # screened out, either because answered neutral (not eligible) or not wanting to commit
+    #     screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
+    #     # finished presurvey, waited too long, not matched with other participants
+    #     waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
+    #     # finished presurvey, commitment, AND completed mock app
+    #     maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
+        
+    #     # maximum groups in each condition
+    #     MAX_N04_p00 = 5,
+    #     MAX_N08_p00 = 5,
+    #     MAX_N04_p50 = 5,
+    #     MAX_N08_p50 = 5,
+    #     MAX_N04_p99 = 0,
+    #     MAX_N08_p99 = 0,
+    #     MAX_N04_p100 = 0,
+    #     MAX_N08_p100 = 0,
+    #     SCE = 's2_p', # scenario framing (s2_n or s2_p)
+    # ),
     dict(
         name='N08_only',
         app_sequence=['presurvey', 'mock_N08_only', 'noPay', 'Pay'],
@@ -116,41 +116,44 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 6,
-        MAX_N08_p00 = 9,
-        MAX_N04_p50 = 5,
-        MAX_N08_p50 = 8,
-        MAX_N04_p99 = 0,
-        MAX_N08_p99 = 0,
-        MAX_N04_p100 = 0,
-        MAX_N08_p100 = 0,
+        MAX_N04_p00 = 5,
+        MAX_N08_p00 = 5,
+
+        MAX_N04_p50 = 2,
+        MAX_N08_p50 = 0,
+
+        MAX_N04_p100 = 5,
+        MAX_N08_p100 = 8,
+
+        MAX_N04_p99 = 10,
+        MAX_N08_p99 = 10,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
-        dict(
-        name='N08_N04_Aonly_old',
-        app_sequence=['presurvey', 'mock_N08_N04_Aonly_old', 'noPay', 'Pay'],
-        num_demo_participants=40, # N08 N04 (must be a multiple of 4)
-        display_name="N08_N04_Aonly_old",
-        # no consent, failed training, faield attention check, and became inactive in mock app
-        returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
-        # screened out, either because answered neutral (not eligible) or not wanting to commit
-        screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
-        # finished presurvey, waited too long, not matched with other participants
-        waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
-        # finished presurvey, commitment, AND completed mock app
-        maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
+    #     dict(
+    #     name='N08_N04_Aonly_old',
+    #     app_sequence=['presurvey', 'mock_N08_N04_Aonly_old', 'noPay', 'Pay'],
+    #     num_demo_participants=40, # N08 N04 (must be a multiple of 4)
+    #     display_name="N08_N04_Aonly_old",
+    #     # no consent, failed training, faield attention check, and became inactive in mock app
+    #     returnlink='https://app.prolific.com/submissions/complete?cc=CUN28996', # no pay, no bonus
+    #     # screened out, either because answered neutral (not eligible) or not wanting to commit
+    #     screenedoutlink='https://app.prolific.com/submissions/complete?cc=CSD7X9S6',
+    #     # finished presurvey, waited too long, not matched with other participants
+    #     waitingbonuslink='https://app.prolific.com/submissions/complete?cc=CMKI4JO9', # base pay only
+    #     # finished presurvey, commitment, AND completed mock app
+    #     maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
-        # maximum groups in each condition
-        MAX_N04_p00 = 6,
-        MAX_N08_p00 = 9,
-        MAX_N04_p50 = 5,
-        MAX_N08_p50 = 8,
-        MAX_N04_p99 = 0,
-        MAX_N08_p99 = 0,
-        MAX_N04_p100 = 0,
-        MAX_N08_p100 = 0,
-        SCE = 's2_p', # scenario framing (s2_n or s2_p)
-    ),
+    #     # maximum groups in each condition
+    #     MAX_N04_p00 = 6,
+    #     MAX_N08_p00 = 9,
+    #     MAX_N04_p50 = 5,
+    #     MAX_N08_p50 = 8,
+    #     MAX_N04_p99 = 0,
+    #     MAX_N08_p99 = 0,
+    #     MAX_N04_p100 = 0,
+    #     MAX_N08_p100 = 0,
+    #     SCE = 's2_p', # scenario framing (s2_n or s2_p)
+    # ),
     dict(
         name='N04_Aonly',
         app_sequence=['presurvey_N04_Aonly', 'mock_N04_Aonly', 'noPay', 'Pay_N04_Aonly'], # different explanation on Pay app
@@ -215,9 +218,12 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase1_p_20260510', 
-         display_name='phase1_p_20260510',
+    dict(name='phase2_p_20260516', 
+         display_name='phase2_p_20260516',
     ),
+    dict(name='phase2_p_20260517', 
+         display_name='phase2_p_20260517',
+    )
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60
