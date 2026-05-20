@@ -117,16 +117,16 @@ SESSION_CONFIGS = [
         
         # maximum groups in each condition
         MAX_N04_p00 = 5,
-        MAX_N08_p00 = 5,
+        MAX_N08_p00 = 0,
 
         MAX_N04_p50 = 2,
         MAX_N08_p50 = 0,
 
-        MAX_N04_p100 = 5,
-        MAX_N08_p100 = 8,
+        MAX_N04_p100 = 4,
+        MAX_N08_p100 = 1,
 
         MAX_N04_p99 = 10,
-        MAX_N08_p99 = 10,
+        MAX_N08_p99 = 0,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     #     dict(
@@ -218,12 +218,9 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase2_p_20260516', 
-         display_name='phase2_p_20260516',
-    ),
-    dict(name='phase2_p_20260517', 
-         display_name='phase2_p_20260517',
-    )
+    dict(name='phase2_p_20260519', display_name='phase2_p_20260519'),
+    dict(name='phase2_p_20260520', display_name='phase2_p_20260520'),
+    dict(name='phase2_p_20260521', display_name='phase2_p_20260521'),
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60

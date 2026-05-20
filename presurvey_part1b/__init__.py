@@ -35,14 +35,18 @@ class Subsession(BaseSubsession):
 # 1-4 = Thu (4:00, 5:00, 6:00, 7:00 PM ET)
 # 5-8 = Fri (4:00, 5:00, 6:00, 7:00 PM ET)
 TIME_SLOT_LABELS = {
-    '1': 'Sat, May 16 | 4:00 - 4:30 PM ET',
-    '2': 'Sat, May 16 | 5:00 - 5:30 PM ET',
-    '3': 'Sat, May 16 | 6:00 - 6:30 PM ET',
-    '4': 'Sat, May 16 | 7:00 - 7:30 PM ET',
-    '5': 'Sun, May 17 | 4:00 - 4:30 PM ET',
-    '6': 'Sun, May 17 | 5:00 - 5:30 PM ET',
-    '7': 'Sun, May 17 | 6:00 - 6:30 PM ET',
-    '8': 'Sun, May 17 | 7:00 - 7:30 PM ET',
+    '1': 'Tue, May 19 | 4:00 - 4:30 PM ET',
+    '2': 'Tue, May 19 | 5:00 - 5:30 PM ET',
+    '3': 'Tue, May 19 | 6:00 - 6:30 PM ET',
+    '4': 'Tue, May 19 | 7:00 - 7:30 PM ET',
+    '5': 'Wed, May 20 | 4:00 - 4:30 PM ET',
+    '6': 'Wed, May 20 | 5:00 - 5:30 PM ET',
+    '7': 'Wed, May 20 | 6:00 - 6:30 PM ET',
+    '8': 'Wed, May 20 | 7:00 - 7:30 PM ET',
+    '9': 'Thu, May 21| 4:00 - 4:30 PM ET',
+    '10': 'Thu, May 21 | 5:00 - 5:30 PM ET',
+    '11': 'Thu, May 21 | 6:00 - 6:30 PM ET',
+    '12': 'Thu, May 21 | 7:00 - 7:30 PM ET',
     '99': '🚫 None of the listed slots work for me',
 }
 
@@ -176,6 +180,10 @@ class Player(BasePlayer):
     timeslot_6 = models.IntegerField(initial=0)
     timeslot_7 = models.IntegerField(initial=0)
     timeslot_8 = models.IntegerField(initial=0)
+    timeslot_9 = models.IntegerField(initial=0)
+    timeslot_10 = models.IntegerField(initial=0)
+    timeslot_11 = models.IntegerField(initial=0)
+    timeslot_12 = models.IntegerField(initial=0)
 
     
     def time_selection_error_message(player, value):
@@ -329,14 +337,14 @@ class TimeSelection(Page):
             TIME_SLOT_LABELS[s] for s in selected_slot_ids_for_display
         ]
 
-        # Create one-hot encoding for slots 1-8 from player.time_selection (ignore 99)
-        slot_keys = [str(i) for i in range(1, 9)]
+        # Create one-hot encoding for all numeric slots from TIME_SLOT_LABELS (ignore 99)
+        slot_keys = [k for k in TIME_SLOT_LABELS if k != '99']
         selected_slot_set = {s for s in selected_slot_ids if s in slot_keys}
         one_hot_by_slot = {slot: (1 if slot in selected_slot_set else 0) for slot in slot_keys}
 
         # Store one-hot values directly on Player so they appear in standard oTree exports
-        for i in range(1, 9):
-            setattr(player, f'timeslot_{i}', one_hot_by_slot[str(i)])
+        for slot in slot_keys:
+            setattr(player, f'timeslot_{slot}', one_hot_by_slot[slot])
         
         # if answer is 99 (cannot attend any time slot), set commit_phase2 to False and complete_presurvey to False since they are not eligible for the main experiment
         if player.time_selection and '99' in player.time_selection.split(','):
