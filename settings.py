@@ -119,13 +119,13 @@ SESSION_CONFIGS = [
         MAX_N04_p00 = 5,
         MAX_N08_p00 = 0,
 
-        MAX_N04_p50 = 2,
+        MAX_N04_p50 = 0,
         MAX_N08_p50 = 0,
 
         MAX_N04_p100 = 4,
-        MAX_N08_p100 = 1,
+        MAX_N08_p100 = 0,
 
-        MAX_N04_p99 = 10,
+        MAX_N04_p99 = 9,
         MAX_N08_p99 = 0,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
