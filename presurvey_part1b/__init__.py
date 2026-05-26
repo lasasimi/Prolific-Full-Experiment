@@ -35,18 +35,18 @@ class Subsession(BaseSubsession):
 # 1-4 = Thu (4:00, 5:00, 6:00, 7:00 PM ET)
 # 5-8 = Fri (4:00, 5:00, 6:00, 7:00 PM ET)
 TIME_SLOT_LABELS = {
-    '1': 'Tue, May 19 | 4:00 - 4:30 PM ET',
-    '2': 'Tue, May 19 | 5:00 - 5:30 PM ET',
-    '3': 'Tue, May 19 | 6:00 - 6:30 PM ET',
-    '4': 'Tue, May 19 | 7:00 - 7:30 PM ET',
-    '5': 'Wed, May 20 | 4:00 - 4:30 PM ET',
-    '6': 'Wed, May 20 | 5:00 - 5:30 PM ET',
-    '7': 'Wed, May 20 | 6:00 - 6:30 PM ET',
-    '8': 'Wed, May 20 | 7:00 - 7:30 PM ET',
-    '9': 'Thu, May 21| 4:00 - 4:30 PM ET',
-    '10': 'Thu, May 21 | 5:00 - 5:30 PM ET',
-    '11': 'Thu, May 21 | 6:00 - 6:30 PM ET',
-    '12': 'Thu, May 21 | 7:00 - 7:30 PM ET',
+    '1': 'Tue, May 26 | 4:00 - 4:30 PM ET',
+    '2': 'Tue, May 26 | 5:00 - 5:30 PM ET',
+    '3': 'Tue, May 26 | 6:00 - 6:30 PM ET',
+    '4': 'Tue, May 26 | 7:00 - 7:30 PM ET',
+    '5': 'Wed, May 27 | 4:00 - 4:30 PM ET',
+    '6': 'Wed, May 27 | 5:00 - 5:30 PM ET',
+    '7': 'Wed, May 27 | 6:00 - 6:30 PM ET',
+    '8': 'Wed, May 27 | 7:00 - 7:30 PM ET',
+    # '9': 'Thu, May 21| 4:00 - 4:30 PM ET',
+    # '10': 'Thu, May 21 | 5:00 - 5:30 PM ET',
+    # '11': 'Thu, May 21 | 6:00 - 6:30 PM ET',
+    # '12': 'Thu, May 21 | 7:00 - 7:30 PM ET',
     '99': '🚫 None of the listed slots work for me',
 }
 
@@ -180,10 +180,10 @@ class Player(BasePlayer):
     timeslot_6 = models.IntegerField(initial=0)
     timeslot_7 = models.IntegerField(initial=0)
     timeslot_8 = models.IntegerField(initial=0)
-    timeslot_9 = models.IntegerField(initial=0)
-    timeslot_10 = models.IntegerField(initial=0)
-    timeslot_11 = models.IntegerField(initial=0)
-    timeslot_12 = models.IntegerField(initial=0)
+    # timeslot_9 = models.IntegerField(initial=0)
+    # timeslot_10 = models.IntegerField(initial=0)
+    # timeslot_11 = models.IntegerField(initial=0)
+    # timeslot_12 = models.IntegerField(initial=0)
 
     
     def time_selection_error_message(player, value):

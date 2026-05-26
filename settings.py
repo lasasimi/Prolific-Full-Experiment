@@ -116,17 +116,17 @@ SESSION_CONFIGS = [
         maxbonuslink=' https://app.prolific.com/submissions/complete?cc=C1AKEBMQ', # base pay + waiting bonus OR max pay
         
         # maximum groups in each condition
-        MAX_N04_p00 = 5,
-        MAX_N08_p00 = 0,
+        MAX_N04_p00 = 4,
+        MAX_N08_p00 = 1,
 
         MAX_N04_p50 = 0,
-        MAX_N08_p50 = 0,
+        MAX_N08_p50 = 1,
 
-        MAX_N04_p100 = 4,
-        MAX_N08_p100 = 0,
+        MAX_N04_p100 = 3,
+        MAX_N08_p100 = 1,
 
-        MAX_N04_p99 = 9,
-        MAX_N08_p99 = 0,
+        MAX_N04_p99 = 8,
+        MAX_N08_p99 = 1,
         SCE = 's2_p', # scenario framing (s2_n or s2_p)
     ),
     #     dict(
@@ -218,9 +218,8 @@ SESSION_FIELDS = ['combined_responses','scenario_counts',
                   'SCE', 'start_time']
 
 ROOMS = [
-    dict(name='phase2_p_20260519', display_name='phase2_p_20260519'),
-    dict(name='phase2_p_20260520', display_name='phase2_p_20260520'),
-    dict(name='phase2_p_20260521', display_name='phase2_p_20260521'),
+    dict(name='phase2_p_20260526', display_name='phase2_p_20260526'),
+    dict(name='phase2_p_20260527', display_name='phase2_p_20260527'),
 ]
 
 GBAT_INACTIVE_SECONDS_UNTIL_PROMPT = 2 * 60

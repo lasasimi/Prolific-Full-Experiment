@@ -27,7 +27,7 @@ class C(BaseConstants):
     # NOTE: Set this to 20 minutes
     LONG_WAIT = 20  #(minutes)
     # NOTE: This number is high because we still want to get N08 groups if possible
-    MEDIUM_WAIT = 19 #(minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
+    MEDIUM_WAIT = 12 #(minutes) # IF NO GROUP OF 8 HAS BEEN FORMED, CREATE A GROUP OF 4
 
     # No changes below
     N_TEST = 8 # SIZE OF DISCUSSION GROUP 
